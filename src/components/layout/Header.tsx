@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, User, Menu, X, BookOpen, Search } from 'lucide-react';
 import Button from '../ui/Button';
-import { useAuth } from '../../context/AuthContext';
-import { useCart } from '../../context/CartContext';
+import useAuthContext from '../../context/useAuthContext';
+import useCartContext from '../../context/useCartContext';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { isAuthenticated, user, logout } = useAuth();
-  const { totalItems } = useCart();
+  const { isAuthenticated, user, logout } = useAuthContext();
+  const { totalItems } = useCartContext();
   const navigate = useNavigate();
 
   const toggleMenu = () => {

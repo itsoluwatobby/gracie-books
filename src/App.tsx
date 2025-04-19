@@ -1,15 +1,17 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
-import HomePage from './pages/HomePage';
-import BooksPage from './pages/BooksPage';
-import BookDetailPage from './pages/BookDetailPage';
-import CartPage from './pages/CartPage';
-import LoginPage from './pages/LoginPage';
-import OrdersPage from './pages/OrdersPage';
-import SearchPage from './pages/SearchPage';
-import AdminDashboardPage from './pages/AdminDashboardPage';
+import {
+  AdminDashboardPage,
+  BookDetailPage,
+  BooksPage,
+  CartPage,
+  HomePage,
+  LoginPage,
+  OrdersPage,
+  PageNotFound,
+  SearchPage,
+} from './pages';
 
 function App() {
   return (
@@ -26,7 +28,7 @@ function App() {
             <Route path="/search" element={<SearchPage />} />
             <Route path="/admin" element={<AdminDashboardPage />} />
 
-            <Route path="*" element={<AdminDashboardPage />} />
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
         </CartProvider>
       </AuthProvider>

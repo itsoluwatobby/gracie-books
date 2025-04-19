@@ -4,11 +4,11 @@ import { ShoppingBag } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import OrderItem from '../components/orders/OrderItem';
 import Button from '../components/ui/Button';
-import { useAuth } from '../context/AuthContext';
+import useAuthContext from '../context/useAuthContext';
 import { getOrdersByUserId } from '../data/orders';
 
 const OrdersPage: React.FC = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuthContext();
   
   // Get orders for the current user
   const orders = user ? getOrdersByUserId(user.id) : [];

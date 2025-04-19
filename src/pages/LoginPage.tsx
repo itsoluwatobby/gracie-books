@@ -3,15 +3,15 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { BookOpen, Mail, Lock } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
-import Input from '../components/ui/Input';
-import { useAuth } from '../context/AuthContext';
+// import Input from '../components/ui/Input';
+import useAuthContext from '../context/useAuthContext';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { login } = useAuthContext();
   const navigate = useNavigate();
   const location = useLocation();
   

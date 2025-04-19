@@ -3,15 +3,14 @@ import { Link } from 'react-router-dom';
 import { ShoppingCart, Heart } from 'lucide-react';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
-import { Book } from '../../types';
-import { useCart } from '../../context/CartContext';
+import useCartContext from '../../context/useCartContext';
 
 interface BookCardProps {
   book: Book;
 }
 
 const BookCard: React.FC<BookCardProps> = ({ book }) => {
-  const { addToCart } = useCart();
+  const { addToCart } = useCartContext();
   
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();

@@ -4,14 +4,13 @@ import { ShoppingBag, BookOpen, Users, AlertCircle, ChevronDown, ChevronUp } fro
 import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
-import { useAuth } from '../context/AuthContext';
+import useAuthContext from '../context/useAuthContext';
 import { orders } from '../data/orders';
 import { books } from '../data/books';
 import { users } from '../data/users';
-import { Order } from '../types';
 
 const AdminDashboardPage: React.FC = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuthContext();
   const [activeSection, setActiveSection] = useState('overview');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isOpen, setIsOpen] = useState(false);

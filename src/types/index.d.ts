@@ -1,6 +1,23 @@
 // Type definitions for the application
 
-export interface Book {
+interface AuthContextType {
+  user: User | null;
+  login: (email: string, password: string) => Promise<boolean>;
+  logout: () => void;
+  isAuthenticated: boolean;
+}
+
+interface CartContextType {
+  items: CartItem[];
+  addToCart: (book: Book, quantity?: number) => void;
+  removeFromCart: (bookId: string) => void;
+  updateQuantity: (bookId: string, quantity: number) => void;
+  clearCart: () => void;
+  totalItems: number;
+  totalPrice: number;
+}
+
+interface Book {
   id: string;
   title: string;
   author: string;
@@ -16,19 +33,19 @@ export interface Book {
   rating: number;
 }
 
-export interface User {
+interface User {
   id: string;
   name: string;
   email: string;
   isAdmin: boolean;
 }
 
-export interface CartItem {
+interface CartItem {
   book: Book;
   quantity: number;
 }
 
-export interface Order {
+interface Order {
   id: string;
   userId: string;
   items: OrderItem[];
@@ -39,14 +56,14 @@ export interface Order {
   shippingAddress: ShippingAddress;
 }
 
-export interface OrderItem {
+interface OrderItem {
   bookId: string;
   title: string;
   quantity: number;
   priceAtPurchase: number;
 }
 
-export interface ShippingAddress {
+interface ShippingAddress {
   fullName: string;
   street: string;
   city: string;
@@ -55,9 +72,9 @@ export interface ShippingAddress {
   country: string;
 }
 
-export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
 
-export interface UserPreferences {
+interface UserPreferences {
   favoriteGenres: string[];
   wishlist: string[]; // Book IDs
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Package, CheckCircle, Clock, Truck } from 'lucide-react';
-import { Order } from '../../types';
 
 interface OrderItemProps {
   order: Order;

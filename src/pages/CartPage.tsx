@@ -3,12 +3,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, ShoppingBag, ChevronLeft, X } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
-import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
+import useCartContext from '../context/useCartContext';
+import useAuthContext from '../context/useAuthContext';
 
 const CartPage: React.FC = () => {
-  const { items, removeFromCart, updateQuantity, totalItems, totalPrice, clearCart } = useCart();
-  const { isAuthenticated } = useAuth();
+  const {
+    items, removeFromCart,
+    updateQuantity, totalItems,
+    totalPrice, clearCart,
+  } = useCartContext();
+  const { isAuthenticated } = useAuthContext();
   const navigate = useNavigate();
   const [couponCode, setCouponCode] = useState('');
   const [couponApplied, setCouponApplied] = useState(false);
@@ -89,7 +93,7 @@ const CartPage: React.FC = () => {
                   </div>
 
                   <div className="divide-y">
-                    {items.map((item) => (
+                    {items.map((item: CartItem) => (
                       <div key={item.book.id} className="py-4 flex">
                         <div className="w-20 h-28 bg-gray-100 rounded overflow-hidden mr-4">
                           <img 

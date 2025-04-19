@@ -1,6 +1,5 @@
 import React from 'react';
 import BookCard from './BookCard';
-import { Book } from '../../types';
 
 interface BookGridProps {
   books: Book[];

@@ -5,7 +5,6 @@ import Layout from '../components/layout/Layout';
 import BookGrid from '../components/books/BookGrid';
 import Button from '../components/ui/Button';
 import { books, getAllGenres } from '../data/books';
-import { Book } from '../types';
 
 const BooksPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -29,7 +28,7 @@ const BooksPage: React.FC = () => {
           book.title.toLowerCase().includes(query) ||
           book.author.toLowerCase().includes(query) ||
           book.description.toLowerCase().includes(query) ||
-          book.genre.some(g => g.toLowerCase().includes(query))
+          book.genre.some((g: string) => g.toLowerCase().includes(query))
       );
     }
 
@@ -40,8 +39,8 @@ const BooksPage: React.FC = () => {
 
     // Filter by genres
     if (selectedGenres.length > 0) {
-      result = result.filter(book =>
-        book.genre.some(g => selectedGenres.includes(g))
+      result = result.filter((book) =>
+        book.genre.some((g: string) => selectedGenres.includes(g))
       );
     }
 

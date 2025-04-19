@@ -4,8 +4,7 @@ import { ShoppingCart, Heart, Share2, Bookmark, Star, ChevronRight } from 'lucid
 import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
 import { getBookById } from '../data/books';
-import { Book } from '../types';
-import { useCart } from '../context/CartContext';
+import useCartContext from '../context/useCartContext';
 import BookGrid from '../components/books/BookGrid';
 import { books } from '../data/books';
 
@@ -14,11 +13,11 @@ const BookDetailPage: React.FC = () => {
   const [book, setBook] = useState<Book | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
-  const { addToCart } = useCart();
+  const { addToCart } = useCartContext();
   
   // Get related books (for demo purposes, just random books)
   const relatedBooks = books
-    .filter(b => b.id !== id && b.genre.some(g => book?.genre.includes(g)))
+    .filter(b => b.id !== id && b.genre.some((g: string) => book?.genre.includes(g)))
     .slice(0, 4);
 
   useEffect(() => {
