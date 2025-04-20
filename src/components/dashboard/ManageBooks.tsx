@@ -3,11 +3,14 @@ import Button from '../ui/Button'
 type ManageBooksProps = {
   books: Book[]
   handleEditBook: (book: Book) => void;
+  formatCurrency: (val: number) => string;
+  setShowBookModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function ManageBooks(
   {
-    books, handleEditBook,
+    books, handleEditBook, formatCurrency,
+    setShowBookModal,
   }: ManageBooksProps
   ) {
 
@@ -15,7 +18,9 @@ export default function ManageBooks(
     <div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Manage Books</h2>
-        <Button>Add New Book</Button>
+        <Button
+        onClick={() => setShowBookModal(true)}
+        >Add New Book</Button>
       </div>
       
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -33,7 +38,7 @@ export default function ManageBooks(
                   Price
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Stock
+                  Quantity
                 </th>
                 <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
@@ -61,7 +66,7 @@ export default function ManageBooks(
                     {book.author}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    ${book.price.toFixed(2)}
+                    {formatCurrency(book.price)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`${

@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ModalSelections } from "../../utils/constants";
 import Button from "../ui/Button"
 import Card from "../ui/Card"
 
 type RecentOrdersProps = {
   orders: Order[];
   formatCurrency: (val: number) => string;
-  setActiveSection: React.Dispatch<React.SetStateAction<string>>;
+  setActiveSection: React.Dispatch<React.SetStateAction<ModalSelectionsType>>;
 }
 
 export default function RecentOrders(
@@ -41,7 +41,7 @@ export default function RecentOrders(
         <Button
           variant="outline"
           size="sm"
-          onClick={() => setActiveSection('orders')}
+          onClick={() => setActiveSection(ModalSelections.orders)}
         >
           View All Orders
         </Button>

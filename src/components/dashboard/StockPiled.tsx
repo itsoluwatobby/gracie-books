@@ -1,9 +1,10 @@
+import { ModalSelections } from "../../utils/constants";
 import Button from "../ui/Button";
 import Card from "../ui/Card"
 
 type StockPiledProps = {
   books: Book[];
-  setActiveSection: React.Dispatch<React.SetStateAction<string>>;
+  setActiveSection: React.Dispatch<React.SetStateAction<ModalSelectionsType>>;
 }
 
 export default function StockPiled(
@@ -13,7 +14,7 @@ export default function StockPiled(
 ) {
   return (
     <Card className="p-6">
-      <h3 className="font-semibold mb-4">Low Stock Books</h3>
+      <h3 className="font-semibold mb-4">Stock Piled Books</h3>
       <div className="space-y-4">
         {books
           .filter(book => book.stockQuantity < 5)
@@ -45,9 +46,9 @@ export default function StockPiled(
         <Button 
           variant="outline"
           size="sm"
-          onClick={() => setActiveSection('books')}
+          onClick={() => setActiveSection(ModalSelections.books)}
         >
-          View All Books
+          View Stocks
         </Button>
       </div>
     </Card>

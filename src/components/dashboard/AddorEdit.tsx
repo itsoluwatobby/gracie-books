@@ -22,7 +22,7 @@ export default function AddorEdit(
     e.preventDefault();
     setEditBook(null);
     setBookForm(InitBookForm);
-    setShowBookModal(true);
+    setShowBookModal(false);
   }
 
   return (

@@ -92,6 +92,7 @@ interface ShippingAddress {
 }
 
 type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+type ModalSelectionsType = 'books' | 'users' | 'orders' | 'overview';
 
 interface UserPreferences {
   favoriteGenres: string[];
