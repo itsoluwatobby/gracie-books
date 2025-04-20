@@ -1,9 +1,23 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { createContext, useState, ReactNode } from 'react';
 import { users } from '../data/users';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [appName, setAppName] = useState<AppConfig>(
+    {
+      name: 'GracieBooks',
+      email: 'crazywandyte@gmail.com',
+      isLoggedIn: false,
+      contact: '(+234) 813-4657-528',
+      socials: {
+        instagram: '',
+        facebook: '',
+        twitter: ''
+      }
+    }
+  );
   const [user, setUser] = useState<User | null>(null);
 
   const login = async (email: string, password: string): Promise<boolean> => {
@@ -29,7 +43,9 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const isAuthenticated = user !== null;
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated }}>
+    <AuthContext.Provider value={
+      { user, login, logout, isAuthenticated, appName, setAppName }
+    }>
       {children}
     </AuthContext.Provider>
   );

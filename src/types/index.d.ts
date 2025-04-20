@@ -1,10 +1,29 @@
 // Type definitions for the application
 
+type AppConfig = {
+  _id?: string,
+  name: string;
+  email: string;
+  isLoggedIn: boolean;
+  contact: string;
+  socials: {
+    instagram: '',
+    facebook: '',
+    twitter: '',
+  };
+  address?: string;
+  createdAt?: string,
+  updatedAt?: string,
+  sessionId?: string;
+}
+
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   isAuthenticated: boolean;
+  appName: AppConfig;
+  setAppName: React.Dispatch<React.SetStateAction<AppConfig>>;
 }
 
 interface CartContextType {
@@ -78,3 +97,25 @@ interface UserPreferences {
   favoriteGenres: string[];
   wishlist: string[]; // Book IDs
 }
+
+type ResponseData<DATA> = {
+  timestamp: string;
+  message: string;
+  statusCode: number;
+  data: DATA
+}
+
+type ErrorResponse = {
+  response: {
+    data: {
+      timestamp: string;
+      error: {
+        statusCode: number;
+        success: boolean;
+        message: string;
+      }
+    }
+  }
+}
+
+type Rating = { bookId: string, rating: number }

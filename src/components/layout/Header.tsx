@@ -8,7 +8,7 @@ import useCartContext from '../../context/useCartContext';
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { isAuthenticated, user, logout } = useAuthContext();
+  const { isAuthenticated, appName, user, logout } = useAuthContext();
   const { totalItems } = useCartContext();
   const navigate = useNavigate();
 
@@ -25,17 +25,17 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-blue-900 text-white shadow-md">
+    <header className="bg-blue-900 text-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo and Brand */}
-          <Link to="/" className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2 mr-4">
             <BookOpen className="h-8 w-8" />
-            <span className="text-xl font-bold">BookHaven</span>
+            <span className="text-xl font-bold">{appName.name}</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden lg:flex items-center space-x-8">
             <Link to="/" className="hover:text-blue-200 transition-colors">Home</Link>
             <Link to="/books" className="hover:text-blue-200 transition-colors">Browse</Link>
             <Link to="/genres" className="hover:text-blue-200 transition-colors">Genres</Link>
@@ -43,7 +43,7 @@ const Header: React.FC = () => {
           </nav>
 
           {/* Search Form - Desktop */}
-          <form onSubmit={handleSearch} className="hidden md:flex items-center flex-1 max-w-md mx-8">
+          <form onSubmit={handleSearch} className="hidden lg:flex items-center flex-1 max-w-lg mx-8">
             <div className="relative w-full">
               <input
                 type="text"
@@ -52,8 +52,8 @@ const Header: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-blue-700"
               >
                 <Search size={20} />
@@ -62,7 +62,7 @@ const Header: React.FC = () => {
           </form>
 
           {/* User Actions - Desktop */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-4">
             <Link to="/cart" className="relative hover:text-blue-200 transition-colors">
               <ShoppingCart className="h-6 w-6" />
               {totalItems > 0 && (
@@ -71,7 +71,7 @@ const Header: React.FC = () => {
                 </span>
               )}
             </Link>
-            
+
             {isAuthenticated ? (
               <div className="relative group">
                 <button className="flex items-center space-x-1 hover:text-blue-200 transition-colors">
@@ -79,28 +79,28 @@ const Header: React.FC = () => {
                   <span>{user?.name}</span>
                 </button>
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block">
-                  <Link 
-                    to="/account" 
+                  <Link
+                    to="/account"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     My Account
                   </Link>
-                  <Link 
-                    to="/orders" 
+                  <Link
+                    to="/orders"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     My Orders
                   </Link>
                   {user?.isAdmin && (
-                    <Link 
-                      to="/admin" 
+                    <Link
+                      to="/admin"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
                       Admin Dashboard
                     </Link>
                   )}
-                  <button 
-                    onClick={logout} 
+                  <button
+                    onClick={logout}
                     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     Logout
@@ -110,7 +110,7 @@ const Header: React.FC = () => {
             ) : (
               <div className="flex items-center space-x-2">
                 <Link to="/login">
-                  <Button variant="ghost" size="sm">Login</Button>
+                  <Button variant="secondary" size="sm">Login</Button>
                 </Link>
                 <Link to="/signup">
                   <Button variant="secondary" size="sm">Sign Up</Button>
@@ -120,8 +120,8 @@ const Header: React.FC = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden text-white focus:outline-none" 
+          <button
+            className="lg:hidden text-white focus:outline-none"
             onClick={toggleMenu}
           >
             {isMenuOpen ? (
@@ -134,7 +134,7 @@ const Header: React.FC = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4">
+          <div className="lg:hidden mt-4 pb-4">
             {/* Search Form - Mobile */}
             <form onSubmit={handleSearch} className="mb-4">
               <div className="relative">
@@ -145,8 +145,8 @@ const Header: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
                 >
                   <Search size={20} />
@@ -156,36 +156,36 @@ const Header: React.FC = () => {
 
             {/* Navigation Links - Mobile */}
             <nav className="flex flex-col space-y-2">
-              <Link 
-                to="/" 
+              <Link
+                to="/"
                 className="px-2 py-1 hover:bg-blue-800 rounded transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
               </Link>
-              <Link 
-                to="/books" 
+              <Link
+                to="/books"
                 className="px-2 py-1 hover:bg-blue-800 rounded transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Browse
               </Link>
-              <Link 
-                to="/genres" 
+              <Link
+                to="/genres"
                 className="px-2 py-1 hover:bg-blue-800 rounded transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Genres
               </Link>
-              <Link 
-                to="/new-releases" 
+              <Link
+                to="/new-releases"
                 className="px-2 py-1 hover:bg-blue-800 rounded transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 New Releases
               </Link>
-              <Link 
-                to="/cart" 
+              <Link
+                to="/cart"
                 className="px-2 py-1 hover:bg-blue-800 rounded transition-colors flex items-center"
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -197,37 +197,37 @@ const Header: React.FC = () => {
                   </span>
                 )}
               </Link>
-              
+
               {isAuthenticated ? (
                 <>
-                  <Link 
-                    to="/account" 
+                  <Link
+                    to="/account"
                     className="px-2 py-1 hover:bg-blue-800 rounded transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     My Account
                   </Link>
-                  <Link 
-                    to="/orders" 
+                  <Link
+                    to="/orders"
                     className="px-2 py-1 hover:bg-blue-800 rounded transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     My Orders
                   </Link>
                   {user?.isAdmin && (
-                    <Link 
-                      to="/admin" 
+                    <Link
+                      to="/admin"
                       className="px-2 py-1 hover:bg-blue-800 rounded transition-colors"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Admin Dashboard
                     </Link>
                   )}
-                  <button 
+                  <button
                     onClick={() => {
                       logout();
                       setIsMenuOpen(false);
-                    }} 
+                    }}
                     className="px-2 py-1 text-left hover:bg-blue-800 rounded transition-colors"
                   >
                     Logout
@@ -235,7 +235,7 @@ const Header: React.FC = () => {
                 </>
               ) : (
                 <div className="flex flex-col space-y-2 mt-2">
-                  <Link 
+                  <Link
                     to="/login"
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -243,7 +243,7 @@ const Header: React.FC = () => {
                       Login
                     </Button>
                   </Link>
-                  <Link 
+                  <Link
                     to="/signup"
                     onClick={() => setIsMenuOpen(false)}
                   >
