@@ -5,6 +5,7 @@ import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
 import useCartContext from '../context/useCartContext';
 import useAuthContext from '../context/useAuthContext';
+import { helper } from '../utils/helper';
 
 const CartPage: React.FC = () => {
   const {
@@ -140,7 +141,7 @@ const CartPage: React.FC = () => {
                             </div>
                             
                             <div className="font-semibold">
-                              ${(item.book.price * item.quantity).toFixed(2)}
+                              {helper.formatPrice(item.book.price * item.quantity)}
                             </div>
                           </div>
                         </div>
@@ -166,29 +167,29 @@ const CartPage: React.FC = () => {
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Subtotal</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                    <span>{helper.formatPrice(subtotal)}</span>
                   </div>
                   
                   {couponApplied && (
                     <div className="flex justify-between text-green-600">
                       <span>Discount (10%)</span>
-                      <span>-${discount.toFixed(2)}</span>
+                      <span>-{helper.formatPrice(discount)}</span>
                     </div>
                   )}
                   
                   <div className="flex justify-between">
                     <span className="text-gray-600">Shipping</span>
-                    <span>{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
+                    <span>{shipping === 0 ? 'Free' : `${helper.formatPrice(shipping)}`}</span>
                   </div>
                   
-                  <div className="flex justify-between">
+                  {/* <div className="flex justify-between">
                     <span className="text-gray-600">Tax (7%)</span>
                     <span>${tax.toFixed(2)}</span>
-                  </div>
+                  </div> */}
                   
                   <div className="border-t pt-3 flex justify-between font-semibold">
                     <span>Total</span>
-                    <span>${total.toFixed(2)}</span>
+                    <span>{helper.formatPrice(total)}</span>
                   </div>
                 </div>
 
@@ -237,6 +238,7 @@ const CartPage: React.FC = () => {
                   fullWidth 
                   onClick={handleCheckout}
                   disabled={items.length === 0}
+                  className='h-12'
                 >
                   Proceed to Checkout
                 </Button>

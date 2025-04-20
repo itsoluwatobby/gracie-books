@@ -4,7 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { BookOpen, Mail, Lock } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
-import { GoogleLogin } from '@react-oauth/google';
+// import { GoogleLogin } from '@react-oauth/google';
 // import Input from '../components/ui/Input';
 import useAuthContext from '../context/useAuthContext';
 
@@ -49,21 +49,21 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse: any) => {
-    try {
-      const success = await loginWithGoogle(credentialResponse.credential);
-      if (success) {
-        navigate(redirectTo);
-      }
-    } catch (error) {
-      setError('Failed to login with Google');
-      console.error(error);
-    }
-  };
+  // const handleGoogleSuccess = async (credentialResponse: any) => {
+  //   try {
+  //     const success = await loginWithGoogle(credentialResponse.credential);
+  //     if (success) {
+  //       navigate(redirectTo);
+  //     }
+  //   } catch (error) {
+  //     setError('Failed to login with Google');
+  //     console.error(error);
+  //   }
+  // };
 
-  const handleGoogleError = () => {
-    setError('Google login failed. Please try again.');
-  };
+  // const handleGoogleError = () => {
+  //   setError('Google login failed. Please try again.');
+  // };
 
   return (
     <Layout>
@@ -149,13 +149,13 @@ const LoginPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="mb-6">
+              {/* <div className="mb-6">
                 <GoogleLogin
                   onSuccess={handleGoogleSuccess}
                   onError={handleGoogleError}
                   useOneTap
                 />
-              </div>
+              </div> */}
               
               <div className="mt-6 text-center">
                 <p className="text-gray-600">

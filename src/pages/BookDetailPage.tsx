@@ -14,7 +14,7 @@ const BookDetailPage: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
   const { addToCart } = useCartContext();
-  
+
   // Get related books (for demo purposes, just random books)
   const relatedBooks = books
     .filter(b => b.id !== id && b.genre.some((g: string) => book?.genre.includes(g)))
@@ -76,8 +76,8 @@ const BookDetailPage: React.FC = () => {
               <ChevronRight size={14} />
             </li>
             <li>
-              <Link 
-                to={`/genres/${book.genre[0]}`} 
+              <Link
+                to={`/genres/${book.genre[0]}`}
                 className="hover:text-blue-700"
               >
                 {book.genre[0]}
@@ -96,14 +96,14 @@ const BookDetailPage: React.FC = () => {
         <div className="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8">
           <div className="flex flex-col md:flex-row gap-8">
             {/* Book Cover Image */}
-            <div className="w-full md:w-1/3 lg:w-1/4">
-              <div className="bg-gray-100 rounded-md overflow-hidden shadow-sm">
-                <img 
-                  src={book.coverImage} 
-                  alt={book.title} 
+            <div className="w-full md:w-1/3 lgw-1/4">
+              <figure className="bg-gray-100 rounded-md max-h-96 overflow-hidden shadow-sm">
+                <img
+                  src={book.coverImage}
+                  alt={book.title}
                   className="w-full h-auto object-cover"
                 />
-              </div>
+              </figure>
 
               <div className="mt-4 flex justify-around">
                 <button className="p-2 text-gray-500 hover:text-blue-700 flex flex-col items-center text-xs">
@@ -134,10 +134,10 @@ const BookDetailPage: React.FC = () => {
               <div className="flex items-center mb-4">
                 <div className="flex items-center mr-2">
                   {[...Array(5)].map((_, i) => (
-                    <Star 
-                      key={i} 
-                      size={18} 
-                      className={`${i < Math.floor(book.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
+                    <Star
+                      key={i}
+                      size={18}
+                      className={`${i < Math.floor(book.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
                     />
                   ))}
                 </div>
@@ -186,10 +186,11 @@ const BookDetailPage: React.FC = () => {
 
               {/* Quantity and Add to Cart */}
               <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                <div className="flex items-center border border-gray-300 rounded-md">
+
+                <div className="flex items-center border justify-between h-12 border-gray-300 rounded-md">
                   <button
                     onClick={decreaseQuantity}
-                    className="px-4 py-2 text-gray-600 hover:text-blue-700 disabled:text-gray-400"
+                    className="px-4 py-2 text-gray-600 h-full rounded-l-md max-sm:w-1/4 hover:text-blue-700 disabled:text-gray-400"
                     disabled={quantity <= 1}
                   >
                     −
@@ -197,15 +198,16 @@ const BookDetailPage: React.FC = () => {
                   <span className="px-4 py-2 text-center w-12">{quantity}</span>
                   <button
                     onClick={increaseQuantity}
-                    className="px-4 py-2 text-gray-600 hover:text-blue-700 disabled:text-gray-400"
+                    className="px-4 py-2 text-gray-600 h-full rounded-r-md max-sm:w-1/4 hover:text-blue-700 disabled:text-gray-400"
                     disabled={quantity >= book.stockQuantity}
                   >
                     +
                   </button>
                 </div>
+
                 <Button
                   onClick={handleAddToCart}
-                  className="flex-1 sm:max-w-xs"
+                  className="flex-1 flex items-center justify-center h-12 sm:max-w-xs max-sm:h-14"
                   disabled={book.stockQuantity === 0}
                 >
                   <ShoppingCart className="mr-2 h-5 w-5" />
@@ -236,31 +238,28 @@ const BookDetailPage: React.FC = () => {
         <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
           <div className="flex border-b">
             <button
-              className={`px-6 py-3 text-sm font-medium ${
-                activeTab === 'description'
+              className={`px-6 py-3 text-sm font-medium ${activeTab === 'description'
                   ? 'border-b-2 border-blue-600 text-blue-600'
                   : 'text-gray-500 hover:text-gray-700'
-              }`}
+                }`}
               onClick={() => setActiveTab('description')}
             >
               Description
             </button>
             <button
-              className={`px-6 py-3 text-sm font-medium ${
-                activeTab === 'details'
+              className={`px-6 py-3 text-sm font-medium ${activeTab === 'details'
                   ? 'border-b-2 border-blue-600 text-blue-600'
                   : 'text-gray-500 hover:text-gray-700'
-              }`}
+                }`}
               onClick={() => setActiveTab('details')}
             >
               Details
             </button>
             <button
-              className={`px-6 py-3 text-sm font-medium ${
-                activeTab === 'reviews'
+              className={`px-6 py-3 text-sm font-medium ${activeTab === 'reviews'
                   ? 'border-b-2 border-blue-600 text-blue-600'
                   : 'text-gray-500 hover:text-gray-700'
-              }`}
+                }`}
               onClick={() => setActiveTab('reviews')}
             >
               Reviews
@@ -272,9 +271,9 @@ const BookDetailPage: React.FC = () => {
               <div className="prose max-w-none">
                 <p className="mb-4">{book.description}</p>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. 
-                  Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus 
-                  ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est 
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris.
+                  Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus
+                  ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est
                   bibendum non venenatis nisl tempor. Suspendisse dictum feugiat nisl ut dapibus.
                 </p>
               </div>
@@ -323,7 +322,7 @@ const BookDetailPage: React.FC = () => {
                   <h3 className="text-lg font-semibold">Customer Reviews</h3>
                   <Button variant="outline" size="sm">Write a Review</Button>
                 </div>
-                
+
                 <div className="text-center py-8">
                   <p className="text-gray-500">
                     Be the first to write a review for this book!
@@ -345,7 +344,7 @@ const BookDetailPage: React.FC = () => {
                 View More →
               </Link>
             </div>
-            
+
             <BookGrid books={relatedBooks} />
           </section>
         )}
