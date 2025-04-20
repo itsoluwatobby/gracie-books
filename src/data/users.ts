@@ -1,5 +1,3 @@
-import { User, UserPreferences } from "../types";
-
 // Mock data for users
 export const users: User[] = [
   {

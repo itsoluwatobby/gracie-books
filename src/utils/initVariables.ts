@@ -12,3 +12,5 @@ export const InitBookForm = {
   stockQuantity: 0,
   rating: 0
 };
+
+export const InitPriceRange = { min: 0, max: 10000 };

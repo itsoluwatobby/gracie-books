@@ -4,6 +4,7 @@ import { ShoppingCart, Heart } from 'lucide-react';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import useCartContext from '../../context/useCartContext';
+import { helper } from '../../utils/helper';
 
 interface BookCardProps {
   book: Book;
@@ -58,7 +59,7 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
             
             <div className="flex gap1.5 mt-2.5 justify-between items-center">
               <div className="flex itemsbaseline mb3">
-                <span className="text-lg font-bold text-blue-900">${book.price.toFixed(2)}</span>
+                <span className="text-lg font-semibold text-blue-900">{helper.formatPrice(book.price)}</span>
                 {book.stockQuantity < 5 && book.stockQuantity > 0 && (
                   <span className="ml-2 text-xs text-orange-600">Only {book.stockQuantity} left</span>
                 )}

@@ -1,4 +1,3 @@
-import { Book } from "../types";
 
 // Mock data for books
 export const books: Book[] = [

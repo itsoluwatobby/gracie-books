@@ -21,8 +21,8 @@ export default function Sidebar(
   ];
 
   return (
-    <div className={`${isOpen ? 'block' : 'hidden'} md:block md:w-64`}>
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div className={`sticky top-40 ${isOpen ? 'block' : 'hidden'} h-screen bg-white lg:block max-w-64 min-w-56 rounded`}>
+      {/* <div className="bg-white rounded-lg shadow-md overflow-hidden"> */}
         <nav className="divide-y">
           {
             ModalSelections.map((value) => (
@@ -36,7 +36,7 @@ export default function Sidebar(
             ))
           }
         </nav>
-      </div>
+      {/* </div> */}
     </div>
   )
 }
@@ -52,7 +52,7 @@ const SelectionButton = ({ activeSection, setActiveSection, name, Icon }: Select
 
   return (
     <button 
-      className={`capitalize px-4 py-3 w-full text-left font-medium flex items-center ${
+      className={`capitalize p-6 pb-3 w-full text-sm text-left font-medium flex items-center ${
         activeSection === name ? 'bg-blue-50 text-blue-800' : 'text-gray-700 hover:bg-gray-50'
       }`}
       onClick={() => setActiveSection(name)}

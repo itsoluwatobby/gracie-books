@@ -5,7 +5,7 @@ import useAuthContext from '../context/useAuthContext';
 import { orders } from '../data/orders';
 import { books } from '../data/books';
 import { users } from '../data/users';
-import { CURRENCY, ModalSelections } from '../utils/constants';
+import { ModalSelections } from '../utils/constants';
 import { helper } from '../utils/helper';
 import {
   AddorEdit,
@@ -38,11 +38,6 @@ const AdminDashboardPage: React.FC = () => {
   const pendingOrders = orders.filter(order => order.status === 'pending' || order.status === 'processing').length;
   const lowStockBooks = books.filter(book => book.stockQuantity < 5).length;
 
-  // Format currency
-  const formatCurrency = (amount: number) => {
-    return `${CURRENCY.NAIRA} ${helper.formatPrice(amount)}`;
-  };
-
   const handleEditBook = (book: Book) => {
     setEditBook(book);
     setShowBookModal(true);
@@ -53,16 +48,16 @@ const AdminDashboardPage: React.FC = () => {
       <>
         <h2 className="text-xl font-semibold mb-4">Dashboard Overview</h2>
         <TopCard 
-        totalOrders={totalOrders}
-        totalRevenue={totalRevenue}
-        lowStockBooks={lowStockBooks}
-        pendingOrders={pendingOrders}
-        formatCurrency={formatCurrency}
+          totalOrders={totalOrders}
+          totalRevenue={totalRevenue}
+          lowStockBooks={lowStockBooks}
+          pendingOrders={pendingOrders}
+          formatCurrency={helper.formatPrice}
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <RecentOrders 
             orders={orders}
-            formatCurrency={formatCurrency}
+            formatCurrency={helper.formatPrice}
             setActiveSection={setActiveSection}
           />
           <StockPiled books={books} setActiveSection={setActiveSection} />
@@ -74,14 +69,14 @@ const AdminDashboardPage: React.FC = () => {
         users={users}
         orders={orders}
         setSelectedOrder={setSelectedOrder}
-        formatCurrency={formatCurrency}
+        formatCurrency={helper.formatPrice}
       />
     ),
     books: (
       <ManageBooks 
         books={books}
         handleEditBook={handleEditBook}
-        formatCurrency={formatCurrency}
+        formatCurrency={helper.formatPrice}
         setShowBookModal={setShowBookModal}
       />
     ),
@@ -91,10 +86,10 @@ const AdminDashboardPage: React.FC = () => {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between z-10 pt-3 p-1 rounded sticky bg-white top-16 items-center mb-8">
           <h1 className="text-2xl md:text-3xl font-bold text-blue-900">Admin Dashboard</h1>
           
-          <div className="flex md:hidden">
+          <div className="flex ld:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="flex items-center text-blue-900 hover:text-blue-700"
@@ -104,7 +99,7 @@ const AdminDashboardPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-5">
           {/* Sidebar */}
           <Sidebar 
             isOpen={isOpen}
@@ -118,7 +113,7 @@ const AdminDashboardPage: React.FC = () => {
               <OrderDetails 
                 order={selectedOrder}
                 users={users}
-                formatCurrency={formatCurrency}
+                formatCurrency={helper.formatPrice}
                 setSelectedOrder={setSelectedOrder}
               />
             ) : (

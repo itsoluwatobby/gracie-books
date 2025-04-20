@@ -1,3 +1,5 @@
+import { CURRENCY } from "./constants";
+
 class Helper {
   public reduceTextLength(content: string, maxLength=20, option:('letter'|'word')='letter') {
     let responseOutput = '';
@@ -75,7 +77,8 @@ class Helper {
   }
 
   formatPrice(price = 0, decimalPlace = 2) {
-    return price.toFixed(decimalPlace).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    const amount = price.toFixed(decimalPlace).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    return `${CURRENCY.NAIRA}${amount}`;
   }
 }
 export const helper = new Helper();

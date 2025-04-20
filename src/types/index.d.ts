@@ -120,3 +120,4 @@ type ErrorResponse = {
 }
 
 type Rating = { bookId: string, rating: number }
+type PriceRangePropTypes = { min: number, max: number }

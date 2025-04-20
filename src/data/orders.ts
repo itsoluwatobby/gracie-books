@@ -1,5 +1,3 @@
-import { Order, OrderStatus } from "../types";
-
 // Mock data for orders
 export const orders: Order[] = [
   {
