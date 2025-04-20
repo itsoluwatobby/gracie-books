@@ -21,6 +21,8 @@ interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
+  loginWithGoogle: (credential: string) => Promise<boolean>;
+  signup: (name: string, email: string, password: string) => Promise<boolean>;
   isAuthenticated: boolean;
   appName: AppConfig;
   setAppName: React.Dispatch<React.SetStateAction<AppConfig>>;

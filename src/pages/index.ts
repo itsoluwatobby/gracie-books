@@ -7,6 +7,10 @@ import OrdersPage from './OrdersPage';
 import SearchPage from './SearchPage';
 import AdminDashboardPage from './AdminDashboardPage';
 import PageNotFound from './PageNotFound';
+import NewReleases from './NewReleases';
+import GenrePage from './GenrePage';
+import ForgotPasswordPage from './ForgotPasswordPage';
+import SignUpPage from './SignUpPage';
 
 export {
   AdminDashboardPage,
@@ -18,4 +22,8 @@ export {
   OrdersPage,
   PageNotFound,
   SearchPage,
+  NewReleases,
+  GenrePage,
+  ForgotPasswordPage,
+  SignUpPage,
 };

@@ -36,6 +36,50 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     return false;
   };
 
+  const loginWithGoogle = async (credential: string): Promise<boolean> => {
+    try {
+      // In a real app, you'd verify the credential with your backend
+      // For demo purposes, we'll create a mock user
+      const mockGoogleUser: User = {
+        id: 'google-user-1',
+        name: 'Google User',
+        email: 'google.user@example.com',
+        isAdmin: false
+      };
+      
+      setUser(mockGoogleUser);
+      return true;
+    } catch (error) {
+      console.error('Google login error:', error);
+      return false;
+    }
+  };
+
+  const signup = async (name: string, email: string, password: string): Promise<boolean> => {
+    try {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Check if user already exists
+      if (users.find(u => u.email === email)) {
+        return false;
+      }
+
+      // Create new user (in a real app, this would be handled by the backend)
+      const newUser: User = {
+        id: `user-${Date.now()}`,
+        name,
+        email,
+        isAdmin: false
+      };
+
+      setUser(newUser);
+      return true;
+    } catch (error) {
+      console.error('Signup error:', error);
+      return false;
+    }
+  };
+
   const logout = () => {
     setUser(null);
   };
@@ -44,7 +88,12 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <AuthContext.Provider value={
-      { user, login, logout, isAuthenticated, appName, setAppName }
+      {
+        user, login,
+        logout, isAuthenticated,
+        appName, signup,
+        setAppName, loginWithGoogle,
+      }
     }>
       {children}
     </AuthContext.Provider>

@@ -6,11 +6,15 @@ import {
   BookDetailPage,
   BooksPage,
   CartPage,
+  ForgotPasswordPage,
+  GenrePage,
   HomePage,
   LoginPage,
   OrdersPage,
+  NewReleases,
   PageNotFound,
   SearchPage,
+  SignUpPage,
 } from './pages';
 
 function App() {
@@ -24,8 +28,12 @@ function App() {
             <Route path="/books/:id" element={<BookDetailPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/search" element={<SearchPage />} />
+            <Route path="/new-releases" element={<NewReleases />} />
+            <Route path="/genres/:genre" element={<GenrePage />} />
             <Route path="/admin" element={<AdminDashboardPage />} />
 
             <Route path="*" element={<PageNotFound />} />
