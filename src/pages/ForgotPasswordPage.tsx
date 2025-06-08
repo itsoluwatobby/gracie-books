@@ -28,6 +28,61 @@ const ForgotPasswordPage: React.FC = () => {
     }
   };
 
+  /**
+   *  const { resetPassword, EMAIL_REGEX } = useAuthStore()
+   *  const loading = ref(false);
+
+  const resetEmail = ref("");
+
+  const canSubmit = computed(() => Boolean(resetEmail.value));
+
+  const isValidEmail = computed(() => {
+    if (resetEmail.value.length === 0) return true;
+    return EMAIL_REGEX.test(resetEmail.value);
+  });
+
+  const isRequirementMet = computed(() => {
+    return canSubmit.value && isValidEmail.value;
+  });
+
+  onMounted(() => {
+    setTimeout(() => {
+      localStorage.removeItem('reset_password_data');
+    }, 100);
+  });
+
+  const submit = async () => {
+    if (loading.value || !isRequirementMet.value) return;
+
+    try {
+      loading.value = true;
+
+      const response = await resetPassword(resetEmail.value);
+
+      if (response === 'duplicate') {
+        toast.success('Password reset link already sent to your email');
+      } else {
+        toast.success('Check your email for a password reset link');
+      }
+      // router.push({ name: 'enter-otp' });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      const errCode = error.code ?? error.message;
+
+      let message = '';
+      if (errCode === 'auth/invalid-email') message = 'Please enter a valid email address';
+      else if (errCode === 'auth/user-not-found') message = 'No account found with this email';
+      else if (errCode === 'auth/missing-email') message = 'Please provide an email';
+      else message = errCode ?? 'Error! Try again';
+
+      toast.error(message);
+    } finally {
+      localStorage.removeItem('reset_password_data');
+      loading.value = false;
+    }
+  }
+   */
+
   if (isSubmitted) {
     return (
       <Layout>

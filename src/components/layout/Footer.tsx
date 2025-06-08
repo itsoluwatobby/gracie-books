@@ -22,13 +22,13 @@ const Footer: React.FC = () => {
               Quality literature, competitive prices, and a passion for reading.
             </p>
             <div className="flex space-x-4 pt-2">
-              <a href="#" className="text-white hover:text-blue-200 transition-colors">
-               <SVGIcon type='Facebook' />
+              <a href={appName.socials.facebook} target="_blank" className="text-white hover:text-blue-200 transition-colors">
+                <SVGIcon type='Facebook' />
               </a>
-              <a href="#" className="text-white hover:text-blue-200 transition-colors">
+              <a href={appName.socials.twitter} target="_blank" className="text-white hover:text-blue-200 transition-colors">
                 <SVGIcon type='Twitter' />
               </a>
-              <a href="#" className="text-white hover:text-blue-200 transition-colors">
+              <a href={appName.socials.instagram} target="_blank" className="text-white hover:text-blue-200 transition-colors">
                 <SVGIcon type='Instagram' />
               </a>
             </div>
@@ -135,7 +135,7 @@ const Footer: React.FC = () => {
                 <a href="#" className="text-blue-200 hover:text-white text-sm transition-colors">Terms</a>
               </li>
               <li>
-                <a href="#" className="text-blue-200 hover:text-white text-sm transition-colors">Sitemap</a>
+                <a href="#" className="text-blue-200 hidden hover:text-white text-sm transition-colors">Sitemap</a>
               </li>
             </ul>
           </div>

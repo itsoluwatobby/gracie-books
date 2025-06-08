@@ -17,6 +17,8 @@ export default {
       xs: "580px",
 
       xxs: "480px",
+
+      xxxs: "380px",
     }
   },
   plugins: [],

@@ -5,12 +5,13 @@ interface BookGridProps {
   books: Book[];
   title?: string;
   emptyMessage?: string;
+  // from?: 'Home';
 }
 
 const BookGrid: React.FC<BookGridProps> = ({ 
   books, 
   title,
-  emptyMessage = 'No books found.'
+  emptyMessage = 'No books found.',
 }) => {
   return (
     <div className="w-full">
@@ -23,7 +24,7 @@ const BookGrid: React.FC<BookGridProps> = ({
           <p className="text-gray-500">{emptyMessage}</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 max-xxxs:grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {books.map(book => (
             <BookCard key={book.id} book={book} />
           ))}

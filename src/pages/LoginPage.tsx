@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -13,7 +14,7 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { appName, login, loginWithGoogle } = useAuthContext();
+  const { appName } = useAuthContext();
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -34,13 +35,13 @@ const LoginPage: React.FC = () => {
     setIsLoading(true);
     
     try {
-      const success = await login(email, password);
+    //   // const success = await login(email, password);
       
-      if (success) {
-        navigate(redirectTo);
-      } else {
-        setError('Invalid email or password');
-      }
+    //   if (success) {
+    //     navigate(redirectTo);
+    //   } else {
+    //     setError('Invalid email or password');
+    //   }
     } catch (err) {
       setError('An error occurred. Please try again.');
       console.error(err);
@@ -64,6 +65,119 @@ const LoginPage: React.FC = () => {
   // const handleGoogleError = () => {
   //   setError('Google login failed. Please try again.');
   // };
+
+  /**
+   * const {
+  login,
+  signup,
+  PASSWORD_REGEX,
+  EMAIL_REGEX,
+} = useAuthStore();
+
+const isValidEmail = computed(() => {
+  if (props.isLogin) return true;
+  if (user.value.email.length === 0) return;
+  return EMAIL_REGEX.test(user.value.email);
+});
+
+const isPasswordValid = computed(() => {
+  if (props.isLogin) return true;
+  if (user.value.password.length === 0) return;
+  return PASSWORD_REGEX.test(user.value.password);
+});
+
+const loading = ref(false);
+const googleLoginLoading = ref(false);
+
+const canSubmit = computed(() => {
+  return [...Object.values(user.value)].every(Boolean);
+});
+
+const handlePolicy = () => acceptPolicy.value = !acceptPolicy.value;
+
+const isRequirementMet = computed(() => {
+  if (props.isLogin) return canSubmit.value;
+  return canSubmit.value && isPasswordValid.value && isValidEmail.value && acceptPolicy.value;
+});
+
+const submit = async (signInMethod: SignInMethodTypes) => {
+  if (
+    loading.value || googleLoginLoading.value ||
+    (!canSubmit.value && !isRequirementMet.value && signInMethod === "password")
+  )
+    return;
+
+  try {
+    let message = "Login Successful";
+    const referralCode = query?.referralCode as string;
+
+    if (props.isLogin) {
+      if (signInMethod === "password") {
+        loading.value = true;
+        await login({
+          signInMethod: "password",
+          credentials: user.value,
+          referralCode,
+        });
+      } else if (signInMethod === "google.com") {
+        googleLoginLoading.value = true;
+        await login({ signInMethod: "google.com", referralCode });
+      } else {
+        googleLoginLoading.value = true;
+        await login({ signInMethod: "apple.com", referralCode });
+      }
+    } else {
+      if (signInMethod === "password") {
+        loading.value = true;
+        await signup({
+          signInMethod: "password",
+          credentials: user.value,
+          referralCode,
+        });
+        message = "Account created successfully!";
+      } else {
+        if (signInMethod === "google.com") {
+          googleLoginLoading.value = true;
+          await signup({ signInMethod: "google.com", referralCode });
+          // message = 'Account created successfully!';
+        } else {
+          googleLoginLoading.value = true;
+          await signup({ signInMethod: "apple.com", referralCode });
+        }
+      }
+    }
+
+    toast.success(message);
+    router.push({ name: "agent-user-ai-search" });
+    // router.push({ name: "agent-user-dashboard" });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    const errCode = error.message;
+
+    let message = "";
+    if (!error?.response?.data) {
+      if (errCode === "auth/invalid-email")
+        message = "Please enter a valid email address";
+      else if (errCode === "auth/user-not-found")
+        message = "No account found with this email";
+      else if (errCode === "auth/missing-email")
+        message = "Please provide an email";
+      else if (errCode === "auth/invalid-credential")
+        message = "Bad credentials";
+      else if (errCode === "auth/email-already-in-use")
+        message = "Email already taken";
+      else message = errCode || "Error! Try again";
+    } else {
+      message = error?.response?.data?.message || error.messge;
+    }
+
+    toast.error(message);
+  } finally {
+    loading.value = false;
+    googleLoginLoading.value = false;
+  }
+}
+   */
 
   return (
     <Layout>

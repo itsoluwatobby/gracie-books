@@ -7,9 +7,9 @@ type AppConfig = {
   isLoggedIn: boolean;
   contact: string;
   socials: {
-    instagram: '',
-    facebook: '',
-    twitter: '',
+    instagram: string,
+    facebook: string,
+    twitter: string,
   };
   address?: string;
   createdAt?: string,
@@ -19,13 +19,12 @@ type AppConfig = {
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
-  loginWithGoogle: (credential: string) => Promise<boolean>;
-  signup: (name: string, email: string, password: string) => Promise<boolean>;
   isAuthenticated: boolean;
   appName: AppConfig;
+  loading: boolean;
   setAppName: React.Dispatch<React.SetStateAction<AppConfig>>;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface CartContextType {
@@ -45,6 +44,7 @@ interface Book {
   description: string;
   price: number;
   coverImage: string;
+  previewImages: string[];
   isbn: string;
   publisher: string;
   publicationDate: string;
@@ -52,18 +52,26 @@ interface Book {
   genre: string[];
   stockQuantity: number;
   rating: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface User {
   id: string;
-  name: string;
+  fullName: string;
+  profilePicture: string;
   email: string;
-  isAdmin: boolean;
+  password: string;
+  role: string; // 1140 | 1155
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface CartItem {
   book: Book;
   quantity: number;
+  price: number;
+  orderId: string;
 }
 
 interface Order {

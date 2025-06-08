@@ -9,3 +9,8 @@ export const ModalSelections = {
   orders: 'orders',
   overview: 'overview',
 } as const;
+
+export const UserRole = {
+  admin: "1155",
+  user: "1140",
+};

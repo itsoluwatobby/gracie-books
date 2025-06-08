@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { FormEvent, useState } from 'react'
 import Button from '../ui/Button'
 import Input from '../ui/Input'
 import { InitBookForm } from '../../utils/initVariables';
 import { X } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { bookServices } from '../../schema';
 
 type AddorEditProps = {
   editBook: Book | null;
@@ -20,9 +23,17 @@ export default function AddorEdit(
 
   const handleBookFormSubmit = async(e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setEditBook(null);
-    setBookForm(InitBookForm);
-    setShowBookModal(false);
+    try {
+      const book = await bookServices.addBook(bookForm);
+      console.log(book);
+      setEditBook(null);
+      setBookForm(InitBookForm);
+
+      toast.success(`${book.title} uploaded`);
+      // setShowBookModal(false);
+    } catch (err: any) {
+      toast.error(err.message);
+    }
   }
 
   return (
@@ -30,9 +41,23 @@ export default function AddorEdit(
       <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold">
-              {editBook ? 'Edit Book' : 'Add New Book'}
-            </h2>
+            <div className="flex items-center gap-4">
+              <h2 className="text-xl font-semibold">
+                {editBook ? 'Edit Book' : 'Add New Book'}
+              </h2>
+
+              {
+                editBook ? null
+                :
+                <button 
+                  // onClick={() => setShowBookModal(false)}
+                  className="text-gray-700 border focus:border-blue-500 text-sm border-gray-500 px-2.5 rounded-md p-1.5 hover:text-gray-700"
+                >
+                  Upload CSV
+                </button>
+
+              }
+            </div>
             <button 
               onClick={() => setShowBookModal(false)}
               className="text-gray-500 hover:text-gray-700"

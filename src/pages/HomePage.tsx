@@ -5,9 +5,10 @@ import Layout from '../components/layout/Layout';
 import BookGrid from '../components/books/BookGrid';
 import Button from '../components/ui/Button';
 import { books } from '../data/books';
+import useAuthContext from '../context/useAuthContext';
 
 const HomePage: React.FC = () => {
-  // Get featured books (we'll just use a subset of our books for this example)
+    const { appName } = useAuthContext();
   const featuredBooks = books.slice(0, 5);
   
   // Get bestsellers (another subset with high ratings)
@@ -39,10 +40,12 @@ const HomePage: React.FC = () => {
             </p>
             <div className="flex flex-wrap gap-4">
               <Link to="/books">
-                <Button size="lg">Browse Collection</Button>
+                <Button size="lg" className='shadow-xl' >Browse Collection</Button>
               </Link>
               <Link to="/new-releases">
-                <Button variant="outline" size="lg">New Releases</Button>
+                <Button variant="outline" size="lg"
+                className='bg-white'
+                >New Releases</Button>
               </Link>
             </div>
           </div>
@@ -151,7 +154,7 @@ const HomePage: React.FC = () => {
       <section className="py-16 bg-blue-800 text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            Stay Updated with BookHaven
+            Stay Updated with {appName.name}
           </h2>
           <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
             Subscribe to our newsletter for the latest book releases, author interviews, and exclusive deals.

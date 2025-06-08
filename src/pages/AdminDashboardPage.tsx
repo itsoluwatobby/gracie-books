@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import Layout from '../components/layout/Layout';
-import useAuthContext from '../context/useAuthContext';
 import { orders } from '../data/orders';
 import { books } from '../data/books';
 import { users } from '../data/users';
@@ -20,17 +19,11 @@ import {
 } from '../components/dashboard';
 
 const AdminDashboardPage: React.FC = () => {
-  const { user, isAuthenticated } = useAuthContext();
   const [activeSection, setActiveSection] = useState<ModalSelectionsType>(ModalSelections.overview);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [showBookModal, setShowBookModal] = useState(false);
   const [editBook, setEditBook] = useState<Book | null>(null);
-  
-  // Check if user is authenticated and is admin
-  if (!isAuthenticated || !user?.isAdmin) {
-    // return <Navigate to="/login" replace />;
-  }
 
   // Calculate summary metrics
   const totalOrders = orders.length;
