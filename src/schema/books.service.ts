@@ -13,6 +13,9 @@ import {
 import { nanoid } from "nanoid/non-secure";
 
 class BookServices {
+  goodReadsBaseURL = "https://www.goodreads.com/book/show";
+
+
   private booksRef = collection(ApplicationDB, "books");
   // private appConfigRef = collection(ApplicationDB, "appConfig");
   // private chatsRef = collection(ApplicationDB, "messages");

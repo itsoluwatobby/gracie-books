@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
   const { appName } = useAuthContext();
 
   return (
-    <footer className="bg-blue-900 text-white pt-12 pb-8 w-full">
+    <footer className="bg-blue-900 text-white pt-12 pb-8 w-full lg:px-10">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
           {/* Company Info */}
@@ -96,7 +96,7 @@ const Footer: React.FC = () => {
                 <Phone className="flex-none h-5 w-5 mr-2 text-blue-200" />
                 <span className="text-blue-200">{appName.name}</span>
               </li>
-              <li className="flexitems-center">
+              <li className="flex items-center">
                 <Mail className="flex-none h-5 w-5 mr-2 text-blue-200" />
                 <a href={`mailto:${appName.email}`} className="text-blue-200 whitespace-pre-wrap hover:text-white transition-colors">
                   {appName.email}

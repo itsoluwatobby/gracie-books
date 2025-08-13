@@ -1,3 +1,4 @@
+// import { useState } from 'react';
 import Button from '../ui/Button';
 
 type ManageBooksProps = {
@@ -13,6 +14,7 @@ export default function ManageBooks(
     setShowBookModal,
   }: ManageBooksProps
   ) {
+  // const [] = useState(true);
   const TableHead = ['Book', 'Author', 'Price', 'Quantity', 'Actions'];
 
   return (
@@ -47,7 +49,7 @@ export default function ManageBooks(
                     <div className="flex items-center">
                       <div className="h-10 w-8 flex-shrink-0 mr-3">
                         <img 
-                          className="h-10 w-8 object-cover" 
+                          className="h-10 w-8 object-cover rounded-sm" 
                           src={book.coverImage} 
                           alt={book.title} 
                         />
@@ -58,7 +60,7 @@ export default function ManageBooks(
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {book.author}
+                    {book.authors.join(',')}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {formatCurrency(book.price)}

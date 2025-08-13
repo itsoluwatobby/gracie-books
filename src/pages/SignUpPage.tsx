@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BookOpen, Mail, Lock, User, ArrowLeft } from 'lucide-react';
-import { GoogleLogin } from '@react-oauth/google';
+// import { GoogleLogin } from '@react-oauth/google';
 import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
 import useAuthContext from '../context/useAuthContext';
@@ -205,13 +205,13 @@ const SignUpPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="mb-6">
+              {/* <div className="mb-6">
                 <GoogleLogin
                   onSuccess={handleGoogleSuccess}
                   onError={handleGoogleError}
                   useOneTap
                 />
-              </div>
+              </div> */}
               
               <div className="text-center text-sm text-gray-600">
                 By signing up, you agree to our{' '}

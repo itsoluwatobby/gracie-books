@@ -22,6 +22,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   appName: AppConfig;
   loading: boolean;
+  logout: () => void;
   setAppName: React.Dispatch<React.SetStateAction<AppConfig>>;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -40,18 +41,24 @@ interface CartContextType {
 interface Book {
   id: string;
   title: string;
-  author: string;
+  subtitle: string;
+  authors: string[];
   description: string;
   price: number;
   coverImage: string;
   previewImages: string[];
+  previewImages: string[];
   isbn: string;
   publisher: string;
   publicationDate: string;
+  discount: string;
   pageCount: number;
   genre: string[];
   stockQuantity: number;
   rating: number;
+  ratingSource: string;
+  ratingsCount: number;
+  readingModes: { image: boolean, text: boolean };
   createdAt: string;
   updatedAt: string;
 }
@@ -63,6 +70,7 @@ interface User {
   email: string;
   password: string;
   role: string; // 1140 | 1155
+  isAdmin: boolean;
   createdAt: string;
   updatedAt: string;
 }

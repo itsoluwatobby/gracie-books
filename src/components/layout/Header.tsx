@@ -25,7 +25,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-blue-900 text-white shadow-md sticky top-0 z-50">
+    <header className="bg-blue-900 text-white shadow-md sticky top-0 z-50 lg:px-10">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo and Brand */}
@@ -76,7 +76,7 @@ const Header: React.FC = () => {
               <div className="relative group">
                 <button className="flex items-center space-x-1 hover:text-blue-200 transition-colors">
                   <User className="h-6 w-6" />
-                  <span>{user?.name}</span>
+                  <span>{user?.fullName}</span>
                 </button>
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block">
                   <Link

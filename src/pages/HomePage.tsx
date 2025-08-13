@@ -22,7 +22,7 @@ const HomePage: React.FC = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="bg-blue-900 text-white relative overflow-hidden">
+      <section className="bg-blue-900 text-white relative overflow-hidden lg:px-10">
         <div className="absolute inset-0 opacity-20">
           <img 
             src="https://images.pexels.com/photos/590493/pexels-photo-590493.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750" 

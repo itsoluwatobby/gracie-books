@@ -22,11 +22,14 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   const isAuthenticated = user !== null;
 
+  const logout = () => {};
+
   const value = {
     appName,
     isAuthenticated,
     loading,
     user,
+    logout,
     setAppName,
     setUser,
     setLoading,
