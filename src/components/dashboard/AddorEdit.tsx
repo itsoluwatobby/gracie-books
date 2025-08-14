@@ -63,8 +63,12 @@ export default function AddorEdit(
     setIsSearching(true);
     try {
       // Mock API calls - replace with actual API implementations
-      const googleResults = await searchGoogleBooks(query);
+      const googleResults = await bookServices.fetchBookDetails(query);
       const goodreadsResults = await searchGoodreadsBooks(query);
+      
+      console.log(googleResults);
+      // const googleResults = await searchGoogleBooks(query);
+      // const goodreadsResults = await searchGoodreadsBooks(query);
       
       const combinedResults = [...googleResults, ...goodreadsResults];
       setSearchResults(combinedResults);

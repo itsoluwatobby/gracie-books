@@ -45,8 +45,8 @@ interface Book {
   authors: string[];
   description: string;
   price: number;
+  icon: string;
   coverImage: string;
-  previewImages: string[];
   previewImages: string[];
   isbn: string;
   publisher: string;
@@ -139,3 +139,32 @@ type ErrorResponse = {
 
 type Rating = { bookId: string, rating: number }
 type PriceRangePropTypes = { min: number, max: number }
+
+type GoogleAPIResponse = {
+  volumeInfo: {
+    title: string,
+    authors: string[],
+    publisher: string,
+    publishedDate: string,
+    description: string,
+    industryIdentifiers: {
+        type: string,
+        identifier: string,
+    }[],
+    readingModes: { text: boolean, image: boolean },
+    pageCount: number,
+    printType: string,
+    categories: string[],
+    maturityRating: string, // not returned
+    allowAnonLogging: false,
+    contentVersion: string,
+    imageLinks: {
+      smallThumbnail: string,
+      thumbnail: string
+    },
+    language: string,
+    previewLink: string,
+    infoLink: string,
+    canonicalVolumeLink: string
+  }
+}

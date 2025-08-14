@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import axios from "axios";
 import { ApplicationDB } from "../firebase/config";
 import {
   collection,
@@ -13,8 +14,8 @@ import {
 import { nanoid } from "nanoid/non-secure";
 
 class BookServices {
-  goodReadsBaseURL = "https://www.goodreads.com/book/show";
-
+  goodReadsBaseURL = "https://audio-book-server.onrender.com/api/v1/books/rating";
+  googleAPIBaseURL = "https://www.googleapis.com/books/v1/volumes";
 
   private booksRef = collection(ApplicationDB, "books");
   // private appConfigRef = collection(ApplicationDB, "appConfig");
@@ -101,5 +102,42 @@ class BookServices {
       },
     );
   };
+
+  async googleAPIFetch(query: string) {
+    const result = await axios.get<GoogleAPIResponse>(
+      this.googleAPIBaseURL,
+      {
+        params: { q: query }
+      }
+    );
+    return result.data;
+  }
+
+  async goodReadAPIFetch(title: string) {
+    const result = await axios.get<GoogleAPIResponse>(
+      this.goodReadsBaseURL,
+      {
+        params: { title },
+      },
+    );
+    return result.data;
+  }
+
+  public async fetchBookDetails(query: string) {
+    const [google, goodReads] = await Promise.all(
+      [
+        this.googleAPIFetch(query),
+        this.goodReadAPIFetch(query),
+      ]
+    )
+
+    console.log(google)
+    console.log(goodReads)
+    // return {
+    //   title: result.title,
+    //   averageRating: result?.averageRating || null,
+    //   ratingsCount: result?.ratingsCount || 0,
+    // };
+  }
 }
 export const bookServices = new BookServices();
