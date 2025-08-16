@@ -11,6 +11,7 @@ import { bookServices } from '../../../schema';
 import CSVUploader from '../../ui/CSVUploader';
 import { BookResultPreveiw } from './BookResultPreview';
 import { BookForm } from './Bookform';
+import { CSVBookData } from '../../../utils/csvProcessor';
 
 type AddorEditProps = {
   editBook: Book | null;
@@ -89,11 +90,19 @@ export default function AddorEdit(
     toast.success('Book details filled automatically!');
   };
 
-  const handleCSVData = async (csvData: any[]) => {
+  const handleCSVData = async (csvData: CSVBookData[]) => {
     try {
       // Process each book from CSV
       const results = await Promise.allSettled(
-        csvData.map(async (bookData) => bookServices.addBook(bookData))
+        csvData.map(async (bookData) => {
+          const { title, author } = bookData;
+          const books = await bookServices.fetchBookDetails(`${title} by ${author}`);
+          if (books?.length) {
+            books[0].price = bookData?.price ?? 0;
+            books[0].stockQuantity = bookData?.stockQuantity ?? 1;
+          }
+          return books[0]
+        })
       );
       
       const successful = results.filter(result => result.status === 'fulfilled').length;

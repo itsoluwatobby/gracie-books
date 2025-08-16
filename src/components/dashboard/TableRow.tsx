@@ -1,9 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import Button from "../ui/Button";
+import { bookServices } from "../../schema";
+import toast from "react-hot-toast";
 
 interface TableRowProps {
   book: Book;
   handleEditBook: (book: Book) => void;
+  handleDelete: (bookId: string) => void;
   formatCurrency: (val: number) => string;
 }
 
@@ -11,13 +15,29 @@ export const TableRow: React.FC<TableRowProps> = (
   {
     book,
     handleEditBook,
+    handleDelete,
     formatCurrency,
   }
 ) => {
   const [isImageDisplayed, setIsImageDisplayed] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleVisibility = async (bookId: string, status: Book["status"]) => {
+    if (isLoading) return;
+    try {
+      setIsLoading(true);
+      const bookStatus = status === 'private' ? 'public' : 'private';
+      await bookServices.updateBookStatus(bookId, bookStatus);
+      book.status = bookStatus;
+    } catch {
+      toast.error('Error updating book status');
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
-    <tr className="hover:bg-gray-50">
+    <tr className={`hover:bg-gray-50 cursor-default text-center ${isLoading ? 'animate-pulse bg-gray-50' : ''}`}>
       <td className="px-6 py-4 whitespace-nowrap">
         <div className="flex items-center">
           <div className="h-10 w-8 flex-shrink-0 mr-3 border">
@@ -29,12 +49,12 @@ export const TableRow: React.FC<TableRowProps> = (
                 onError={() => setIsImageDisplayed(false)}
                 alt={book.title} 
               />
-              : <p className="text-center">
+              : <span className="text-center">
                 {book.title.substring(0,2)}
-              </p>
+              </span>
             }
           </div>
-          <div className="text-sm font-medium text-gray-900 line-clamp-1 max-w-[10rem]">
+          <div className="text-sm font-medium text-gray-900 line-clamp-1 w-fit max-w-[10rem]">
             {book.title}
           </div>
         </div>
@@ -54,10 +74,24 @@ export const TableRow: React.FC<TableRowProps> = (
           {book.stockQuantity}
         </span>
       </td>
-      <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
-        <Button variant="ghost" size="sm"
+      <td className="px-6 py-4 whitespace-nowrap max-sm:text-center">
+        <button 
+        disabled={isLoading}
+        onClick={() => handleVisibility(book.id, book.status)}
+        className={`border px-3 py-1 rounded-xl text-sm ${
+          book.status === 'public' ? 'bg-green-100 border-green-200' : 
+          'bg-red-100 border-red-200'
+        }`}>
+          {book.status}
+        </button>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap textright text-sm flex items-center gap-3">
+        <Button variant="outline" size="sm"
         onClick={() => handleEditBook(book)}
         >Edit</Button>
+        <Button variant="danger" size="sm"
+        onClick={() => handleDelete(book.id)}
+        >Delete</Button>
       </td>
     </tr>
   );

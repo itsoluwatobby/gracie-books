@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useRef } from 'react';
 import { Upload, Download, FileText, AlertCircle, CheckCircle, X, Eye, XCircle, AlertTriangle } from 'lucide-react';
-import { processCSV, downloadCSVTemplate, CSVProcessResult } from '../../utils/csvProcessor';
+import { processCSV, downloadCSVTemplate, CSVProcessResult, CSVBookData } from '../../utils/csvProcessor';
 import Button from './Button';
 
 interface CSVUploaderProps {
-  onDataProcessed: (data: any[]) => void;
+  onDataProcessed: (data: CSVBookData[]) => void;
   onClose: () => void;
 }
 

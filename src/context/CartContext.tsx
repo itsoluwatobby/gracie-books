@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import { InitReloads } from '../utils/initVariables';
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
@@ -6,6 +7,7 @@ const LOCAL_STORAGE_KEY = 'bookstore-cart';
 
 const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [reload, setReload] = useState<Reloads>(InitReloads)
 
   // Load cart from localStorage on component mount
   useEffect(() => {
@@ -29,7 +31,7 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   }, [items]);
 
   const addToCart = (book: Book, quantity = 1) => {
-    setItems(prevItems => {
+    setItems((prevItems) => {
       const existingItem = prevItems.find(item => item.book.id === book.id);
       
       if (existingItem) {
@@ -77,7 +79,9 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <CartContext.Provider 
       value={{ 
-        items, 
+        items,
+        reload,
+        setReload,
         addToCart, 
         removeFromCart, 
         updateQuantity, 

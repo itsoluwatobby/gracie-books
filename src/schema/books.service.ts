@@ -3,6 +3,7 @@ import axios from "axios";
 import { ApplicationDB } from "../firebase/config";
 import {
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -31,7 +32,7 @@ class BookServices {
       await this.updateBook(book.id!, { stockQuantity: duplicate.stockQuantity + 1 });
       return duplicate;
     }
-  
+
     await setDoc(doc(this.booksRef, book.id), {
       ...book,
       createdAt: new Date().toISOString(),
@@ -43,7 +44,7 @@ class BookServices {
   public async getBookByTitle(title: string, authors?: string[]) {
     const whereQueries: QueryFieldFilterConstraint[] = [];
     if (authors?.length) {
-      for (const author in authors) {
+      for (const author of authors) {
         whereQueries.push(where("authors", "array-contains", author));
       }
     }
@@ -95,16 +96,7 @@ class BookServices {
   };
 
   public async updateBook(bookId: string, updatedInfo: Partial<Book>) {
-    // const q = query(
-    //   this.usersRef,
-    //   where("convoId", "==", conversationId),
-    //   where("receiverId", "==", receiverId),
-    //   where("read", "==", false),
-    // );
-    // const querySnapShot = await getDocs(q);
-    // querySnapShot.forEach(async (msg) => {})
-    
-    const docRef = doc(this.booksRef, bookId);
+    const docRef = doc(ApplicationDB, "books", bookId);
     await updateDoc(
       docRef,
       {
@@ -113,6 +105,15 @@ class BookServices {
       },
     );
   };
+
+  public async removeBook(bookId: string) {
+    const docRef = doc(ApplicationDB, "books", bookId);
+    await deleteDoc(docRef);
+  };
+
+  public async updateBookStatus(bookId: string, status: Book["status"]) {
+    await this.updateBook(bookId, { status });
+  }
 
   async googleAPIFetch(query: string) {
     const result = await axios.get<GoogleAPIResponse>(
@@ -143,7 +144,7 @@ class BookServices {
           id: nanoid(),
           title: bookInfo.title.toLowerCase(),
           subtitle: "",
-          authors: bookInfo.authors,
+          authors: bookInfo?.authors ?? [],
           description: bookInfo?.description ?? "",
           price: 0,
           icon: bookInfo?.imageLinks?.thumbnail ?? "",
@@ -156,7 +157,8 @@ class BookServices {
           pageCount: bookInfo.pageCount,
           genre: bookInfo?.categories ?? [],
           source: "google" as Book["source"],
-          stockQuantity: 0,
+          stockQuantity: 1,
+          status: 'public',
         }
       })
       return normalizeResult;
@@ -170,7 +172,7 @@ class BookServices {
           id: nanoid(),
           title: bookInfo.title.toLowerCase(),
           subtitle: "",
-          authors: [bookInfo.author.name],
+          authors: [bookInfo.author?.name ?? ''],
           authorAvatar: bookInfo.author.profileUrl,
           description: bookInfo.description.html,
           price: 0,
@@ -180,7 +182,8 @@ class BookServices {
           pageCount: bookInfo.numPages,
           genre: [],
           source: "goodreads" as Book["source"],
-          stockQuantity: 0,
+          stockQuantity: 1,
+          status: 'public',
         }
       });
       return normalizeResult;

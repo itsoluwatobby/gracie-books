@@ -5,6 +5,8 @@ import { bookServices } from '../../schema';
 import { initAppState } from '../../utils/initVariables';
 import { TableRow } from './TableRow';
 import { LoadingBook } from './LoadingBook';
+import useCartContext from '../../context/useCartContext';
+import toast from 'react-hot-toast';
 
 type ManageBooksProps = {
   handleEditBook: (book: Book) => void;
@@ -12,15 +14,16 @@ type ManageBooksProps = {
   setShowBookModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+const TableHead = ['Book', 'Author', 'Price', 'Quantity', 'status', 'Actions'];
 export default function ManageBooks(
   {
     handleEditBook, formatCurrency,
     setShowBookModal,
   }: ManageBooksProps
   ) {
+  const { reload } = useCartContext();
   const [books, setBooks] = useState<Book[]>([]);
   const [appState, setAppState] = useState<AppState>(initAppState)
-  const TableHead = ['Book', 'Author', 'Price', 'Quantity', 'Actions'];
 
   const { isLoading, isError, errMsg } = appState;
 
@@ -42,9 +45,16 @@ export default function ManageBooks(
     return () => {
       isMounted = false;
     }
-  }, [])
+  }, [reload.bookUpdate_reload])
 
-  console.log(books)
+  const handleDelete = async (bookId: string) => {
+    try {
+      await bookServices.removeBook(bookId);
+      setBooks((prev) => prev?.filter((book) => book.id !== bookId));
+    } catch {
+      toast.error('Error removing book');
+    }
+  }
 
   return (
     <div>
@@ -64,7 +74,7 @@ export default function ManageBooks(
                   TableHead.map((head) => (
                     <th scope="col" 
                     key={head}
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    className="px-6 py-3 textleft text-xs font-medium text-gray-500 uppercase tracking-wider textcenter">
                       {head}
                     </th>
                   ))
@@ -91,6 +101,7 @@ export default function ManageBooks(
                     <TableRow 
                       key={book.id}
                       book={book}
+                      handleDelete={handleDelete}
                       handleEditBook={handleEditBook}
                       formatCurrency={formatCurrency}
                     />

@@ -14,10 +14,18 @@ export const InitBookForm: Book = {
   rating: 0,
   source: 'google',
   subtitle: '',
-  id: ''
+  id: '',
+  status: 'public',
 };
 
 export const InitPriceRange = { min: 0, max: 10000 };
+
+export const InitReloads = {
+  cart_reload: 0,
+  platform_reload: 0,
+  bookUpdate_reload: 0,
+  order_reload: 0,
+};
 
 export const initAppState = {
   isLoading: false,

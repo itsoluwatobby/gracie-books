@@ -30,9 +30,11 @@ interface AuthContextType {
 
 interface CartContextType {
   items: CartItem[];
+  reload: Reloads;
   addToCart: (book: Book, quantity?: number) => void;
   removeFromCart: (bookId: string) => void;
   updateQuantity: (bookId: string, quantity: number) => void;
+  setReload: React.Dispatch<React.SetStateAction<Reloads>>;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
@@ -63,6 +65,7 @@ interface Book {
   createdAt?: string;
   updatedAt?: string;
   source: 'google' | 'goodreads';
+  status: 'public' | 'private';
 }
 
 interface User {
@@ -197,3 +200,6 @@ type GracieAudioAPIGoodReadResponse = {
   imageUrl: string,
   source: string,
 }
+
+type ReloadKeys = 'cart_reload' | 'platform_reload' | 'bookUpdate_reload' | 'order_reload';
+type Reloads = Record<ReloadKeys, number>;

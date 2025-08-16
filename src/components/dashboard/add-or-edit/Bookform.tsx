@@ -6,6 +6,7 @@ import { InitBookForm } from "../../../utils/initVariables";
 import { bookServices } from "../../../schema";
 import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
+import useCartContext from "../../../context/useCartContext";
 
 type BookFormProps = {
   editBook: Book | null;
@@ -22,19 +23,34 @@ export const BookForm: React.FC<BookFormProps> = (
     setEditBook,
   },
 ) => {
+  const { setReload } = useCartContext();
   const [isloading, setIsloading] = useState(false);
 
   const handleBookFormSubmit = async(e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isloading) return;
     try {
       setIsloading(true);
 
-      const book = await bookServices.addBook(bookForm);
+      if (!editBook) {
+        await bookServices.addBook(bookForm);
+        toast.success(`${bookForm.title} uploaded`);
+      } else {
+        const { id, ...rest } = bookForm;
+        await bookServices.updateBook(id!, rest);
+        toast.success(`${bookForm.title} info updated`);
+      }
       setEditBook(null);
       setBookForm(InitBookForm);
 
-      toast.success(`${book.title} uploaded`);
-      // setShowBookModal(false);
+      setReload((prev) => (
+        {
+          ...prev,
+          bookUpdate_reload: prev.bookUpdate_reload + 1
+        }
+      ));
+
+      setShowBookModal(false);
     } catch (err: any) {
       toast.error(err.message);
     } finally {
@@ -65,7 +81,8 @@ export const BookForm: React.FC<BookFormProps> = (
             <Input
               label="Author"
               value={bookForm.authors?.join(',')}
-              onChange={(e) => setBookForm({ ...bookForm, authors: [...bookForm.authors!, e.target.value] })}
+              // onChange={(e) => setBookForm({ ...bookForm, authors: [...bookForm.authors!, e.target.value] })}
+              onChange={(e) => setBookForm({ ...bookForm, authors: e.target.value.split(',').map(g => g.trim()) })}
               required
               fullWidth
               icon={<User className="w-4 h-4" />}
@@ -144,7 +161,7 @@ export const BookForm: React.FC<BookFormProps> = (
       <div className="grid grid-cols-1 gap-3">
         <div className="flex items-center justify-between gap-10 max-xxs:flex-col">
           <Input
-            label="Price ($)"
+            label="Price (₦)"
             type="number"
             step="50"
             min={0}
@@ -216,7 +233,7 @@ export const BookForm: React.FC<BookFormProps> = (
         </Button>
         <Button 
           type="submit"
-          disabled={!bookForm.id!}
+          disabled={!bookForm.id! || isloading}
           isLoading={isloading}
           className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
         >

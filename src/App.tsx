@@ -25,7 +25,7 @@ import LoadingUI from './components/ui/Loader';
 
 function App() {
   return (
-    <>
+    <main className=''>
       <Router>
         <AuthProvider>
           <CartProvider>
@@ -58,7 +58,7 @@ function App() {
       </Router>
 
       <LoadingUI />
-    </>
+    </main>
   );
 }
 
