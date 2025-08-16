@@ -7,6 +7,7 @@ import {
   getDoc,
   getDocs,
   query,
+  QueryFieldFilterConstraint,
   setDoc,
   updateDoc,
   where,
@@ -25,22 +26,34 @@ class BookServices {
   // private ordersRef = collection(ApplicationDB, "orders");
 
   public async addBook(book: Partial<Book>) {
-    const duplicate = await this.getBookByISBN(book.isbn!);
-    if (duplicate) return duplicate;
-
-    const bookId = nanoid();
-    await setDoc(doc(this.booksRef, bookId), {
+    const duplicate = await this.getBookByTitle(book.title!);
+    if (duplicate) {
+      await this.updateBook(book.id!, { stockQuantity: duplicate.stockQuantity + 1 });
+      return duplicate;
+    }
+  
+    await setDoc(doc(this.booksRef, book.id), {
       ...book,
-      id: bookId,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
-    return this.getBookById(bookId);
+    return this.getBookById(book.id!);
   };
 
-  public async getBookByISBN(isbn: string) {
+  public async getBookByTitle(title: string, authors?: string[]) {
+    const whereQueries: QueryFieldFilterConstraint[] = [];
+    if (authors?.length) {
+      for (const author in authors) {
+        whereQueries.push(where("authors", "array-contains", author));
+      }
+    }
+
     try {
-      const q = query(this.booksRef, where("isbn", "==", isbn));
+      const q = query(
+        this.booksRef,
+        where("title", "==", title.toLowerCase()),
+        ...whereQueries,
+      );
       const querySnapShot = await getDocs(q);
 
       const books: Book[] = [];
@@ -49,9 +62,7 @@ class BookServices {
       });
 
       if (books.length) return books[0];
-      else {
-        throw Error("Book not found");
-      }
+      return null
     } catch (err: any) {
       throw new Error(err.message);
     }
@@ -83,7 +94,7 @@ class BookServices {
     return books;
   };
 
-  public async updateUser(bookId: string, updatedInfo: Partial<Book>) {
+  public async updateBook(bookId: string, updatedInfo: Partial<Book>) {
     // const q = query(
     //   this.usersRef,
     //   where("convoId", "==", conversationId),
@@ -107,37 +118,73 @@ class BookServices {
     const result = await axios.get<GoogleAPIResponse>(
       this.googleAPIBaseURL,
       {
-        params: { q: query }
+        params: { q: query },
       }
     );
-    return result.data;
+    return result.data.items;
   }
 
   async goodReadAPIFetch(title: string) {
-    const result = await axios.get<GoogleAPIResponse>(
+    const result = await axios.get<ResponseData<GracieAudioAPIGoodReadResponse[]>>(
       this.goodReadsBaseURL,
       {
         params: { title },
       },
     );
-    return result.data;
+    return result.data.data;
   }
 
-  public async fetchBookDetails(query: string) {
-    const [google, goodReads] = await Promise.all(
-      [
-        this.googleAPIFetch(query),
-        this.goodReadAPIFetch(query),
-      ]
-    )
-
-    console.log(google)
-    console.log(goodReads)
-    // return {
-    //   title: result.title,
-    //   averageRating: result?.averageRating || null,
-    //   ratingsCount: result?.ratingsCount || 0,
-    // };
+  public async fetchBookDetails(query: string): Promise<Book[]> {
+    try {
+      const volumes = await this.googleAPIFetch(query);
+      const normalizeResult: Book[] = volumes?.slice(0,5)?.map((volume) => {
+        const bookInfo = volume.volumeInfo;
+        return {
+          id: nanoid(),
+          title: bookInfo.title.toLowerCase(),
+          subtitle: "",
+          authors: bookInfo.authors,
+          description: bookInfo?.description ?? "",
+          price: 0,
+          icon: bookInfo?.imageLinks?.thumbnail ?? "",
+          coverImage: bookInfo?.previewLink ?? "",
+          previewImages: Object.values(bookInfo.imageLinks),
+          isbn: "",
+          publicationDate: bookInfo.publishedDate,
+          publisher: bookInfo?.publisher ?? "",
+          discount: "",
+          pageCount: bookInfo.pageCount,
+          genre: bookInfo?.categories ?? [],
+          source: "google" as Book["source"],
+          stockQuantity: 0,
+        }
+      })
+      return normalizeResult;
+    } catch (error: any) {
+      console.log(error)
+      if (axios.isCancel(error)) throw error;
+  
+      const bookInfo = await this.goodReadAPIFetch(query);
+      const normalizeResult: Book[] = bookInfo?.slice(0,5)?.map((bookInfo) => {
+        return {
+          id: nanoid(),
+          title: bookInfo.title.toLowerCase(),
+          subtitle: "",
+          authors: [bookInfo.author.name],
+          authorAvatar: bookInfo.author.profileUrl,
+          description: bookInfo.description.html,
+          price: 0,
+          icon: bookInfo.imageUrl,
+          coverImage: bookInfo.imageUrl,
+          previewImages: [bookInfo.imageUrl],
+          pageCount: bookInfo.numPages,
+          genre: [],
+          source: "goodreads" as Book["source"],
+          stockQuantity: 0,
+        }
+      });
+      return normalizeResult;
+    }
   }
 }
 export const bookServices = new BookServices();

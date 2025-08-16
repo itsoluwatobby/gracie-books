@@ -28,3 +28,9 @@ type SignupProps = {
   credentials?: UserCredentials,
   referralCode: string,
 }
+
+type AppState = {
+  isLoading: boolean,
+  isError: boolean,
+  errMsg: string
+}

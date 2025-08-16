@@ -4,7 +4,7 @@ import StockPiled from './StockPiled';
 import ManageBooks from './ManageBooks';
 import ManageUsers from './ManageUsers';
 import ManageOrders from './ManageOrders';
-import AddorEdit from './AddorEdit';
+import AddorEdit from './add-or-edit/AddorEdit';
 import OrderDetails from './OrderDetails';
 import Sidebar from './Sidebar';
 

@@ -1,8 +1,12 @@
-// import { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useState } from 'react';
 import Button from '../ui/Button';
+import { bookServices } from '../../schema';
+import { initAppState } from '../../utils/initVariables';
+import { TableRow } from './TableRow';
+import { LoadingBook } from './LoadingBook';
 
 type ManageBooksProps = {
-  books: Book[]
   handleEditBook: (book: Book) => void;
   formatCurrency: (val: number) => string;
   setShowBookModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -10,12 +14,37 @@ type ManageBooksProps = {
 
 export default function ManageBooks(
   {
-    books, handleEditBook, formatCurrency,
+    handleEditBook, formatCurrency,
     setShowBookModal,
   }: ManageBooksProps
   ) {
-  // const [] = useState(true);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [appState, setAppState] = useState<AppState>(initAppState)
   const TableHead = ['Book', 'Author', 'Price', 'Quantity', 'Actions'];
+
+  const { isLoading, isError, errMsg } = appState;
+
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      if (!isMounted) return;
+      try {
+        setAppState((prev) => ({ ...prev, isLoading: true }));
+        const inventory = await bookServices.getBooks();
+        setBooks(inventory);
+      } catch (err: any) {
+        setAppState((prev) => ({ ...prev, isError: true, errMsg: err.message }));
+      } finally {
+        setAppState((prev) => ({ ...prev, isLoading: false }));
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    }
+  }, [])
+
+  console.log(books)
 
   return (
     <div>
@@ -43,44 +72,35 @@ export default function ManageBooks(
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {books.map(book => (
-                <tr key={book.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="h-10 w-8 flex-shrink-0 mr-3">
-                        <img 
-                          className="h-10 w-8 object-cover rounded-sm" 
-                          src={book.coverImage} 
-                          alt={book.title} 
-                        />
-                      </div>
-                      <div className="text-sm font-medium text-gray-900 line-clamp-1 max-w-xs">
-                        {book.title}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {book.authors.join(',')}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {formatCurrency(book.price)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`${
-                      book.stockQuantity === 0 ? 'text-red-600' : 
-                      book.stockQuantity < 5 ? 'text-yellow-600' :
-                      'text-green-600'
-                    }`}>
-                      {book.stockQuantity}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
-                    <Button variant="ghost" size="sm"
-                    onClick={() => handleEditBook(book)}
-                    >Edit</Button>
-                  </td>
+              {
+                isLoading ?
+                [...Array(8).keys()].map((index) => (
+                  <LoadingBook key={index} />
+                ))
+                :
+                isError ? (
+                  <tr className='py-4 px-6 h-20 text-base text-center'>
+                  <p className='text-red-400 translate-x-[50%]'>
+                    {errMsg}
+                  </p>
                 </tr>
-              ))}
+                ) 
+                :
+                books?.length ? (
+                  books.map(book => (
+                    <TableRow 
+                      key={book.id}
+                      book={book}
+                      handleEditBook={handleEditBook}
+                      formatCurrency={formatCurrency}
+                    />
+                  ))
+                ) : <tr className='py-4 px-6 h-20 text-xl text-center'>
+                  <p className='translate-x-[50%]'>
+                    No books at the moment
+                  </p>
+                </tr>
+              }
             </tbody>
           </table>
         </div>

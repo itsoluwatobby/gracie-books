@@ -67,7 +67,6 @@ const AdminDashboardPage: React.FC = () => {
     ),
     books: (
       <ManageBooks 
-        books={books}
         handleEditBook={handleEditBook}
         formatCurrency={helper.formatPrice}
         setShowBookModal={setShowBookModal}

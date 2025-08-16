@@ -43,24 +43,26 @@ interface Book {
   title: string;
   subtitle: string;
   authors: string[];
+  authorAvatar?: string;
   description: string;
   price: number;
   icon: string;
   coverImage: string;
-  previewImages: string[];
-  isbn: string;
-  publisher: string;
-  publicationDate: string;
-  discount: string;
+  previewImages?: string[];
+  isbn?: string;
+  publisher?: string;
+  publicationDate?: string;
+  discount?: string;
   pageCount: number;
   genre: string[];
   stockQuantity: number;
-  rating: number;
-  ratingSource: string;
-  ratingsCount: number;
-  readingModes: { image: boolean, text: boolean };
-  createdAt: string;
-  updatedAt: string;
+  rating?: number;
+  ratingSource?: string;
+  ratingsCount?: number;
+  readingModes?: { image: boolean, text: boolean };
+  createdAt?: string;
+  updatedAt?: string;
+  source: 'google' | 'goodreads';
 }
 
 interface User {
@@ -141,6 +143,10 @@ type Rating = { bookId: string, rating: number }
 type PriceRangePropTypes = { min: number, max: number }
 
 type GoogleAPIResponse = {
+  items: GoogleResponse[]
+}
+
+type GoogleResponse = {
   volumeInfo: {
     title: string,
     authors: string[],
@@ -167,4 +173,27 @@ type GoogleAPIResponse = {
     infoLink: string,
     canonicalVolumeLink: string
   }
+}
+
+type GracieAudioAPIGoodReadResponse = {
+  rating: string,
+  ratingsCount: number,
+  author: {
+    id: number,
+    name: string,
+    isGoodreadsAuthor: boolean,
+    profileUrl: string, // authors picture
+    worksListUrl: string
+  },
+  title: string,
+  description: {
+    html: string,
+    truncated: boolean,
+    fullContentUrl: string,
+  },
+  bookTitleBare: string,
+  rank: number,
+  numPages: number,
+  imageUrl: string,
+  source: string,
 }
