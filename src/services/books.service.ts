@@ -84,8 +84,11 @@ class BookServices {
     }
   };
 
-  public async getBooks() {
-    const q = query(this.booksRef);
+  public async getBooks(filter: Book["status"] | null = null) {
+    const whereQueries: QueryFieldFilterConstraint[] = [];
+    if (filter) whereQueries.push(where("status", "==", filter))
+
+    const q = query(this.booksRef, ...whereQueries);
     const querySnapShot = await getDocs(q);
     const books: Book[] = [];
     querySnapShot.forEach((doc) => {
@@ -135,10 +138,10 @@ class BookServices {
     return result.data.data;
   }
 
-  public async fetchBookDetails(query: string): Promise<Book[]> {
+  public async fetchBookDetails(query: string): Promise<Partial<Book>[]> {
     try {
       const volumes = await this.googleAPIFetch(query);
-      const normalizeResult: Book[] = volumes?.slice(0,5)?.map((volume) => {
+      const normalizeResult: Partial<Book>[] = volumes?.slice(0,5)?.map((volume) => {
         const bookInfo = volume.volumeInfo;
         return {
           id: nanoid(),
@@ -167,7 +170,7 @@ class BookServices {
       if (axios.isCancel(error)) throw error;
   
       const bookInfo = await this.goodReadAPIFetch(query);
-      const normalizeResult: Book[] = bookInfo?.slice(0,5)?.map((bookInfo) => {
+      const normalizeResult: Partial<Book>[] = bookInfo?.slice(0,5)?.map((bookInfo) => {
         return {
           id: nanoid(),
           title: bookInfo.title.toLowerCase(),

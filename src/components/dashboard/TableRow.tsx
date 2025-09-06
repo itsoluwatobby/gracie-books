@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import Button from "../ui/Button";
-import { bookServices } from "../../schema";
+import { bookServices } from "../../services";
 import toast from "react-hot-toast";
 
 interface TableRowProps {
@@ -85,7 +85,7 @@ export const TableRow: React.FC<TableRowProps> = (
           {book.status}
         </button>
       </td>
-      <td className="px-6 py-4 whitespace-nowrap textright text-sm flex items-center gap-3">
+      <td className="px-6 py-4 whitespace-nowrap text-sm flex justify-center gap-3">
         <Button variant="outline" size="sm"
         onClick={() => handleEditBook(book)}
         >Edit</Button>

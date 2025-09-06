@@ -15,11 +15,11 @@ const BookGrid: React.FC<BookGridProps> = ({
 }) => {
   return (
     <div className="w-full">
-      {title && (
+      {title ? (
         <h2 className="text-2xl font-bold mb-6 text-blue-900">{title}</h2>
-      )}
+      ) : null}
       
-      {books.length === 0 ? (
+      {!books?.length ? (
         <div className="text-center py-12">
           <p className="text-gray-500">{emptyMessage}</p>
         </div>

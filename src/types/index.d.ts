@@ -32,8 +32,7 @@ interface CartContextType {
   items: CartItem[];
   reload: Reloads;
   addToCart: (book: Book, quantity?: number) => void;
-  removeFromCart: (bookId: string) => void;
-  updateQuantity: (bookId: string, quantity: number) => void;
+  updateQuantity: (cart: CartItem, quantity: number) => void;
   setReload: React.Dispatch<React.SetStateAction<Reloads>>;
   clearCart: () => void;
   totalItems: number;
@@ -62,8 +61,9 @@ interface Book {
   ratingSource?: string;
   ratingsCount?: number;
   readingModes?: { image: boolean, text: boolean };
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+  saved?: string[];
   source: 'google' | 'goodreads';
   status: 'public' | 'private';
 }
@@ -80,17 +80,20 @@ interface User {
   updatedAt: string;
 }
 
-interface CartItem {
+type CartStatus = 'pending' | 'completed';
+type CartItem = {
+  id?: string;
   book: Book;
   quantity: number;
   price: number;
-  orderId: string;
+  status: CartStatus;
+  userId: string;
 }
 
 interface Order {
   id: string;
   userId: string;
-  items: OrderItem[];
+  items: CartItem[];
   status: OrderStatus;
   totalAmount: number;
   createdAt: string;
@@ -98,12 +101,12 @@ interface Order {
   shippingAddress: ShippingAddress;
 }
 
-interface OrderItem {
-  bookId: string;
-  title: string;
-  quantity: number;
-  priceAtPurchase: number;
-}
+// interface OrderItem {
+//   bookId: string;
+//   title: string;
+//   quantity: number;
+//   priceAtPurchase: number;
+// }
 
 interface ShippingAddress {
   fullName: string;
@@ -112,6 +115,12 @@ interface ShippingAddress {
   state: string;
   zipCode: string;
   country: string;
+}
+
+interface SavedBooks {
+  bookId: string;
+  userId?: string;
+  deviceId?: string;
 }
 
 type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';

@@ -3,7 +3,7 @@ import { Book, Building2, Calendar, DollarSign, FileText, Hash, Image, Package, 
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import { InitBookForm } from "../../../utils/initVariables";
-import { bookServices } from "../../../schema";
+import { bookServices } from "../../../services";
 import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
 import useCartContext from "../../../context/useCartContext";

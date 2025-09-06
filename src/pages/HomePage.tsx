@@ -1,23 +1,55 @@
-import React from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { TrendingUp, BookOpen, ShoppingBag } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import BookGrid from '../components/books/BookGrid';
 import Button from '../components/ui/Button';
-import { books } from '../data/books';
 import useAuthContext from '../context/useAuthContext';
+import useCartContext from '../context/useCartContext';
+import { initAppState } from '../utils/initVariables';
+import { bookServices } from '../services';
 
 const HomePage: React.FC = () => {
-    const { appName } = useAuthContext();
+  const { appName } = useAuthContext();
+  const { reload } = useCartContext();
+
+  const [books, setBooks] = useState<Book[]>([]);
+  const [appState, setAppState] = useState<AppState>(initAppState);
+
+  const { isLoading, isError, errMsg } = appState;
+
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      if (!isMounted) return;
+      try {
+        setAppState((prev) => ({ ...prev, isLoading: true }));
+        const inventory = await bookServices.getBooks("public");
+        setBooks(inventory);
+      } catch (err: any) {
+        setAppState((prev) => ({ ...prev, isError: true, errMsg: err.message }));
+      } finally {
+        setAppState((prev) => ({ ...prev, isLoading: false }));
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    }
+  }, [reload.bookUpdate_reload])
+  
   const featuredBooks = books.slice(0, 5);
   
-  // Get bestsellers (another subset with high ratings)
-  const bestsellers = [...books]
-    .sort((a, b) => b.rating - a.rating)
-    .slice(0, 5);
+  // Get recent books (another subset with high ratings)
+  const newArrivals = [...books]
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .slice(0, 10);
+
+  // const otherBooks = books.slice(0, 10)
   
   // Get new arrivals (for demo purposes, just another subset)
-  const newArrivals = books.slice(3, 8);
+  // const newArrivals = books.slice(3, 8);
 
   return (
     <Layout>
@@ -53,7 +85,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Featured Categories */}
-      <section className="py-16 bg-gradient-to-b from-blue-50 to-white">
+      <section className="py-16 bg-gradient-to-b from-blue-50 to-white lg:px-10">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-12 text-blue-900">
             Explore Our Categories
@@ -103,7 +135,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Featured Books Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white lg:px-10">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-blue-900">
@@ -119,7 +151,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Bestsellers Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50 lg:px-10">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-blue-900">
@@ -130,12 +162,12 @@ const HomePage: React.FC = () => {
             </Link>
           </div>
           
-          <BookGrid books={bestsellers} />
+          <BookGrid books={books} />
         </div>
       </section>
 
       {/* New Arrivals Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white lg:px-10">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-blue-900">
@@ -151,7 +183,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-16 bg-blue-800 text-white">
+      <section className="py-16 bg-blue-800 text-white lg:px-10">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4">
             Stay Updated with {appName.name}

@@ -9,7 +9,7 @@ import { helper } from '../utils/helper';
 
 const CartPage: React.FC = () => {
   const {
-    items, removeFromCart,
+    items,
     updateQuantity, totalItems,
     totalPrice, clearCart,
   } = useCartContext();
@@ -18,6 +18,8 @@ const CartPage: React.FC = () => {
   const [couponCode, setCouponCode] = useState('');
   const [couponApplied, setCouponApplied] = useState(false);
   const [error, setError] = useState('');
+
+  const [isImageDisplayed, setIsImageDisplayed] = useState(true);
 
   const handleApplyCoupon = () => {
     if (!couponCode) {
@@ -98,8 +100,9 @@ const CartPage: React.FC = () => {
                       <div key={item.book.id} className="py-4 flex">
                         <div className="w-20 h-28 bg-gray-100 rounded overflow-hidden mr-4">
                           <img 
-                            src={item.book.coverImage} 
-                            alt={item.book.title} 
+                            src={isImageDisplayed ? item.book?.coverImage : item.book?.icon}
+                            alt={item.book?.title}
+                            onError={() => setIsImageDisplayed(false)}
                             className="w-full h-full object-cover"
                           />
                         </div>
@@ -110,7 +113,7 @@ const CartPage: React.FC = () => {
                               {item.book.title}
                             </Link>
                             <button 
-                              onClick={() => removeFromCart(item.book.id)}
+                              onClick={() => updateQuantity(item, 0)}
                               className="text-gray-400 hover:text-red-500"
                             >
                               <X size={18} />
@@ -118,13 +121,13 @@ const CartPage: React.FC = () => {
                           </div>
                           
                           <p className="text-sm text-gray-500">
-                            By {item.book.author}
+                            By {item.book.authors[0]}
                           </p>
                           
                           <div className="mt-2 flex justify-between items-end">
                             <div className="flex items-center border border-gray-300 rounded">
                               <button
-                                onClick={() => updateQuantity(item.book.id, item.quantity - 1)}
+                                onClick={() => updateQuantity(item, item.quantity - 1)}
                                 className="px-2 py-1 text-gray-600 hover:text-blue-700"
                                 disabled={item.quantity <= 1}
                               >
@@ -132,7 +135,7 @@ const CartPage: React.FC = () => {
                               </button>
                               <span className="px-2 py-1 text-center w-8">{item.quantity}</span>
                               <button
-                                onClick={() => updateQuantity(item.book.id, item.quantity + 1)}
+                                onClick={() => updateQuantity(item, item.quantity + 1)}
                                 className="px-2 py-1 text-gray-600 hover:text-blue-700"
                                 disabled={item.quantity >= item.book.stockQuantity}
                               >
@@ -179,7 +182,7 @@ const CartPage: React.FC = () => {
                   
                   <div className="flex justify-between">
                     <span className="text-gray-600">Shipping</span>
-                    <span>{shipping === 0 ? 'Free' : `${helper.formatPrice(shipping)}`}</span>
+                    <span className="text-gray-700">{shipping === 0 ? 'To be calculated' : `${helper.formatPrice(shipping)}`}</span>
                   </div>
                   
                   {/* <div className="flex justify-between">

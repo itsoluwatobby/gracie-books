@@ -1,5 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { InitReloads } from '../utils/initVariables';
+import { userService } from '../services';
+import { cartService } from '../services/cart.service';
+import toast from 'react-hot-toast';
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
@@ -8,6 +12,7 @@ const LOCAL_STORAGE_KEY = 'bookstore-cart';
 const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
   const [reload, setReload] = useState<Reloads>(InitReloads)
+  const [deviceId] = useState(userService.getDeviceId());
 
   // Load cart from localStorage on component mount
   useEffect(() => {
@@ -23,49 +28,49 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
+    let isMounted = true;
+    const getItems = async () => {
+      const cartItems = await cartService.getCart(deviceId, "pending");
+      console.log(cartItems)
+      if (cartItems?.length) setItems(cartItems);
+    };
+    if (isMounted) getItems();
+
+    return () => {
+      isMounted = false
+    }
+  }, [deviceId]);
+
+  const addToCart = async (book: Book, quantity = 1) => {
     try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(items));
-    } catch (error) {
-      console.error('Failed to save cart to localStorage:', error);
+      const deviceId = userService.getDeviceId();
+      const newCart: CartItem = {
+        book, quantity,
+        price: book.price * quantity,
+        userId: deviceId,
+        status: 'pending',
+      };
+      const cartItems = await cartService.addCart(newCart);
+      if (cartItems?.length) setItems(cartItems)
+      toast.success(`${quantity} item(s) added to cart`);
+    } catch (e: any) {
+      console.log(e)
+      toast.error("Erorr adding item to cart")
     }
-  }, [items]);
-
-  const addToCart = (book: Book, quantity = 1) => {
-    setItems((prevItems) => {
-      const existingItem = prevItems.find(item => item.book.id === book.id);
-      
-      if (existingItem) {
-        // Update quantity if item already exists
-        return prevItems.map(item => 
-          item.book.id === book.id 
-            ? { ...item, quantity: item.quantity + quantity } 
-            : item
-        );
-      } else {
-        // Add new item
-        return [...prevItems, { book, quantity }];
-      }
-    });
   };
 
-  const removeFromCart = (bookId: string) => {
-    setItems(prevItems => prevItems.filter(item => item.book.id !== bookId));
-  };
-
-  const updateQuantity = (bookId: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(bookId);
-      return;
+  const updateQuantity = async (cart: CartItem, quantity: number) => {
+    try {  
+      const cartItems = await cartService.updateCart(deviceId, cart.book.id, quantity);
+      if (cartItems?.length) setItems(cartItems);
+    } catch (e: any) {
+      console.log(e)
+      toast.error("Erorr updating cart item")
     }
-    
-    setItems(prevItems => 
-      prevItems.map(item => 
-        item.book.id === bookId ? { ...item, quantity } : item
-      )
-    );
   };
 
-  const clearCart = () => {
+  const clearCart = async () => {
+    await cartService.clearCart(deviceId);
     setItems([]);
   };
 
@@ -82,8 +87,7 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         items,
         reload,
         setReload,
-        addToCart, 
-        removeFromCart, 
+        addToCart,  
         updateQuantity, 
         clearCart, 
         totalItems,

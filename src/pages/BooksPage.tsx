@@ -39,7 +39,7 @@ const BooksPage: React.FC = () => {
       result = result.filter(
         book =>
           book.title.toLowerCase().includes(query) ||
-          book.author.toLowerCase().includes(query) ||
+          book.authors[0].toLowerCase().includes(query) ||
           book.description.toLowerCase().includes(query) ||
           book.genre.some((g: string) => g.toLowerCase().includes(query))
       );
@@ -64,11 +64,11 @@ const BooksPage: React.FC = () => {
         result.sort((a, b) => b.price - a.price);
         break;
       case 'newest':
-        result.sort((a, b) => new Date(b.publicationDate).getTime() - new Date(a.publicationDate).getTime());
+        result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         break;
-      case 'bestselling':
-        result.sort((a, b) => b.rating - a.rating);
-        break;
+      // case 'bestselling':
+      //   result.sort((a, b) => b?.rating - a?.rating);
+      //   break;
       default:
         // 'relevance' - no specific sorting or sorted by search relevance
         break;

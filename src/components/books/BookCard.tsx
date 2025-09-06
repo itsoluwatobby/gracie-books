@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Heart } from 'lucide-react';
 import Card from '../ui/Card';
@@ -12,11 +12,12 @@ interface BookCardProps {
 
 const BookCard: React.FC<BookCardProps> = ({ book }) => {
   const { addToCart } = useCartContext();
+  const [isImageDisplayed, setIsImageDisplayed] = useState(true);
   
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart(book, 1);
+    await addToCart(book, 1);
   };
 
   return (
@@ -27,8 +28,9 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
       <Link to={`/books/${book.id}`} className="flex flex-col h-full">
         <div className="relative pt[120%] bg-gray-100 h-40">
           <img 
-            src={book.coverImage}
+            src={isImageDisplayed ? book?.coverImage : book?.icon}
             alt={book.title}
+            onError={() => setIsImageDisplayed(false)}
             className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 hover:scale-[1.005]"
           />
           <div className="absolute top-2 right-2">
@@ -40,21 +42,22 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
         
         <div className="p-2 flex-grow flex flex-col">
           <h3 className="font-medium text-lg line-clamp-1">{book.title}</h3>
-          <p className="text-gray-600 text-sm mb-2">{book.author}</p>
+          <p className="text-gray-600 text-sm mb-2">{book?.authors[0]}</p>
           
           <div className="mt-auto">
             <div className="flex items-center space-x-1">
               {[...Array(5)].map((_, i) => (
                 <svg 
                   key={i} 
-                  className={`w-4 h-4 ${i < Math.floor(book.rating) ? 'text-yellow-400' : 'text-gray-300'}`} 
+                  className={`w-4 h-4 text-gray-300`} 
+                  // className={`w-4 h-4 ${i < Math.floor(book?.rating) ? 'text-yellow-400' : 'text-gray-300'}`} 
                   fill="currentColor" 
                   viewBox="0 0 20 20"
                 >
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
               ))}
-              <span className="text-xs text-gray-600 ml-1">({book.rating.toFixed(1)})</span>
+              {book?.rating ? <span className="text-xs text-gray-600 ml-1">({book.rating.toFixed(1)})</span> : null}
             </div>
             
             <div className="flex gap1.5 mt-2.5 justify-between items-center">

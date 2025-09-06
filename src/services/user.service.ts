@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ApplicationDB } from "../firebase/config";
 import {
   collection,
@@ -12,8 +11,10 @@ import {
 } from "firebase/firestore";
 import { nanoid } from "nanoid/non-secure";
 import { UserRole } from "../utils/constants";
+import { browserAPI } from "../composables/local-storage";
 
 class UsersService {
+  private key = "wandyte-sales::unique_id";
   private usersRef = collection(ApplicationDB, "users");
 
   public async updateUser(email: string, updatedInfo: Partial<User>) {
@@ -83,5 +84,13 @@ class UsersService {
     });
     return users;
   };
+
+  public getDeviceId() {
+    const deviceId = browserAPI.get(this.key) as string
+    if (deviceId) return deviceId
+    const generatedId = `wandyte-sales::${nanoid()}`;
+    browserAPI.add(this.key, generatedId)
+    return generatedId;
+  }
 }
 export const userService = new UsersService();

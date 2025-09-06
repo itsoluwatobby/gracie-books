@@ -1,21 +1,59 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ShoppingCart, Heart, Share2, Bookmark, Star, ChevronRight } from 'lucide-react';
+import {
+  ShoppingCart,
+  Heart,
+  Share2,
+  Bookmark,
+  Star,
+  ChevronRight,
+  LoaderIcon,
+} from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
 import { getBookById } from '../data/books';
 import useCartContext from '../context/useCartContext';
 import BookGrid from '../components/books/BookGrid';
 import { books } from '../data/books';
+import { bookServices } from '../services';
+import { initAppState } from '../utils/initVariables';
+import toast from 'react-hot-toast';
 
 const BookDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [book, setBook] = useState<Book | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
-  const { addToCart } = useCartContext();
+  const { addToCart, reload } = useCartContext();
+
+  const [isImageDisplayed, setIsImageDisplayed] = useState(true);
+  const [appState, setAppState] = useState<AppState>(initAppState);
+  
+  const { isLoading, isError, errMsg } = appState;
 
   // Get related books (for demo purposes, just random books)
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      if (!isMounted || !id) return;
+      try {
+        setAppState((prev) => ({ ...prev, isLoading: true }));
+        const inventory = await bookServices.getBookById(id);
+        console.log(inventory)
+        setBook(inventory);
+      } catch (err: any) {
+        setAppState((prev) => ({ ...prev, isError: true, errMsg: err.message }));
+      } finally {
+        setAppState((prev) => ({ ...prev, isLoading: false }));
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    }
+  }, [reload.cart_reload, id])
+
   const relatedBooks = books
     .filter(b => b.id !== id && b.genre.some((g: string) => book?.genre.includes(g)))
     .slice(0, 4);
@@ -29,18 +67,6 @@ const BookDetailPage: React.FC = () => {
     }
   }, [id]);
 
-  if (!book) {
-    return (
-      <Layout>
-        <div className="container mx-auto px-4 py-12">
-          <div className="text-center py-12">
-            <p className="text-gray-500">Book not found.</p>
-          </div>
-        </div>
-      </Layout>
-    );
-  }
-
   const decreaseQuantity = () => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
@@ -48,13 +74,39 @@ const BookDetailPage: React.FC = () => {
   };
 
   const increaseQuantity = () => {
+    if (!book) return;
     if (quantity < book.stockQuantity) {
       setQuantity(quantity + 1);
     }
   };
-
+  
   const handleAddToCart = () => {
+    if (!book) return;
+    // console.log(book, quantity)
     addToCart(book, quantity);
+  };
+
+  const shareBook = async () => {
+    if (!book) return;
+
+    const shareData = {
+      title: book.title,
+      text: 'Wandyte book sales have some hot deals on ground. Check this out!',
+      url: `${window.origin}/books/${book.id}`
+    };
+  
+   if (navigator.canShare && navigator.canShare(shareData)) {
+      try {
+        await navigator.share(shareData);
+        toast.success("Content shared successfully!");
+      } catch (error: any) {
+        toast.error(`Error sharing content: ${error.message}`);
+      }
+    } else {
+      console.log("Web Share API not supported or invalid share data.");
+      // Fallback: You could copy the URL to clipboard or show a message
+      alert("Sharing is not supported on this device. Copy this link: " + shareData.url);
+    }
   };
 
   return (
@@ -77,162 +129,188 @@ const BookDetailPage: React.FC = () => {
             </li>
             <li>
               <Link
-                to={`/genres/${book.genre[0]}`}
+                to={`/genres/${book?.genre[0]}`}
                 className="hover:text-blue-700"
               >
-                {book.genre[0]}
+                {book?.genre[0]}
               </Link>
             </li>
             <li className="mx-2">
               <ChevronRight size={14} />
             </li>
             <li className="text-gray-700 font-medium">
-              {book.title}
+              {book?.title}
             </li>
           </ol>
         </nav>
 
         {/* Book Details */}
-        <div className="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8">
-          <div className="flex flex-col md:flex-row gap-8">
-            {/* Book Cover Image */}
-            <div className="w-full md:w-1/3 lgw-1/4">
-              <figure className="bg-gray-100 rounded-md max-h-96 overflow-hidden shadow-sm">
-                <img
-                  src={book.coverImage}
-                  alt={book.title}
-                  className="w-full h-auto object-cover"
-                />
-              </figure>
-
-              <div className="mt-4 flex justify-around">
-                <button className="p-2 text-gray-500 hover:text-blue-700 flex flex-col items-center text-xs">
-                  <Heart size={20} />
-                  <span>Wishlist</span>
-                </button>
-                <button className="p-2 text-gray-500 hover:text-blue-700 flex flex-col items-center text-xs">
-                  <Share2 size={20} />
-                  <span>Share</span>
-                </button>
-                <button className="p-2 text-gray-500 hover:text-blue-700 flex flex-col items-center text-xs">
-                  <Bookmark size={20} />
-                  <span>Save</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Book Information */}
-            <div className="flex-1">
-              <h1 className="text-2xl md:text-3xl font-bold text-blue-900 mb-2">
-                {book.title}
-              </h1>
-              <p className="text-lg text-gray-600 mb-4">
-                by <span className="font-medium">{book.author}</span>
-              </p>
-
-              {/* Ratings */}
-              <div className="flex items-center mb-4">
-                <div className="flex items-center mr-2">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      size={18}
-                      className={`${i < Math.floor(book.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
-                    />
-                  ))}
-                </div>
-                <span className="text-sm text-gray-600 ml-1">
-                  {book.rating.toFixed(1)} ({Math.floor(Math.random() * 200) + 50} reviews)
-                </span>
-              </div>
-
-              {/* Price and Stock */}
-              <div className="mb-6">
-                <div className="text-2xl font-bold text-blue-900 mb-2">
-                  ${book.price.toFixed(2)}
-                </div>
-                <div className="text-sm">
-                  {book.stockQuantity > 0 ? (
-                    <span className="text-green-600">
-                      ✓ In Stock ({book.stockQuantity} available)
-                    </span>
-                  ) : (
-                    <span className="text-red-600">
-                      ✗ Out of Stock
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Book Details */}
-              <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
-                <div>
-                  <p className="text-gray-500">Publisher</p>
-                  <p className="font-medium">{book.publisher}</p>
-                </div>
-                <div>
-                  <p className="text-gray-500">Publication Date</p>
-                  <p className="font-medium">{new Date(book.publicationDate).toLocaleDateString()}</p>
-                </div>
-                <div>
-                  <p className="text-gray-500">ISBN</p>
-                  <p className="font-medium">{book.isbn}</p>
-                </div>
-                <div>
-                  <p className="text-gray-500">Pages</p>
-                  <p className="font-medium">{book.pageCount}</p>
-                </div>
-              </div>
-
-              {/* Quantity and Add to Cart */}
-              <div className="flex flex-col sm:flex-row gap-4 mb-6">
-
-                <div className="flex items-center border justify-between h-12 border-gray-300 rounded-md">
-                  <button
-                    onClick={decreaseQuantity}
-                    className="px-4 py-2 text-gray-600 h-full rounded-l-md max-sm:w-1/4 hover:text-blue-700 disabled:text-gray-400"
-                    disabled={quantity <= 1}
-                  >
-                    −
-                  </button>
-                  <span className="px-4 py-2 text-center w-12">{quantity}</span>
-                  <button
-                    onClick={increaseQuantity}
-                    className="px-4 py-2 text-gray-600 h-full rounded-r-md max-sm:w-1/4 hover:text-blue-700 disabled:text-gray-400"
-                    disabled={quantity >= book.stockQuantity}
-                  >
-                    +
-                  </button>
-                </div>
-
-                <Button
-                  onClick={handleAddToCart}
-                  className="flex-1 flex items-center justify-center h-12 sm:max-w-xs max-sm:h-14"
-                  disabled={book.stockQuantity === 0}
-                >
-                  <ShoppingCart className="mr-2 h-5 w-5" />
-                  Add to Cart
-                </Button>
-              </div>
-
-              {/* Genres */}
-              <div className="mb-6">
-                <div className="text-sm text-gray-500 mb-2">Genres</div>
-                <div className="flex flex-wrap gap-2">
-                  {book.genre.map((genre, index) => (
-                    <Link
-                      key={index}
-                      to={`/genres/${genre}`}
-                      className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm hover:bg-blue-200 transition-colors"
-                    >
-                      {genre}
-                    </Link>
-                  ))}
-                </div>
-              </div>
+      {
+        isLoading ? (
+          <div className='w-full grid place-content-center h-96'>
+            <LoaderIcon size={48} className='animate-spin duration-1000' />
+          </div>
+        ) : 
+        isError ? (
+          <div className="container mx-auto px-4 py-12">
+            <div className="text-center py-12">
+              <p className="text-gray-500">Book not found. <span className='text-red'>{errMsg}</span></p>
             </div>
           </div>
-        </div>
+        ) : (
+          book &&
+          <div className="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8">
+            <div className="flex flex-col md:flex-row gap-8">
+              {/* Book Cover Image */}
+              <div className="w-full md:w-1/3 lgw-1/4">
+                <figure className="bg-gray-100 rounded-md h-96 overflow-hidden shadow-sm">
+                  <img
+                    src={isImageDisplayed ? book?.coverImage : book?.icon}
+                    alt={book?.title}
+                    onError={() => setIsImageDisplayed(false)}
+                    className="w-full h-auto object-cover"
+                  />
+                </figure>
+
+                <div className="mt-4 flex justify-around">
+                  <button className="p-2 text-gray-500 hover:text-blue-700 flex flex-col items-center text-xs">
+                    <Heart size={20} />
+                    <span>Wishlist</span>
+                  </button>
+                  <button 
+                  onClick={shareBook}
+                  className="p-2 text-gray-500 hover:text-blue-700 flex flex-col items-center text-xs">
+                    <Share2 size={20} />
+                    <span>Share</span>
+                  </button>
+                  <button className="p-2 text-gray-500 hover:text-blue-700 flex flex-col items-center text-xs">
+                    <Bookmark size={20} />
+                    <span>Save</span>
+                  </button>
+                </div>
+              </div>
+
+            {/* Book Information */}
+                <div className="flex-1">
+                  <h1 className="text-2xl md:text-3xl font-bold text-blue-900 mb-2">
+                    {book?.title}
+                  </h1>
+                  <p className="text-lg text-gray-600 mb-4">
+                    by <span className="font-medium">{book?.authors[0]}</span>
+                  </p>
+  
+                  {/* Ratings */}
+                  <div className="flex items-center mb-4">
+                    <div className="flex items-center mr-2">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          size={18}
+                          className="text-gray-300"
+                          // className={`${i < Math.floor(book.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
+                        />
+                      ))}
+                    </div>
+                    {
+                      book?.rating ?
+                      <span className="text-sm text-gray-600 ml-1">
+                      {book.rating.toFixed(1)} ({Math.floor(Math.random() * 200) + 50} reviews)
+                    </span> : null}
+                  </div>
+  
+                  {/* Price and Stock */}
+                  <div className="mb-6">
+                    <div className="text-2xl font-bold text-blue-900 mb-2">
+                      ${book.price.toFixed(2)}
+                    </div>
+                    <div className="text-sm">
+                      {book.stockQuantity > 0 ? (
+                        <span className="text-green-600">
+                          ✓ In Stock ({book.stockQuantity} available)
+                        </span>
+                      ) : (
+                        <span className="text-red-600">
+                          ✗ Out of Stock
+                        </span>
+                      )}
+                    </div>
+                  </div>
+  
+                  {/* Book Details */}
+                  <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
+                    <div>
+                      <p className="text-gray-500">Publisher</p>
+                      <p className="font-medium">{book.publisher}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-500">Publication Date</p>
+                      {
+                        book?.publicationDate ? 
+                        <p className="font-medium">{new Date(book.publicationDate).toLocaleDateString()}</p> 
+                        : null
+                      }
+                    </div>
+                    <div>
+                      <p className="text-gray-500">ISBN</p>
+                      <p className="font-medium">{book?.isbn}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-500">Pages</p>
+                      <p className="font-medium">{book?.pageCount}</p>
+                    </div>
+                  </div>
+  
+                  {/* Quantity and Add to Cart */}
+                  <div className="flex flex-col sm:flex-row gap-4 mb-6">
+  
+                    <div className="flex items-center border justify-between h-12 border-gray-300 rounded-md">
+                      <button
+                        onClick={decreaseQuantity}
+                        className="px-4 py-2 text-gray-600 h-full rounded-l-md max-sm:w-1/4 hover:text-blue-700 disabled:text-gray-400"
+                        disabled={quantity <= 1}
+                      >
+                        −
+                      </button>
+                      <span className="px-4 py-2 text-center w-12">{quantity}</span>
+                      <button
+                        onClick={increaseQuantity}
+                        className="px-4 py-2 text-gray-600 h-full rounded-r-md max-sm:w-1/4 hover:text-blue-700 disabled:text-gray-400"
+                        disabled={quantity >= book.stockQuantity}
+                      >
+                        +
+                      </button>
+                    </div>
+  
+                    <Button
+                      onClick={handleAddToCart}
+                      className="flex-1 flex items-center justify-center h-12 sm:max-w-xs max-sm:h-14"
+                      disabled={book.stockQuantity === 0}
+                    >
+                      <ShoppingCart className="mr-2 h-5 w-5" />
+                      Add to Cart
+                    </Button>
+                  </div>
+  
+                  {/* Genres */}
+                  <div className="mb-6">
+                    <div className="text-sm text-gray-500 mb-2">Genres</div>
+                    <div className="flex flex-wrap gap-2">
+                      {book.genre.map((genre, index) => (
+                        <Link
+                          key={index}
+                          to={`/genres/${genre}`}
+                          className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm hover:bg-blue-200 transition-colors"
+                        >
+                          {genre}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        }
 
         {/* Tabs Section */}
         <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
@@ -269,13 +347,7 @@ const BookDetailPage: React.FC = () => {
           <div className="p-6">
             {activeTab === 'description' && (
               <div className="prose max-w-none">
-                <p className="mb-4">{book.description}</p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris.
-                  Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus
-                  ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est
-                  bibendum non venenatis nisl tempor. Suspendisse dictum feugiat nisl ut dapibus.
-                </p>
+                <p className="mb-4">{book?.description}</p>
               </div>
             )}
 
@@ -285,31 +357,31 @@ const BookDetailPage: React.FC = () => {
                   <tbody>
                     <tr className="border-b">
                       <td className="py-2 font-medium text-gray-500 w-1/3">Title</td>
-                      <td className="py-2">{book.title}</td>
+                      <td className="py-2">{book?.title}</td>
                     </tr>
                     <tr className="border-b">
                       <td className="py-2 font-medium text-gray-500">Author</td>
-                      <td className="py-2">{book.author}</td>
+                      <td className="py-2">{book?.authors[0]}</td>
                     </tr>
                     <tr className="border-b">
                       <td className="py-2 font-medium text-gray-500">ISBN</td>
-                      <td className="py-2">{book.isbn}</td>
+                      <td className="py-2">{book?.isbn}</td>
                     </tr>
                     <tr className="border-b">
                       <td className="py-2 font-medium text-gray-500">Publisher</td>
-                      <td className="py-2">{book.publisher}</td>
+                      <td className="py-2">{book?.publisher}</td>
                     </tr>
                     <tr className="border-b">
                       <td className="py-2 font-medium text-gray-500">Publication Date</td>
-                      <td className="py-2">{new Date(book.publicationDate).toLocaleDateString()}</td>
+                      <td className="py-2">{new Date(book?.publicationDate ?? '1990-03-10').toLocaleDateString()}</td>
                     </tr>
                     <tr className="border-b">
                       <td className="py-2 font-medium text-gray-500">Pages</td>
-                      <td className="py-2">{book.pageCount}</td>
+                      <td className="py-2">{book?.pageCount}</td>
                     </tr>
                     <tr className="border-b">
                       <td className="py-2 font-medium text-gray-500">Genres</td>
-                      <td className="py-2">{book.genre.join(', ')}</td>
+                      <td className="py-2">{book?.genre.join(', ')}</td>
                     </tr>
                   </tbody>
                 </table>

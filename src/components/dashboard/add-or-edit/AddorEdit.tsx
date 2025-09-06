@@ -7,7 +7,7 @@ import {
   Book, FileText,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { bookServices } from '../../../schema';
+import { bookServices } from '../../../services';
 import CSVUploader from '../../ui/CSVUploader';
 import { BookResultPreveiw } from './BookResultPreview';
 import { BookForm } from './Bookform';

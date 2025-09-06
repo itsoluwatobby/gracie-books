@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import Button from '../ui/Button';
-import { bookServices } from '../../schema';
+import { bookServices } from '../../services';
 import { initAppState } from '../../utils/initVariables';
 import { TableRow } from './TableRow';
 import { LoadingBook } from './LoadingBook';
@@ -17,7 +17,8 @@ type ManageBooksProps = {
 const TableHead = ['Book', 'Author', 'Price', 'Quantity', 'status', 'Actions'];
 export default function ManageBooks(
   {
-    handleEditBook, formatCurrency,
+    handleEditBook, 
+    formatCurrency,
     setShowBookModal,
   }: ManageBooksProps
   ) {
