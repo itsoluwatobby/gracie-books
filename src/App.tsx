@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
@@ -22,8 +23,58 @@ import RoutePrivilege from './components/layout/RoutePrivilege';
 import { PageRoutes } from './utils/pageRoutes';
 import { Toaster } from 'react-hot-toast';
 import LoadingUI from './components/ui/Loader';
+import { useEffect } from 'react';
+import { connect, Socket } from 'socket.io-client';
 
+
+let socket: Socket;
 function App() {
+
+  // useEffect(() => {
+  //   fetch("https://korrin-ai-backend.onrender.com/api/v1/auth/login", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(
+  //       {
+  //         // "full_name": "Mathew Dane",
+  //         // "stage_name": "mat dane",
+  //         "email": "itsoluwatobby+korrin@gmail.com",
+  //         // "token": "327685",
+  //         "password": "Abcd1234$",
+  //     //     "confirm_password": "Abcd1234$",
+  //     //     "phone_number": "08100001234",
+  //     //     "agree_to_terms_and_condition": false,
+  //       }
+  //     )
+  //   })
+  // }, [])
+
+  useEffect(() => {
+    socket = connect("http://3.254.118.10:5000");
+    socket.on("connect", () => {
+      console.log("SOCKET CONNECTED")
+      socket.emit(
+        "join",
+        {
+          "conversationId": "6850631a6274a64264c7396f",
+          "userId": "66a91e5870365e2063e4b7b1",
+          "name": "Matthew"
+        },
+        (data: any) => {
+          console.log(data)
+        }
+      )
+    })
+  }, []);
+
+  useEffect(() => {
+    socket.on("user_joined", (data) => {
+      console.log(data);
+    })
+  }, []);
+
   return (
     <main className=''>
       <Router>
