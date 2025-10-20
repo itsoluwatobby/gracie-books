@@ -52,7 +52,8 @@ function App() {
   // }, [])
 
   useEffect(() => {
-    socket = connect("http://3.254.118.10:5000");
+    // socket = connect("http://3.254.118.10:5000");
+    socket = connect("http://172.31.32.190:5000");
     socket.on("connect", () => {
       console.log("SOCKET CONNECTED")
       socket.emit(
