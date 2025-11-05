@@ -4,7 +4,7 @@ import Button from "../ui/Button";
 
 type OrderDetailsProps = {
   order: Order;
-  users: User[];
+  users: UserInfo[];
   formatCurrency: (val: number) => string;
   setSelectedOrder: React.Dispatch<React.SetStateAction<Order | null>>;
 }
@@ -118,19 +118,19 @@ export default function OrderDetails(
               <div key={index} className="bg-white rounded-lg p-5 border border-gray-200 hover:shadow-md transition-shadow duration-200">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
-                    <h5 className="font-bold text-gray-900 text-lg mb-2">{item.title}</h5>
+                    <h5 className="font-bold text-gray-900 text-lg mb-2">{item.book.title}</h5>
                     <div className="flex items-center space-x-4 text-sm text-gray-600">
                       <span className="bg-gray-100 px-3 py-1 rounded-full">
                         Qty: {item.quantity}
                       </span>
                       <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
-                        {formatCurrency(item.priceAtPurchase)} each
+                        {formatCurrency(item.price)} each
                       </span>
                     </div>
                   </div>
                   <div className="text-right">
                     <div className="text-2xl font-bold text-gray-900">
-                      {formatCurrency(item.priceAtPurchase * item.quantity)}
+                      {formatCurrency(item.price * item.quantity)}
                     </div>
                   </div>
                 </div>

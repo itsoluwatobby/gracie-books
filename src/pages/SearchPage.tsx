@@ -4,7 +4,7 @@ import { Search as SearchIcon } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import BookGrid from '../components/books/BookGrid';
 import { searchBooks, getAllGenres } from '../data/books';
-import { Book } from '../types';
+// import { Book } from '../types';
 
 const SearchPage: React.FC = () => {
   const [searchParams] = useSearchParams();

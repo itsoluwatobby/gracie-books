@@ -18,14 +18,15 @@ type AppConfig = {
 }
 
 interface AuthContextType {
-  user: User | null;
+  user: Partial<UserInfo> | null;
   isAuthenticated: boolean;
   appName: AppConfig;
   loading: boolean;
   logout: () => void;
   setAppName: React.Dispatch<React.SetStateAction<AppConfig>>;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  setUser: React.Dispatch<React.SetStateAction<Partial<UserInfo> | null>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface CartContextType {
@@ -68,16 +69,31 @@ interface Book {
   status: 'public' | 'private';
 }
 
-interface User {
+interface UserInfo {
   id: string;
-  fullName: string;
-  profilePicture: string;
+  deviceId: string;
+  fullName: string | null;
   email: string;
-  password: string;
+  profilePicture: string | null;
+  phoneNumber: string | null;
   role: string; // 1140 | 1155
   isAdmin: boolean;
+  isLoggedIn: boolean;
+  accessToken: string;
+  refreshToken?: string;
   createdAt: string;
   updatedAt: string;
+  provider: SignInMethodTypes;
+}
+
+type GoogleLoginDetails = {
+  uid: string,
+  displayName: string,
+  email: string,
+  photoURL: string,
+  phoneNumber: string,
+  accessToken: string,
+  refreshToken: string
 }
 
 type CartStatus = 'pending' | 'completed';

@@ -1,5 +1,5 @@
 // Mock data for users
-export const users: User[] = [
+export const users: UserInfo[] = [
   {
     id: "user-1",
     name: "John Doe",
@@ -14,7 +14,7 @@ export const users: User[] = [
   },
   {
     id: "admin-1",
-    name: "Admin User",
+    name: "Admin UserInfo",
     email: "admin@example.com",
     isAdmin: true
   }
@@ -32,7 +32,7 @@ export const userPreferences: Record<string, UserPreferences> = {
   }
 };
 
-export const getUserById = (id: string): User | undefined => {
+export const getUserById = (id: string): UserInfo | undefined => {
   return users.find(user => user.id === id);
 };
 

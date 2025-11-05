@@ -2,7 +2,7 @@ import Button from '../ui/Button'
 
 type ManageOrdersProps = {
   orders: Order[];
-  users: User[];
+  users: UserInfo[];
   formatCurrency: (val: number) => string;
   setSelectedOrder: React.Dispatch<React.SetStateAction<Order | null>>;
 }

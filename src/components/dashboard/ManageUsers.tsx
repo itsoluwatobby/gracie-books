@@ -1,7 +1,7 @@
 import Button from '../ui/Button'
 
 type ManageUsersProps = {
-  users: User[];
+  users: UserInfo[];
 }
 
 export default function ManageUsers(
@@ -14,7 +14,7 @@ export default function ManageUsers(
     <div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Manage Users</h2>
-        <Button>Add New User</Button>
+        <Button>Add New UserInfo</Button>
       </div>
       
       <div className="bg-white rounded-lg shadow-md overflow-hidden">

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { createContext, useState, ReactNode } from 'react';
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -17,10 +16,9 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       }
     }
   );
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<Partial<UserInfo> | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-
-  const isAuthenticated = user !== null;
 
   const logout = () => {};
 
@@ -33,6 +31,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     setAppName,
     setUser,
     setLoading,
+    setIsAuthenticated,
   };
 
   return (

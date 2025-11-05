@@ -99,8 +99,19 @@ class UserAuthenticationAPI {
     }
 
     const accessToken = await user.getIdToken();
+
+    const userInfo: Partial<UserInfo> = {
+      id: user.uid,
+      fullName: null,
+      email: user.email!,
+      profilePicture: user.photoURL ?? null,
+      phoneNumber: user.phoneNumber ?? null,
+      accessToken: accessToken,
+      refreshToken: user.refreshToken,
+    };
+
     this.setTokenValue(accessToken);
-    return user;
+    return userInfo;
   };
 
   async signup({ signInMethod, credentials }: SignupProps) {
@@ -128,7 +139,17 @@ class UserAuthenticationAPI {
     const accessToken = await user.getIdToken();
     this.setTokenValue(accessToken);
 
-    return user;
+    const userInfo: Partial<UserInfo> = {
+      id: user.uid,
+      fullName: user.displayName!,
+      email: user.email!,
+      profilePicture: user.photoURL ?? null,
+      phoneNumber: user.phoneNumber ?? null,
+      accessToken: accessToken,
+      refreshToken: user.refreshToken,
+    };
+
+    return userInfo;
   };
 
   async resetPassword(email: string) {

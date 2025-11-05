@@ -15,18 +15,19 @@ type OTPRequestResponse ={
 }
 
 type CreateUser =  {
-  email: string | null;
-  signInMethod: SignInMethodTypes;
-  address: string;
-  referralCode: string;
-  name: string | null;
-  phone: string | null;
+  email: string;
+  fullName: string;
+  // signInMethod: SignInMethodTypes;
+  // password?: string;
+  // referralCode?: string;
+  // confirmPassword?: string;
 }
 
 type SignupProps = {
   signInMethod: SignInMethodTypes,
   credentials?: UserCredentials,
-  referralCode: string,
+  // referralCode: string,
+  // userDetails: CreateUser
 }
 
 type AppState = {

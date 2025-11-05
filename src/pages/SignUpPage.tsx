@@ -1,79 +1,116 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { BookOpen, Mail, Lock, User, ArrowLeft } from 'lucide-react';
+import { BookOpen, Mail, UserIcon, ArrowLeft } from 'lucide-react';
 // import { GoogleLogin } from '@react-oauth/google';
 import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
 import useAuthContext from '../context/useAuthContext';
+import { Passwords } from '../components/ui/Password';
+import { userAuthenticationAPI } from '../composables/auth';
+import toast from 'react-hot-toast';
+import { userService } from '../services';
+
+const initDetails = {
+  fullName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+}
 
 const SignUpPage: React.FC = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [userDetails, setUserDetails] = useState(initDetails);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { signup, loginWithGoogle } = useAuthContext();
+  
+  const { appName, setUser, setIsAuthenticated } = useAuthContext();
+
   const navigate = useNavigate();
 
-  const validateForm = () => {
-    if (!name || !email || !password || !confirmPassword) {
-      setError('All fields are required');
-      return false;
-    }
+  const { email, password, confirmPassword, fullName } = userDetails;
 
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return false;
-    }
+    // useEffect(() => {
+    //   if (email.length === 0) return;
+    //   const isValidEmail = () => {
+    //     if (props.isLogin) return true;
+    //     return EMAIL_REGEX.test(user.value.email);
+    //   }
+    // }, [email])
 
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters long');
-      return false;
-    }
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const [name, value] = [e.target.name, e.target.value];
+    setUserDetails((prev) => ({ ...prev, [name]: value }));
+  }
 
-    return true;
-  };
+  // const validateForm = () => {
+  //   if (!fullName || !email || !password || !confirmPassword) {
+  //     setError('All fields are required');
+  //     return false;
+  //   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  //   if (password !== confirmPassword) {
+  //     setError('Passwords do not match');
+  //     return false;
+  //   }
+
+  //   if (password.length < 8) {
+  //     setError('Password must be at least 8 characters long');
+  //     return false;
+  //   }
+
+  //   return true;
+  // };
+
+  // const handleSubmit = async (e: React.FormEvent, signInMethod: SignInMethodTypes) => {
+  const handleSubmit = async (signInMethod: SignInMethodTypes) => {
     setError('');
 
-    if (!validateForm()) return;
+    // if (!validateForm()) return;
     
     setIsLoading(true);
     
     try {
-      const success = await signup(name, email, password);
-      
-      if (success) {
-        navigate('/');
+      let user: Partial<UserInfo> | null = null;
+      if (signInMethod === "password") {
+        user = await userAuthenticationAPI.signup(
+          {
+            signInMethod,
+            credentials: { email, password },
+          },
+        );
+        setUserDetails(initDetails);
       } else {
-        setError('Email already exists');
+        user = await userAuthenticationAPI.signup({ signInMethod });
       }
-    } catch (err) {
-      setError('An error occurred. Please try again.');
-      console.error(err);
+      setUser(user);
+      await userService.addUser(user);
+      setIsAuthenticated(true);
+      navigate('/');
+    } catch (err: any) {
+      const errCode = err.message;
+
+      let message = "";
+      if (!err?.response?.data) {
+        if (errCode === "auth/invalid-email")
+          message = "Please enter a valid email address";
+        else if (errCode === "auth/user-not-found")
+          message = "No account found with this email";
+        else if (errCode === "auth/missing-email")
+          message = "Please provide an email";
+        else if (errCode === "auth/invalid-credential")
+          message = "Bad credentials";
+        else if (errCode === "auth/email-already-in-use")
+          message = "Email already taken";
+        else message = errCode || "Error! Try again";
+      } else {
+        message = err?.response?.data?.message || err.messge;
+      }
+
+      toast.error(message);
+      setError(message);
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleGoogleSuccess = async (credentialResponse: any) => {
-    try {
-      const success = await loginWithGoogle(credentialResponse.credential);
-      if (success) {
-        navigate('/');
-      }
-    } catch (error) {
-      setError('Failed to sign up with Google');
-      console.error(error);
-    }
-  };
-
-  const handleGoogleError = () => {
-    setError('Google sign up failed. Please try again.');
   };
 
   return (
@@ -82,10 +119,10 @@ const SignUpPage: React.FC = () => {
         <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
           <div className="bg-blue-900 py-4 px-6 flex items-center justify-center">
             <BookOpen className="text-white mr-2" size={24} />
-            <h1 className="text-xl font-bold text-white">BookHaven</h1>
+            <h1 className="text-xl font-bold text-white">{appName.name}</h1>
           </div>
           
-          <div className="p-6">
+          <div className="p-6 flex flex-col">
             <div className="mb-6">
               <Link to="/login" className="text-blue-700 hover:text-blue-900 inline-flex items-center">
                 <ArrowLeft className="h-4 w-4 mr-1" />
@@ -97,26 +134,26 @@ const SignUpPage: React.FC = () => {
               Create Your Account
             </h2>
             
-            <form onSubmit={handleSubmit}>
+            <form className='flex flex-col gap-y-4'>
               {error && (
                 <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md text-sm">
                   {error}
                 </div>
               )}
               
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2" htmlFor="name">
+              <div>
+                <label className="block text-gray-700 mb-2" htmlFor="fullName">
                   Full Name
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <User className="h-5 w-5 text-gray-400" />
+                    <UserIcon className="h-5 w-5 text-gray-400" />
                   </div>
                   <input
-                    id="name"
+                    id="fullName"
                     type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={fullName}
+                    onChange={handleChange}
                     className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="John Doe"
                     required
@@ -124,7 +161,7 @@ const SignUpPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="mb-4">
+              <div>
                 <label className="block text-gray-700 mb-2" htmlFor="email">
                   Email Address
                 </label>
@@ -136,7 +173,7 @@ const SignUpPage: React.FC = () => {
                     id="email"
                     type="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={handleChange}
                     className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="your@email.com"
                     required
@@ -144,52 +181,30 @@ const SignUpPage: React.FC = () => {
                 </div>
               </div>
               
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2" htmlFor="password">
-                  Password
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="********"
-                    required
-                  />
-                </div>
+              <div>
+                <Passwords 
+                  name="password"
+                  handleChange={handleChange}
+                  pwd={confirmPassword}
+                  label='Password'
+                />
                 <p className="mt-1 text-xs text-gray-500">
                   Must be at least 8 characters long
                 </p>
               </div>
 
-              <div className="mb-6">
-                <label className="block text-gray-700 mb-2" htmlFor="confirmPassword">
-                  Confirm Password
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    id="confirmPassword"
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="********"
-                    required
-                  />
-                </div>
-              </div>
+              
+              <Passwords 
+                name="confirmPassword"
+                handleChange={handleChange}
+                pwd={confirmPassword}
+                label='Confirm Password'
+              />
               
               <Button
-                type="submit"
+                type="button"
                 fullWidth
+                onClick={() => handleSubmit("password")}
                 isLoading={isLoading}
                 disabled={isLoading}
               >
@@ -205,13 +220,16 @@ const SignUpPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* <div className="mb-6">
-                <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={handleGoogleError}
-                  useOneTap
-                />
-              </div> */}
+              <div className="mb-6">
+                <Button
+                type='button'
+                className='self-center w-40'
+                variant='secondary'
+                onClick={() => handleSubmit("google.com")}
+                >
+                  Google
+                </Button>
+              </div>
               
               <div className="text-center text-sm text-gray-600">
                 By signing up, you agree to our{' '}

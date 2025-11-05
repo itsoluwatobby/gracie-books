@@ -1,20 +1,19 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { BookOpen, Mail, Lock } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
-// import { GoogleLogin } from '@react-oauth/google';
-// import Input from '../components/ui/Input';
 import useAuthContext from '../context/useAuthContext';
+import { userAuthenticationAPI } from '../composables/auth';
+import toast from 'react-hot-toast';
+import { userService } from '../services';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { appName } = useAuthContext();
+  const { appName, setUser, setIsAuthenticated } = useAuthContext();
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -22,29 +21,50 @@ const LoginPage: React.FC = () => {
   const searchParams = new URLSearchParams(location.search);
   const redirectTo = searchParams.get('redirect') || '/';
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (signInMethod: SignInMethodTypes) => {
     setError('');
-    
-    // Simple validation
-    if (!email || !password) {
-      setError('Please enter both email and password');
-      return;
-    }
-    
     setIsLoading(true);
     
     try {
-    //   // const success = await login(email, password);
-      
-    //   if (success) {
-    //     navigate(redirectTo);
-    //   } else {
-    //     setError('Invalid email or password');
-    //   }
-    } catch (err) {
-      setError('An error occurred. Please try again.');
-      console.error(err);
+      let user: Partial<UserInfo> | null = null;
+      if (signInMethod === "password") {
+        user = await userAuthenticationAPI.login(
+          {
+            signInMethod,
+            credentials: { email, password },
+          },
+        );
+        // setUserDetails(initDetails);
+      } else {
+        user = await userAuthenticationAPI.login({ signInMethod });
+      }
+      setUser(user);
+      await userService.addUser(user);
+      setIsAuthenticated(true);
+      navigate(redirectTo);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      const errCode = err.message;
+
+      let message = "";
+      if (!err?.response?.data) {
+        if (errCode === "auth/invalid-email")
+          message = "Please enter a valid email address";
+        else if (errCode === "auth/user-not-found")
+          message = "No account found with this email";
+        else if (errCode === "auth/missing-email")
+          message = "Please provide an email";
+        else if (errCode === "auth/invalid-credential")
+          message = "Bad credentials";
+        else if (errCode === "auth/email-already-in-use")
+          message = "Email already taken";
+        else message = errCode || "Error! Try again";
+      } else {
+        message = err?.response?.data?.message || err.messge;
+      }
+
+      toast.error(message);
+      setError(message);
     } finally {
       setIsLoading(false);
     }
@@ -73,12 +93,6 @@ const LoginPage: React.FC = () => {
   PASSWORD_REGEX,
   EMAIL_REGEX,
 } = useAuthStore();
-
-const isValidEmail = computed(() => {
-  if (props.isLogin) return true;
-  if (user.value.email.length === 0) return;
-  return EMAIL_REGEX.test(user.value.email);
-});
 
 const isPasswordValid = computed(() => {
   if (props.isLogin) return true;
@@ -193,7 +207,7 @@ const submit = async (signInMethod: SignInMethodTypes) => {
               Login to Your Account
             </h2>
             
-            <form onSubmit={handleSubmit}>
+            <form>
               {error ? (
                 <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md text-sm">
                   {error}
@@ -246,8 +260,9 @@ const submit = async (signInMethod: SignInMethodTypes) => {
               </div>
               
               <Button
-                type="submit"
+                type="button"
                 fullWidth
+                onClick={() => handleSubmit("password")}
                 isLoading={isLoading}
                 disabled={isLoading}
               >
@@ -263,13 +278,16 @@ const submit = async (signInMethod: SignInMethodTypes) => {
                 </div>
               </div>
 
-              {/* <div className="mb-6">
-                <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={handleGoogleError}
-                  useOneTap
-                />
-              </div> */}
+              <div className="mb-6">
+                <Button
+                  type='button'
+                  className='self-center w-40'
+                  variant='secondary'
+                  onClick={() => handleSubmit("google.com")}
+                >
+                  Google
+                </Button>
+              </div>
               
               <div className="mt-6 text-center">
                 <p className="text-gray-600">
@@ -284,8 +302,8 @@ const submit = async (signInMethod: SignInMethodTypes) => {
             <div className="mt-8 text-center text-sm text-gray-500">
               <p className="mb-2">For demo purposes, you can use:</p>
               <div className="bg-gray-50 p-3 rounded-md inline-block text-left">
-                <p><strong>Regular User:</strong> john@example.com</p>
-                <p><strong>Admin User:</strong> admin@example.com</p>
+                <p><strong>Regular UserInfo:</strong> john@example.com</p>
+                <p><strong>Admin UserInfo:</strong> admin@example.com</p>
                 <p className="text-xs mt-1">(any password will work)</p>
               </div>
             </div>

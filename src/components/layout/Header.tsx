@@ -4,11 +4,12 @@ import { ShoppingCart, User, Menu, X, BookOpen, Search } from 'lucide-react';
 import Button from '../ui/Button';
 import useAuthContext from '../../context/useAuthContext';
 import useCartContext from '../../context/useCartContext';
+import { userAuthenticationAPI } from '../../composables/auth';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { isAuthenticated, appName, user, logout } = useAuthContext();
+  const { isAuthenticated, appName, user, setIsAuthenticated } = useAuthContext();
   const { totalItems } = useCartContext();
   const navigate = useNavigate();
 
@@ -23,6 +24,12 @@ const Header: React.FC = () => {
       setIsMenuOpen(false);
     }
   };
+
+  const logout = async () => {
+    await userAuthenticationAPI.logout();
+    setIsAuthenticated(false);
+    setIsMenuOpen(false);
+  }
 
   return (
     <header className="bg-blue-900 text-white shadow-md sticky top-0 z-50 lg:px-10">
@@ -224,10 +231,7 @@ const Header: React.FC = () => {
                     </Link>
                   )}
                   <button
-                    onClick={() => {
-                      logout();
-                      setIsMenuOpen(false);
-                    }}
+                    onClick={logout}
                     className="px-2 py-1 text-left hover:bg-blue-800 rounded transition-colors"
                   >
                     Logout
@@ -239,7 +243,7 @@ const Header: React.FC = () => {
                     to="/login"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    <Button variant="outline" size="sm" fullWidth>
+                    <Button variant="secondary" size="sm" fullWidth>
                       Login
                     </Button>
                   </Link>
