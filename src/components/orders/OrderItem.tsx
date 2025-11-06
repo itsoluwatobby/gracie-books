@@ -48,7 +48,7 @@ const OrderItem: React.FC<OrderItemProps> = ({ order }) => {
                   {
                     isImageDisplayed && (item.book?.coverImage || item.book?.icon) ?
                       <img 
-                        src={item.book?.coverImage ?? item.book?.icon}
+                        src={item.book?.icon ? item.book?.icon : item.book?.coverImage}
                         alt={item.book?.title}
                         onError={() => setIsImageDisplayed(false)}
                         className="w-full h-full object-cover rounded-sm"

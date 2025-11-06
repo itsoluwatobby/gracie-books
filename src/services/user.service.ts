@@ -41,6 +41,7 @@ class UsersService {
       doc(this.usersRef, user.email),
       {
         ...user,
+        role: UserRole.user,
         deviceId: userService.getDeviceId(),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),

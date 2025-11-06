@@ -9,6 +9,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import { userService } from "./user.service";
 
 
 class OrdersService {
@@ -23,10 +24,11 @@ class OrdersService {
         updatedAt: new Date().toISOString(),
       },
     );
+    return this.getOrder(id);
   };
 
   // ORDERS
-  public async addOrder(order: Partial<Order>) {
+  public async addOrder(order: Partial<Order>, email: string) {
     await setDoc(
       doc(this.ordersRef, order.id),
       {
@@ -35,6 +37,7 @@ class OrdersService {
         updatedAt: new Date().toISOString(),
       },
     );
+    await userService.updateUser(email, { shippingAddress: order.shippingAddress })
     return this.getOrder(order.id!);
   };
 
@@ -58,6 +61,16 @@ class OrdersService {
 
   public async getOrders(userId: string) {
     const q = query(this.ordersRef, where("userId", "==", userId));
+    const querySnapShot = await getDocs(q);
+    const orders: Order[] = [];
+    querySnapShot.forEach((doc) => {
+      orders.push({ ...doc.data(), id: doc.id } as Order);
+    });
+    return orders;
+  };
+
+  public async getAllOrders() {
+    const q = query(this.ordersRef);
     const querySnapShot = await getDocs(q);
     const orders: Order[] = [];
     querySnapShot.forEach((doc) => {

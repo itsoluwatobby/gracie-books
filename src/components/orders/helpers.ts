@@ -1,6 +1,6 @@
 
 
-export const getStatusText = (status: string) => {
+export const getStatusText = (status: OrderStatus) => {
 
   switch (status) {
     case 'pending':
@@ -18,7 +18,7 @@ export const getStatusText = (status: string) => {
   }
 };
 
-export const getStatusColor = (status: string) => {
+export const getStatusColor = (status: OrderStatus) => {
 
   switch (status) {
     case 'pending':

@@ -84,6 +84,7 @@ interface UserInfo {
   createdAt: string;
   updatedAt: string;
   provider: SignInMethodTypes;
+  shippingAddress?: ShippingAddress;
 }
 
 type GoogleLoginDetails = {
@@ -133,8 +134,8 @@ interface ShippingAddress {
   city: string;
   state: string;
   phoneNumber: string;
-  // zipCode: string;
   country: string;
+  // zipCode: string;
 }
 
 interface SavedBooks {

@@ -6,18 +6,25 @@ type RecentOrdersProps = {
   orders: Order[];
   formatCurrency: (val: number) => string;
   setActiveSection: React.Dispatch<React.SetStateAction<ModalSelectionsType>>;
+  setSelectedOrder: React.Dispatch<React.SetStateAction<Order | null>>;
 }
 
 export default function RecentOrders(
   { 
-    formatCurrency, orders, setActiveSection,
+    formatCurrency, orders,
+    setActiveSection,
+    setSelectedOrder,
   }: RecentOrdersProps) {
+
   return (
     <Card className="p-6">
       <h3 className="font-semibold mb-4">Recent Orders</h3>
       <div className="space-y-4">
-        {orders.slice(0, 3).map(order => (
-          <div key={order.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+        {orders.slice(0, 5).map(order => (
+          <div 
+          key={order.id} 
+          onClick={() => setSelectedOrder(order)}
+          className="flex justify-between cursor-default items-center p-3 bg-gray-50 rounded-lg hover:scale-[1.005] active:bg-gray-100 transition-all duration-300">
             <div>
               <div className="font-medium">Order #{order.id}</div>
               <div className="text-sm text-gray-500">

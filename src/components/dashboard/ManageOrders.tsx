@@ -2,14 +2,13 @@ import Button from '../ui/Button'
 
 type ManageOrdersProps = {
   orders: Order[];
-  users: UserInfo[];
   formatCurrency: (val: number) => string;
   setSelectedOrder: React.Dispatch<React.SetStateAction<Order | null>>;
 }
 
 export default function ManageOrders(
   {
-    orders, users, formatCurrency, setSelectedOrder
+    orders, formatCurrency, setSelectedOrder
   }: ManageOrdersProps
 ) {
 
@@ -52,7 +51,7 @@ export default function ManageOrders(
                     #{order.id}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {users.find(u => u.id === order.userId)?.name || 'Unknown'}
+                    {order.shippingAddress.fullName || 'Unknown'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {new Date(order.createdAt).toLocaleDateString()}

@@ -1,5 +1,5 @@
 
-export const getStatusText = (status: string) => {
+export const getStatusText = (status: OrderStatus) => {
     switch (status) {
       case 'pending':
         return 'Order Pending';
@@ -16,7 +16,7 @@ export const getStatusText = (status: string) => {
     }
   };
 
-export const getStatusColor = (status: string) => {
+export const getStatusColor = (status: OrderStatus) => {
   switch (status) {
     case 'pending':
       return 'bg-yellow-100 text-yellow-800 border-yellow-200';
@@ -33,7 +33,7 @@ export const getStatusColor = (status: string) => {
   }
 };
 
-export const getTrackingSteps = (status: string) => {
+export const getTrackingSteps = (status: OrderStatus) => {
   const steps = [
     { key: 'pending', label: 'Order Placed', completed: true },
     { key: 'processing', label: 'Processing', completed: ['processing', 'shipped', 'delivered'].includes(status) },

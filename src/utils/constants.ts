@@ -13,4 +13,4 @@ export const ModalSelections = {
 export const UserRole = {
   admin: "1155",
   user: "1140",
-};
+} as const;

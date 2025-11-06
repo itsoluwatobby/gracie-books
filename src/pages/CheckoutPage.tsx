@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Truck } from 'lucide-react';
 import Layout from '../components/layout/Layout';
@@ -16,15 +16,30 @@ const CheckoutPage: React.FC = () => {
   const { items, totalPrice, clearCart } = useCartContext();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ShippingAddress>({
     fullName: '',
-    email: '',
+    // email: '',
     address: '',
     city: '',
     state: '',
     phoneNumber: '',
     country: '',
   });
+
+  useEffect(() => {
+    if (user) {
+      if (user.shippingAddress) setFormData(user.shippingAddress);
+      else {
+        setFormData((prev) => (
+          {
+            ...prev,
+            fullName: user.fullName!,
+            phoneNumber: user.phoneNumber!,
+          }
+        ));
+      }
+    }
+  }, [user])
 
   if (!isAuthenticated) {
     return <Navigate to="/login?redirect=checkout" replace />;
@@ -67,9 +82,9 @@ const CheckoutPage: React.FC = () => {
           country: formData.country
         },
       };
-      
+
       // Clear cart and redirect to success page
-      await orderService.addOrder(newOrder);
+      await orderService.addOrder(newOrder, user.email!);
       clearCart();
       navigate('/orders');
     } catch (error) {
@@ -82,8 +97,8 @@ const CheckoutPage: React.FC = () => {
   // Calculate order summary
   const subtotal = totalPrice;
   const shipping = subtotal > 100 ? 0 : 5.99;
-  const tax = subtotal * 0.07; // 7% tax
-  const total = subtotal + shipping + tax;
+  // const tax = subtotal * 0.07; // 7% tax
+  const total = subtotal + shipping;
 
   return (
     <Layout>
@@ -110,7 +125,7 @@ const CheckoutPage: React.FC = () => {
                     required
                     fullWidth
                   />
-                  <Input
+                  {/* <Input
                     label="Email"
                     type="email"
                     name="email"
@@ -118,7 +133,7 @@ const CheckoutPage: React.FC = () => {
                     onChange={handleInputChange}
                     required
                     fullWidth
-                  />
+                  /> */}
                   <Input
                     type='numeric'
                     label="Phone number"
@@ -172,7 +187,7 @@ const CheckoutPage: React.FC = () => {
                     <div key={item.book.id} className="py-4 flex items-center">
                       <div className="w-16 h-24 bg-gray-100 rounded overflow-hidden mr-4">
                         <img 
-                          src={item.book.coverImage} 
+                          src={item.book.icon ? item.book.icon : item.book.coverImage} 
                           alt={item.book.title} 
                           className="w-full h-full object-cover"
                         />
@@ -182,7 +197,7 @@ const CheckoutPage: React.FC = () => {
                         <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
                       </div>
                       <div className="font-medium">
-                        ${(item.book.price * item.quantity).toFixed(2)}
+                        {helper.formatPrice(item.book.price * item.quantity)}
                       </div>
                     </div>
                   ))}
@@ -197,22 +212,22 @@ const CheckoutPage: React.FC = () => {
                   <div className="space-y-3 mb-6">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Subtotal</span>
-                      <span>${subtotal.toFixed(2)}</span>
+                      <span>${subtotal}</span>
                     </div>
                     
                     <div className="flex justify-between">
                       <span className="text-gray-600">Shipping</span>
-                      <span>{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
+                      <span>{shipping === 0 ? 'To Calculated' : `${helper.formatPrice(shipping)}`}</span>
                     </div>
                     
-                    <div className="flex justify-between">
+                    {/* <div className="flex justify-between">
                       <span className="text-gray-600">Tax (7%)</span>
-                      <span>${tax.toFixed(2)}</span>
-                    </div>
+                      <span>${tax}</span>
+                    </div> */}
                     
                     <div className="border-t pt-3 flex justify-between font-semibold">
                       <span>Total</span>
-                      <span>${total.toFixed(2)}</span>
+                      <span>{helper.formatPrice(total)}</span>
                     </div>
                   </div>
 
@@ -243,22 +258,22 @@ const CheckoutPage: React.FC = () => {
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>{helper.formatPrice(subtotal)}</span>
                 </div>
                 
                 <div className="flex justify-between">
                   <span className="text-gray-600">Shipping</span>
-                  <span>{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
+                  <span>{shipping === 0 ? 'To Calculated' : `${helper.formatPrice(shipping)}`}</span>
                 </div>
                 
-                <div className="flex justify-between">
+                {/* <div className="flex justify-between">
                   <span className="text-gray-600">Tax (7%)</span>
-                  <span>${tax.toFixed(2)}</span>
-                </div>
+                  <span>${tax}</span>
+                </div> */}
                 
                 <div className="border-t pt-3 flex justify-between font-semibold">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>{helper.formatPrice(total)}</span>
                 </div>
               </div>
 

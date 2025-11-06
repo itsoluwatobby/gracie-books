@@ -28,7 +28,8 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       setIsAuthenticated(true)
     } else {
       (async () => {
-        const currentUser = auth.currentUser;
+        const currentUser = auth.currentUser; 
+        
         if (currentUser) {
           const accessToken = await currentUser.getIdToken(true);
           const userInfo: Partial<UserInfo> = {

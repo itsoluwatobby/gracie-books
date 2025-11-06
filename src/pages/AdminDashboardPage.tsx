@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useState } from 'react';
 import { ChevronDown, ChevronUp, Menu } from 'lucide-react';
 import Layout from '../components/layout/Layout';
-import { orders } from '../data/orders';
+// import { orders } from '../data/orders';
 import { books } from '../data/books';
 import { users } from '../data/users';
 import { ModalSelections } from '../utils/constants';
@@ -17,6 +18,9 @@ import {
   StockPiled,
   TopCard,
 } from '../components/dashboard';
+import { orderService } from '../services/order.service';
+import useCartContext from '../context/useCartContext';
+
 
 const AdminDashboardPage: React.FC = () => {
   const [activeSection, setActiveSection] = useState<ModalSelectionsType>(ModalSelections.overview);
@@ -24,6 +28,32 @@ const AdminDashboardPage: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showBookModal, setShowBookModal] = useState(false);
   const [editBook, setEditBook] = useState<Book | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const { reload, setReload } = useCartContext() as CartContextType;
+
+  useEffect(() => {
+    let isMounted = true;
+    const getItems = async () => {
+      try {
+        setIsLoading(true);
+        const orderItems = await orderService.getAllOrders();
+        if (orderItems?.length) setOrders(orderItems);
+        else throw Error("An error occurred");
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    if (isMounted) getItems();
+
+    return () => {
+      isMounted = false
+    }
+  }, [reload.platform_reload]);
 
   // Calculate summary metrics
   const totalOrders = orders.length;
@@ -47,11 +77,12 @@ const AdminDashboardPage: React.FC = () => {
           pendingOrders={pendingOrders}
           formatCurrency={helper.formatPrice}
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <RecentOrders 
             orders={orders}
             formatCurrency={helper.formatPrice}
             setActiveSection={setActiveSection}
+            setSelectedOrder={setSelectedOrder}
           />
           <StockPiled books={books} setActiveSection={setActiveSection} />
         </div>
@@ -59,7 +90,6 @@ const AdminDashboardPage: React.FC = () => {
     ),
     orders: (
       <ManageOrders 
-        users={users}
         orders={orders}
         setSelectedOrder={setSelectedOrder}
         formatCurrency={helper.formatPrice}
@@ -72,7 +102,7 @@ const AdminDashboardPage: React.FC = () => {
         setShowBookModal={setShowBookModal}
       />
     ),
-    users: <ManageUsers users={users} />
+    users: <ManageUsers />
   }
 
   return (
@@ -114,6 +144,7 @@ const AdminDashboardPage: React.FC = () => {
                 <OrderDetails 
                   order={selectedOrder}
                   users={users}
+                  setReload={setReload}
                   formatCurrency={helper.formatPrice}
                   setSelectedOrder={setSelectedOrder}
                 />

@@ -8,6 +8,7 @@ import { GetStatusIcon } from '../components/orders/StatusIcons';
 import { getStatusColor, getStatusText, getTrackingSteps } from '../components/order/helper';
 import { orderService } from '../services/order.service';
 import { helper } from '../utils/helper';
+import LoadingContent from '../components/ui/ContentLoading';
 
 
 const OrderDetailPage: React.FC = () => {
@@ -34,11 +35,7 @@ const OrderDetailPage: React.FC = () => {
   if (loading) {
     return (
       <Layout>
-        <div className="container mx-auto px-4 py-12">
-          <div className="flex justify-center items-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-900"></div>
-          </div>
-        </div>
+        <LoadingContent />
       </Layout>
     );
   }
@@ -107,35 +104,41 @@ const OrderDetailPage: React.FC = () => {
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-lg font-semibold mb-6">Order Tracking</h2>
               <div className="relative">
-                {getTrackingSteps(order.status).map((step, index) => (
-                  <div key={step.key} className="flex items-center mb-6 last:mb-0">
-                    <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-                      step.completed ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'
-                    }`}>
-                      {step.completed ? (
-                        <CheckCircle className="h-5 w-5" />
-                      ) : (
-                        <div className="w-3 h-3 rounded-full bg-current"></div>
-                      )}
-                    </div>
-                    <div className="ml-4">
-                      <div className={`font-medium ${step.completed ? 'text-blue-900' : 'text-gray-500'}`}>
-                        {step.label}
+                {getTrackingSteps("delivered").map((step, index) => (
+                // {getTrackingSteps(order.status).map((step, index) => (
+                  <div key={step.key} className='flex flex-col'>
+                    <div className="flex items-center last:mb-0 first">
+                      <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                        step.completed ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'
+                      }`}>
+                        {step.completed ? (
+                          <CheckCircle className="h-5 w-5" />
+                        ) : (
+                          <div className="w-3 h-3 rounded-full bg-current"></div>
+                        )}
                       </div>
-                      {step.key === order.status && (
-                        <div className="text-sm text-gray-500">
-                          Updated {formatDate(order.updatedAt)}
+                      <div className="ml-4">
+                        <div className={`font-medium ${step.completed ? 'text-blue-900' : 'text-gray-500'}`}>
+                          {step.label}
                         </div>
-                      )}
+                        {step.key === order.status && (
+                          <div className="text-sm text-gray-500">
+                            Updated {formatDate(order.updatedAt)}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    {index < getTrackingSteps(order.status).length - 1 && (
-                      <div className={`absolute left-4 w-0.5 h-6 mt-8 ${
+                  
+                    {/* {index < getTrackingSteps(order.status).length - 1 && ( */}
+                    {index < getTrackingSteps("delivered").length - 1 && ( 
+                      <div className={`lasthidden ml-4 bsolute left-4 w-0.5 h-5 mt1 ${
                         step.completed ? 'bg-blue-600' : 'bg-gray-200'
                       }`} style={{ top: `${index * 6 + 2}rem` }}></div>
                     )}
                   </div>
                 ))}
               </div>
+              {/* </div> */}
             </div>
 
             {/* Order Items */}
@@ -150,7 +153,7 @@ const OrderDetailPage: React.FC = () => {
                         {
                           (item.book?.coverImage || item.book?.icon) ? (
                             <img 
-                              src={item.book.coverImage} 
+                              src={item.book?.icon ? item.book?.icon : item.book.coverImage} 
                               alt={item.book.title} 
                               className="w-full h-full object-cover"
                             />

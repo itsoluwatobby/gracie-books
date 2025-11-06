@@ -1,11 +1,15 @@
-import React from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState } from 'react';
 import { X, Calendar, User, Package, MapPin, CreditCard } from 'lucide-react';
 import Button from "../ui/Button";
+import toast from 'react-hot-toast';
+import { orderService } from '../../services/order.service';
 
 type OrderDetailsProps = {
   order: Order;
   users: UserInfo[];
   formatCurrency: (val: number) => string;
+  setReload: React.Dispatch<React.SetStateAction<Reloads>>
   setSelectedOrder: React.Dispatch<React.SetStateAction<Order | null>>;
 }
 
@@ -13,8 +17,12 @@ export default function OrderDetails(
   { 
     order, users,
     formatCurrency, setSelectedOrder,
+    setReload,
   }: OrderDetailsProps
 ) {
+  const [orderDetail, setOrderDetail] = useState<Order>(order);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const customer = users.find(u => u.id === order.userId);
 
   const getStatusColor = (status: string) => {
@@ -25,6 +33,26 @@ export default function OrderDetails(
       case 'delivered': return 'bg-green-100 text-green-800 border-green-200';
       case 'cancelled': return 'bg-red-100 text-red-800 border-red-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  const handleUpdate = async () => {
+    if (isLoading || order.status === orderDetail.status) return;
+    try {
+      setIsLoading(true);
+      const orderInfo = await orderService.updateOrder(order.id, { status: orderDetail.status });
+      
+      if (!orderInfo)
+        throw Error("An Error Occurred");
+      else {
+        setOrderDetail(orderInfo);
+        setReload((prev) => ({ ...prev, platform_reload: prev.platform_reload + 1 }))
+        toast.success("Order status updated");
+      }
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -41,9 +69,9 @@ export default function OrderDetails(
             variant="outline" 
             size="sm"
             onClick={() => setSelectedOrder(null)}
-            className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm"
+            className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm flex items-center py-2"
           >
-            <X className="w-4 h-4 mr-2" />
+            <X className="w-5 h-5 mr-2" />
             Close
           </Button>
         </div>
@@ -58,7 +86,7 @@ export default function OrderDetails(
               <span className="text-sm font-medium text-blue-800">Customer</span>
             </div>
             <div className="text-lg font-bold text-blue-900">
-              {customer?.fullName || 'Unknown Customer'}
+              {order.shippingAddress.fullName || 'Unknown Customer'}
             </div>
             {customer?.email && (
               <div className="text-sm text-blue-600 mt-1">{customer.email}</div>
@@ -91,8 +119,9 @@ export default function OrderDetails(
               <span className="text-sm font-medium text-purple-800">Status</span>
             </div>
             <select 
-              className={`w-full border rounded-lg px-3 py-2 text-sm font-medium capitalize ${getStatusColor(order.status)}`}
-              defaultValue={order.status}
+              onChange={(e) => setOrderDetail((prev) => ({ ...prev, status: e.target.value as OrderStatus }))}
+              className={`w-full border focus:outline-0 rounded-lg px-3 py-2 text-sm font-medium capitalize ${getStatusColor(orderDetail.status)}`}
+              defaultValue={orderDetail.status}
             >
               <option value="pending">Pending</option>
               <option value="processing">Processing</option>
@@ -124,13 +153,13 @@ export default function OrderDetails(
                         Qty: {item.quantity}
                       </span>
                       <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
-                        {formatCurrency(item.price)} each
+                        {formatCurrency(item.book.price)} each
                       </span>
                     </div>
                   </div>
                   <div className="text-right">
                     <div className="text-2xl font-bold text-gray-900">
-                      {formatCurrency(item.price * item.quantity)}
+                      {formatCurrency(item.price)}
                     </div>
                   </div>
                 </div>
@@ -147,10 +176,13 @@ export default function OrderDetails(
           </div>
           <div className="bg-white rounded-lg p-5 border border-orange-200">
             <div className="space-y-2 text-gray-700">
-              <p className="font-semibold text-lg text-gray-900">{order.shippingAddress.fullName}</p>
-              <p className="text-gray-600">{order.shippingAddress.street}</p>
+              <div className='flex items-center justify-between'>
+                <p className="font-semibold text-lg text-gray-900">{order.shippingAddress.fullName}</p>
+                <p className="text-gray-600"><b>Contact:</b> {order.shippingAddress.phoneNumber}</p>
+              </div>
+              <p className="text-gray-600">{order.shippingAddress.address}</p>
               <p className="text-gray-600">
-                {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zipCode}
+                {order.shippingAddress.city}, {order.shippingAddress.state}
               </p>
               <p className="text-gray-600 font-medium">{order.shippingAddress.country}</p>
             </div>
@@ -175,8 +207,10 @@ export default function OrderDetails(
           <Button variant="outline" className="px-6 py-3">
             Print Order
           </Button>
-          <Button className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800">
-            Update Order
+          <Button 
+          onClick={handleUpdate}
+          className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800">
+            {isLoading ? 'Updating...' : 'Update Order'}
           </Button>
         </div>
       </div>
