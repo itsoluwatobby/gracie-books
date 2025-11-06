@@ -5,6 +5,7 @@ import Button from '../ui/Button';
 import useAuthContext from '../../context/useAuthContext';
 import useCartContext from '../../context/useCartContext';
 import { userAuthenticationAPI } from '../../composables/auth';
+import { userService } from '../../services';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -27,6 +28,9 @@ const Header: React.FC = () => {
 
   const logout = async () => {
     await userAuthenticationAPI.logout();
+    if (user) {
+      await userService.updateUser(user.email!, { isLoggedIn: false });
+    }
     setIsAuthenticated(false);
     setIsMenuOpen(false);
   }

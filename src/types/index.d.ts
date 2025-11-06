@@ -106,12 +106,15 @@ type CartItem = {
   userId: string;
 }
 
+type Currency = "₦"
+
 interface Order {
   id: string;
   userId: string;
   items: CartItem[];
   status: OrderStatus;
   totalAmount: number;
+  currency: Currency;
   createdAt: string;
   updatedAt: string;
   shippingAddress: ShippingAddress;
@@ -126,10 +129,11 @@ interface Order {
 
 interface ShippingAddress {
   fullName: string;
-  street: string;
+  address: string;
   city: string;
   state: string;
-  zipCode: string;
+  phoneNumber: string;
+  // zipCode: string;
   country: string;
 }
 

@@ -1,22 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import OrderItem from '../components/orders/OrderItem';
 import Button from '../components/ui/Button';
 import useAuthContext from '../context/useAuthContext';
-import { getOrdersByUserId } from '../data/orders';
+import { orderService } from '../services/order.service';
 
 const OrdersPage: React.FC = () => {
   const { user, isAuthenticated } = useAuthContext();
-  
-  // Get orders for the current user
-  const orders = user ? getOrdersByUserId(user.id) : [];
+  const [orders, setOrders] = useState<Order[]>([]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    let isMounted = true;
+    const getItems = async () => {
+      const orderItems = await orderService.getOrders(user.id!);
+      if (orderItems?.length) setOrders(orderItems);
+    };
+    if (isMounted) getItems();
+
+    return () => {
+      isMounted = false
+    }
+  }, [user]);
   
   if (!isAuthenticated) {
     return (
       <Layout>
-        <div className="container mx-auto px-4 py-12">
+        <div className="container mx-auto px-4 py-12 xl:max-w-[65vw]">
           <div className="bg-white rounded-lg shadow-md p-8 text-center">
             <h2 className="text-xl font-semibold mb-4">You need to be logged in to view your orders</h2>
             <p className="text-gray-600 mb-6">
@@ -33,7 +46,7 @@ const OrdersPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 xl:max-w-[75vw]">
         <h1 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6">Your Orders</h1>
 
         {orders.length === 0 ? (

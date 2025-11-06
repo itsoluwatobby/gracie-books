@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
- 
- export default function PageNotFound() {
+
+const PageNotFound: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,3 +22,4 @@ import Layout from '../components/layout/Layout';
     </Layout>
   )
 }
+export default PageNotFound;

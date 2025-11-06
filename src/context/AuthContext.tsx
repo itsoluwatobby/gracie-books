@@ -1,4 +1,6 @@
-import React, { createContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode, useEffect } from 'react';
+import { auth } from "../firebase/config";
+// import { useLocation } from 'react-router-dom';
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
@@ -19,6 +21,34 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<Partial<UserInfo> | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (user) {
+      console.log(user) 
+      setIsAuthenticated(true)
+    } else {
+      (async () => {
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+          const accessToken = await currentUser.getIdToken(true);
+          const userInfo: Partial<UserInfo> = {
+            id: currentUser.uid,
+            fullName: null,
+            email: currentUser.email!,
+            profilePicture: currentUser.photoURL ?? null,
+            phoneNumber: currentUser.phoneNumber ?? null,
+            accessToken: accessToken,
+            refreshToken: currentUser.refreshToken,
+          };
+
+          console.log("called")
+          setUser(userInfo);
+          setIsAuthenticated(true);
+        }
+      })();
+    }
+  }, [user])
+  // }, [user, pathname])
 
   const logout = () => {};
 

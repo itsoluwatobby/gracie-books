@@ -11,9 +11,22 @@ import {
   signOut,
   type User,
   confirmPasswordReset,
+  // onAuthStateChanged,
 } from "firebase/auth";
 import { browserAPI } from "./local-storage";
 import { helper } from "../utils/helper";
+
+
+// onAuthStateChanged(auth, (user) => {
+//   console.log({ user })
+//   if (user) {
+//     console.log('User is signed in:', user.uid);
+//     // Show user profile
+//   } else {
+//     console.log('User is signed out');
+//     // Show login
+//   }
+// });
 
 class UserAuthenticationAPI {
   public static EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -33,7 +46,7 @@ class UserAuthenticationAPI {
 
   setTokenValue(accessToken: string) {
     this.token = accessToken;
-    localStorage.setItem("zedo-token", JSON.stringify({ accessToken }));
+    localStorage.setItem("wandyte-token", JSON.stringify({ accessToken }));
   };
 
   async getRefreshToken() {
@@ -62,6 +75,7 @@ class UserAuthenticationAPI {
 
   async loginWithGoogle() {
     const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
 
     try {
       const userCredential = await signInWithPopup(auth, provider)
@@ -88,6 +102,26 @@ class UserAuthenticationAPI {
     }
   };
 
+  private async constructUserInfo(
+    user: User,
+    signInMethod: SignupProps["signInMethod"],
+  ): Promise<Partial<UserInfo>> {
+    const accessToken = await user.getIdToken();
+    this.setTokenValue(accessToken);
+
+    return {
+      id: user.uid,
+      fullName: user?.displayName ?? null,
+      email: user.email!,
+      profilePicture: user.photoURL ?? null,
+      phoneNumber: user.phoneNumber ?? null,
+      accessToken: accessToken,
+      refreshToken: user.refreshToken,
+      provider: signInMethod,
+      isLoggedIn: true,
+    };
+  }
+
   async login({ signInMethod, credentials }: SignupProps): Promise<any> {
     let user: User;
     if (signInMethod === "password") {
@@ -98,24 +132,11 @@ class UserAuthenticationAPI {
       user = await this.loginWithApple();
     }
 
-    const accessToken = await user.getIdToken();
-
-    const userInfo: Partial<UserInfo> = {
-      id: user.uid,
-      fullName: null,
-      email: user.email!,
-      profilePicture: user.photoURL ?? null,
-      phoneNumber: user.phoneNumber ?? null,
-      accessToken: accessToken,
-      refreshToken: user.refreshToken,
-    };
-
-    this.setTokenValue(accessToken);
-    return userInfo;
+    return this.constructUserInfo(user, signInMethod);
   };
 
   async signup({ signInMethod, credentials }: SignupProps) {
-    let user: User | null = null;
+    let user: User;
     if (signInMethod === "password") {
       try {
         const userCredential = await createUserWithEmailAndPassword(
@@ -136,20 +157,7 @@ class UserAuthenticationAPI {
       }
     }
 
-    const accessToken = await user.getIdToken();
-    this.setTokenValue(accessToken);
-
-    const userInfo: Partial<UserInfo> = {
-      id: user.uid,
-      fullName: user.displayName!,
-      email: user.email!,
-      profilePicture: user.photoURL ?? null,
-      phoneNumber: user.phoneNumber ?? null,
-      accessToken: accessToken,
-      refreshToken: user.refreshToken,
-    };
-
-    return userInfo;
+    return this.constructUserInfo(user, signInMethod);
   };
 
   async resetPassword(email: string) {

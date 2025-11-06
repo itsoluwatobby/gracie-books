@@ -17,11 +17,13 @@ import {
   Unauthorised,
   SearchPage,
   SignUpPage,
+  OrderDetailPage,
 } from './pages';
 import RoutePrivilege from './components/layout/RoutePrivilege';
 import { PageRoutes } from './utils/pageRoutes';
 import { Toaster } from 'react-hot-toast';
 import LoadingUI from './components/ui/Loader';
+import AuthLayout from './components/layout/AuthLayour';
 
 
 function App() {
@@ -37,10 +39,15 @@ function App() {
               <Route path={`${PageRoutes.books}/:id`} element={<BookDetailPage />} />
               <Route path={PageRoutes.cart} element={<CartPage />} />
               <Route path={PageRoutes.checkout} element={<CheckoutPage />} />
-              <Route path={PageRoutes.auth.login} element={<LoginPage />} />
-              <Route path={PageRoutes.auth.signup} element={<SignUpPage />} />
-              <Route path={PageRoutes.auth.forgotPassword} element={<ForgotPasswordPage />} />
+
+              <Route path="/" element={<AuthLayout />}>
+                <Route path={PageRoutes.auth.login} element={<LoginPage />} />
+                <Route path={PageRoutes.auth.signup} element={<SignUpPage />} />
+                <Route path={PageRoutes.auth.forgotPassword} element={<ForgotPasswordPage />} />
+              </Route>
+
               <Route path={PageRoutes.orders} element={<OrdersPage />} />
+              <Route path={`${PageRoutes.orders}/:id`} element={<OrderDetailPage />} />
               <Route path={PageRoutes.search} element={<SearchPage />} />
               <Route path={PageRoutes.newRelease} element={<NewReleases />} />
               <Route path={`${PageRoutes.genres}/:genre"`} element={<GenrePage />} />

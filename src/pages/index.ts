@@ -5,6 +5,7 @@ import CheckoutPage from './CheckoutPage';
 import CartPage from './CartPage';
 import LoginPage from './LoginPage';
 import OrdersPage from './OrdersPage';
+import OrderDetailPage from './OrderDetailPage';
 import SearchPage from './SearchPage';
 import AdminDashboardPage from './AdminDashboardPage';
 import PageNotFound from './PageNotFound';
@@ -23,6 +24,7 @@ export {
   HomePage,
   LoginPage,
   OrdersPage,
+  OrderDetailPage,
   PageNotFound,
   SearchPage,
   NewReleases,

@@ -7,6 +7,7 @@ import useAuthContext from '../context/useAuthContext';
 import { userAuthenticationAPI } from '../composables/auth';
 import toast from 'react-hot-toast';
 import { userService } from '../services';
+import { GoogleSignupbutton } from '../components/ui/GoogleSignupbutton';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -34,7 +35,6 @@ const LoginPage: React.FC = () => {
             credentials: { email, password },
           },
         );
-        // setUserDetails(initDetails);
       } else {
         user = await userAuthenticationAPI.login({ signInMethod });
       }
@@ -48,17 +48,28 @@ const LoginPage: React.FC = () => {
 
       let message = "";
       if (!err?.response?.data) {
-        if (errCode === "auth/invalid-email")
-          message = "Please enter a valid email address";
-        else if (errCode === "auth/user-not-found")
-          message = "No account found with this email";
-        else if (errCode === "auth/missing-email")
-          message = "Please provide an email";
-        else if (errCode === "auth/invalid-credential")
-          message = "Bad credentials";
-        else if (errCode === "auth/email-already-in-use")
-          message = "Email already taken";
-        else message = errCode || "Error! Try again";
+        switch(errCode) {
+          case "auth/invalid-email":
+            message = "Please enter a valid email address";
+            break;
+          case "auth/user-not-found":
+            message = "No account found with this email";
+            break;
+          case "auth/missing-email":
+            message = "Please provide an email";
+            break;
+          case "auth/invalid-credential":
+            message = "Bad credentials";
+            break;
+          case "auth/email-already-in-use":
+            message = "Email already taken";
+            break;
+          case "auth/popup-closed-by-user":
+            message = "An error occurred";
+            break;
+          default:
+            message = errCode || "Error! Try again";
+        } 
       } else {
         message = err?.response?.data?.message || err.messge;
       }
@@ -69,129 +80,6 @@ const LoginPage: React.FC = () => {
       setIsLoading(false);
     }
   };
-
-  // const handleGoogleSuccess = async (credentialResponse: any) => {
-  //   try {
-  //     const success = await loginWithGoogle(credentialResponse.credential);
-  //     if (success) {
-  //       navigate(redirectTo);
-  //     }
-  //   } catch (error) {
-  //     setError('Failed to login with Google');
-  //     console.error(error);
-  //   }
-  // };
-
-  // const handleGoogleError = () => {
-  //   setError('Google login failed. Please try again.');
-  // };
-
-  /**
-   * const {
-  login,
-  signup,
-  PASSWORD_REGEX,
-  EMAIL_REGEX,
-} = useAuthStore();
-
-const isPasswordValid = computed(() => {
-  if (props.isLogin) return true;
-  if (user.value.password.length === 0) return;
-  return PASSWORD_REGEX.test(user.value.password);
-});
-
-const loading = ref(false);
-const googleLoginLoading = ref(false);
-
-const canSubmit = computed(() => {
-  return [...Object.values(user.value)].every(Boolean);
-});
-
-const handlePolicy = () => acceptPolicy.value = !acceptPolicy.value;
-
-const isRequirementMet = computed(() => {
-  if (props.isLogin) return canSubmit.value;
-  return canSubmit.value && isPasswordValid.value && isValidEmail.value && acceptPolicy.value;
-});
-
-const submit = async (signInMethod: SignInMethodTypes) => {
-  if (
-    loading.value || googleLoginLoading.value ||
-    (!canSubmit.value && !isRequirementMet.value && signInMethod === "password")
-  )
-    return;
-
-  try {
-    let message = "Login Successful";
-    const referralCode = query?.referralCode as string;
-
-    if (props.isLogin) {
-      if (signInMethod === "password") {
-        loading.value = true;
-        await login({
-          signInMethod: "password",
-          credentials: user.value,
-          referralCode,
-        });
-      } else if (signInMethod === "google.com") {
-        googleLoginLoading.value = true;
-        await login({ signInMethod: "google.com", referralCode });
-      } else {
-        googleLoginLoading.value = true;
-        await login({ signInMethod: "apple.com", referralCode });
-      }
-    } else {
-      if (signInMethod === "password") {
-        loading.value = true;
-        await signup({
-          signInMethod: "password",
-          credentials: user.value,
-          referralCode,
-        });
-        message = "Account created successfully!";
-      } else {
-        if (signInMethod === "google.com") {
-          googleLoginLoading.value = true;
-          await signup({ signInMethod: "google.com", referralCode });
-          // message = 'Account created successfully!';
-        } else {
-          googleLoginLoading.value = true;
-          await signup({ signInMethod: "apple.com", referralCode });
-        }
-      }
-    }
-
-    toast.success(message);
-    router.push({ name: "agent-user-ai-search" });
-    // router.push({ name: "agent-user-dashboard" });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    const errCode = error.message;
-
-    let message = "";
-    if (!error?.response?.data) {
-      if (errCode === "auth/invalid-email")
-        message = "Please enter a valid email address";
-      else if (errCode === "auth/user-not-found")
-        message = "No account found with this email";
-      else if (errCode === "auth/missing-email")
-        message = "Please provide an email";
-      else if (errCode === "auth/invalid-credential")
-        message = "Bad credentials";
-      else if (errCode === "auth/email-already-in-use")
-        message = "Email already taken";
-      else message = errCode || "Error! Try again";
-    } else {
-      message = error?.response?.data?.message || error.messge;
-    }
-
-    toast.error(message);
-  } finally {
-    loading.value = false;
-    googleLoginLoading.value = false;
-  }
-}
-   */
 
   return (
     <Layout>
@@ -279,14 +167,11 @@ const submit = async (signInMethod: SignInMethodTypes) => {
               </div>
 
               <div className="mb-6">
-                <Button
-                  type='button'
-                  className='self-center w-40'
-                  variant='secondary'
-                  onClick={() => handleSubmit("google.com")}
-                >
-                  Google
-                </Button>
+                <GoogleSignupbutton
+                type='button'
+                className='self-center w-40'
+                onClick={() => handleSubmit("google.com")}
+                />
               </div>
               
               <div className="mt-6 text-center">
@@ -299,14 +184,14 @@ const submit = async (signInMethod: SignInMethodTypes) => {
               </div>
             </form>
             
-            <div className="mt-8 text-center text-sm text-gray-500">
+            {/* <div className="mt-8 text-center text-sm text-gray-500">
               <p className="mb-2">For demo purposes, you can use:</p>
               <div className="bg-gray-50 p-3 rounded-md inline-block text-left">
                 <p><strong>Regular UserInfo:</strong> john@example.com</p>
                 <p><strong>Admin UserInfo:</strong> admin@example.com</p>
                 <p className="text-xs mt-1">(any password will work)</p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

@@ -10,6 +10,7 @@ import { Passwords } from '../components/ui/Password';
 import { userAuthenticationAPI } from '../composables/auth';
 import toast from 'react-hot-toast';
 import { userService } from '../services';
+import { GoogleSignupbutton } from '../components/ui/GoogleSignupbutton';
 
 const initDetails = {
   fullName: "",
@@ -78,12 +79,15 @@ const SignUpPage: React.FC = () => {
             credentials: { email, password },
           },
         );
+        console.log(user)
+        const res = await userService.addUser({ ...user, fullName });
+        console.log({ res })
         setUserDetails(initDetails);
       } else {
         user = await userAuthenticationAPI.signup({ signInMethod });
+        await userService.addUser(user);
       }
       setUser(user);
-      await userService.addUser(user);
       setIsAuthenticated(true);
       navigate('/');
     } catch (err: any) {
@@ -91,17 +95,28 @@ const SignUpPage: React.FC = () => {
 
       let message = "";
       if (!err?.response?.data) {
-        if (errCode === "auth/invalid-email")
-          message = "Please enter a valid email address";
-        else if (errCode === "auth/user-not-found")
-          message = "No account found with this email";
-        else if (errCode === "auth/missing-email")
-          message = "Please provide an email";
-        else if (errCode === "auth/invalid-credential")
-          message = "Bad credentials";
-        else if (errCode === "auth/email-already-in-use")
-          message = "Email already taken";
-        else message = errCode || "Error! Try again";
+        switch(errCode) {
+          case "auth/invalid-email":
+            message = "Please enter a valid email address";
+            break;
+          case "auth/user-not-found":
+            message = "No account found with this email";
+            break;
+          case "auth/missing-email":
+            message = "Please provide an email";
+            break;
+          case "auth/invalid-credential":
+            message = "Bad credentials";
+            break;
+          case "auth/email-already-in-use":
+            message = "Email already taken";
+            break;
+          case "auth/popup-closed-by-user":
+            message = "An error occurred";
+            break;
+          default:
+            message = errCode || "Error! Try again";
+        } 
       } else {
         message = err?.response?.data?.message || err.messge;
       }
@@ -151,6 +166,7 @@ const SignUpPage: React.FC = () => {
                   </div>
                   <input
                     id="fullName"
+                    name="fullName"
                     type="text"
                     value={fullName}
                     onChange={handleChange}
@@ -171,6 +187,7 @@ const SignUpPage: React.FC = () => {
                   </div>
                   <input
                     id="email"
+                    name="email"
                     type="email"
                     value={email}
                     onChange={handleChange}
@@ -185,7 +202,7 @@ const SignUpPage: React.FC = () => {
                 <Passwords 
                   name="password"
                   handleChange={handleChange}
-                  pwd={confirmPassword}
+                  pwd={password}
                   label='Password'
                 />
                 <p className="mt-1 text-xs text-gray-500">
@@ -221,14 +238,11 @@ const SignUpPage: React.FC = () => {
               </div>
 
               <div className="mb-6">
-                <Button
+                <GoogleSignupbutton
                 type='button'
                 className='self-center w-40'
-                variant='secondary'
                 onClick={() => handleSubmit("google.com")}
-                >
-                  Google
-                </Button>
+                />
               </div>
               
               <div className="text-center text-sm text-gray-600">

@@ -49,17 +49,6 @@ class UsersService {
     return this.getUser(user.email!);
   };
 
-  // public async getUserWithoutError(email: string) {
-  //   const docRef = doc(ApplicationDB, "users", email);
-  //   const docSnap = await getDoc(docRef);
-  //   if (docSnap.exists()) {
-  //     return { ...docSnap.data(), id: docSnap.id } as UserInfo;
-  //   } else {
-  //     console.log("UserInfo not found");
-  //     return null;
-  //   }
-  // };
-
   public async getUser(email: string) {
     const docRef = doc(ApplicationDB, "users", email);
     const docSnap = await getDoc(docRef);
@@ -102,7 +91,7 @@ class UsersService {
   };
 
   public getDeviceId() {
-    let deviceId = browserAPI.get(this.key);
+    let deviceId = browserAPI.get(this.key) as string;
     if (!deviceId) {
       const navigator = window.navigator;
       const screen = window.screen;

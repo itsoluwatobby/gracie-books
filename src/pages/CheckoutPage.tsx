@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { CreditCard, Truck, ShieldCheck } from 'lucide-react';
+import { Truck } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import useAuthContext from '../context/useAuthContext';
 import useCartContext from '../context/useCartContext';
+import { nanoid } from 'nanoid';
+import { orderService } from '../services/order.service';
+import { CURRENCY } from '../utils/constants';
+import { helper } from '../utils/helper';
 
 const CheckoutPage: React.FC = () => {
-  const { isAuthenticated } = useAuthContext();
+  const { isAuthenticated, user } = useAuthContext();
   const { items, totalPrice, clearCart } = useCartContext();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -18,11 +22,8 @@ const CheckoutPage: React.FC = () => {
     address: '',
     city: '',
     state: '',
-    zipCode: '',
+    phoneNumber: '',
     country: '',
-    cardNumber: '',
-    expiryDate: '',
-    cvv: ''
   });
 
   if (!isAuthenticated) {
@@ -43,13 +44,32 @@ const CheckoutPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) return;
     setIsLoading(true);
 
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
+
+      const newOrder: Partial<Order> = {
+        id: nanoid(),
+        userId: user.id!,
+        items: items,
+        status: "pending",
+        totalAmount: helper.roundPrice(totalPrice),
+        currency: CURRENCY.NAIRA,
+        shippingAddress: {
+          fullName: formData.fullName,
+          address: formData.address,
+          state: formData.state,
+          city: formData.city,
+          phoneNumber: formData.phoneNumber,
+          country: formData.country
+        },
+      };
       
       // Clear cart and redirect to success page
+      await orderService.addOrder(newOrder);
       clearCart();
       navigate('/orders');
     } catch (error) {
@@ -67,7 +87,7 @@ const CheckoutPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto xl:px-24 px-4 py-8">
         <h1 className="text-2xl md:text-3xl font-bold text-blue-900 mb-8">Checkout</h1>
 
         <div className="flex flex-col lg:flex-row gap-8">
@@ -75,19 +95,20 @@ const CheckoutPage: React.FC = () => {
           <div className="flex-grow">
             <form onSubmit={handleSubmit}>
               {/* Shipping Information */}
-              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+              <div className="bg-white rounded-lg shadow-md p-6 flex flex-col gap-8">
                 <div className="flex items-center mb-4">
                   <Truck className="h-5 w-5 text-blue-700 mr-2" />
                   <h2 className="text-lg font-semibold">Shipping Information</h2>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 xl:px-8 xl:gap-10">
                   <Input
                     label="Full Name"
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleInputChange}
                     required
+                    fullWidth
                   />
                   <Input
                     label="Email"
@@ -96,6 +117,16 @@ const CheckoutPage: React.FC = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
+                    fullWidth
+                  />
+                  <Input
+                    type='numeric'
+                    label="Phone number"
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={handleInputChange}
+                    required
+                    fullWidth
                   />
                   <Input
                     label="Address"
@@ -104,6 +135,7 @@ const CheckoutPage: React.FC = () => {
                     onChange={handleInputChange}
                     className="md:col-span-2"
                     required
+                    fullWidth
                   />
                   <Input
                     label="City"
@@ -111,6 +143,7 @@ const CheckoutPage: React.FC = () => {
                     value={formData.city}
                     onChange={handleInputChange}
                     required
+                    fullWidth
                   />
                   <Input
                     label="State/Province"
@@ -118,13 +151,7 @@ const CheckoutPage: React.FC = () => {
                     value={formData.state}
                     onChange={handleInputChange}
                     required
-                  />
-                  <Input
-                    label="ZIP/Postal Code"
-                    name="zipCode"
-                    value={formData.zipCode}
-                    onChange={handleInputChange}
-                    required
+                    fullWidth
                   />
                   <Input
                     label="Country"
@@ -132,48 +159,8 @@ const CheckoutPage: React.FC = () => {
                     value={formData.country}
                     onChange={handleInputChange}
                     required
+                    fullWidth
                   />
-                </div>
-              </div>
-
-              {/* Payment Information */}
-              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-                <div className="flex items-center mb-4">
-                  <CreditCard className="h-5 w-5 text-blue-700 mr-2" />
-                  <h2 className="text-lg font-semibold">Payment Information</h2>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input
-                    label="Card Number"
-                    name="cardNumber"
-                    value={formData.cardNumber}
-                    onChange={handleInputChange}
-                    placeholder="1234 5678 9012 3456"
-                    className="md:col-span-2"
-                    required
-                  />
-                  <Input
-                    label="Expiry Date"
-                    name="expiryDate"
-                    value={formData.expiryDate}
-                    onChange={handleInputChange}
-                    placeholder="MM/YY"
-                    required
-                  />
-                  <Input
-                    label="CVV"
-                    name="cvv"
-                    value={formData.cvv}
-                    onChange={handleInputChange}
-                    placeholder="123"
-                    required
-                  />
-                </div>
-
-                <div className="mt-4 flex items-center text-sm text-gray-600">
-                  <ShieldCheck className="h-4 w-4 text-green-600 mr-2" />
-                  Your payment information is encrypted and secure
                 </div>
               </div>
 

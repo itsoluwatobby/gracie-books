@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 
-export default function UnauthorisedPage() {
+const UnauthorisedPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,3 +22,4 @@ export default function UnauthorisedPage() {
     </div>
   )
 }
+export default UnauthorisedPage;

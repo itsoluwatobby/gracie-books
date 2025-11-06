@@ -9,8 +9,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { nanoid } from "nanoid/non-secure";
-// import { browserAPI } from "../composables/local-storage";
+
 
 class OrdersService {
   private ordersRef = collection(ApplicationDB, "orders");
@@ -28,22 +27,19 @@ class OrdersService {
 
   // ORDERS
   public async addOrder(order: Partial<Order>) {
-    const orderId = nanoid();
     await setDoc(
-      doc(this.ordersRef, order.userId),
+      doc(this.ordersRef, order.id),
       {
         ...order,
-        id: orderId,
-        convoId: orderId,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
     );
-    return this.getOrder(order.userId!);
+    return this.getOrder(order.id!);
   };
 
-  public async getOrder(userId: string) {
-    const docRef = doc(ApplicationDB, "orders", userId);
+  public async getOrder(orderId: string) {
+    const docRef = doc(ApplicationDB, "orders", orderId);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       return { ...docSnap.data(), id: docSnap.id } as Order;
@@ -53,12 +49,12 @@ class OrdersService {
     }
   };
 
-  public async getOrAddOrder (order: Order) {
-    const result = await this.getOrder(order.userId);
-    if (result) return result;
+  // public async getOrAddOrder (order: Order) {
+  //   const result = await this.getOrder(order.userId);
+  //   if (result) return result;
 
-    return this.addOrder(order);
-  };
+  //   return this.addOrder(order);
+  // };
 
   public async getOrders(userId: string) {
     const q = query(this.ordersRef, where("userId", "==", userId));

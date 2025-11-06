@@ -80,5 +80,9 @@ class Helper {
     const amount = price.toFixed(decimalPlace).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
     return `${CURRENCY.NAIRA}${amount}`;
   }
+
+  roundPrice(price = 0, decimalPlace = 2) {
+    return +price.toFixed(decimalPlace);
+  }
 }
 export const helper = new Helper();

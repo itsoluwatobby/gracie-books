@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-const LOCAL_STORAGE_KEY = 'bookstore-cart';
+// const LOCAL_STORAGE_KEY = 'bookstore-cart';
 
 const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
@@ -15,23 +15,23 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [deviceId] = useState(userService.getDeviceId());
 
   // Load cart from localStorage on component mount
-  useEffect(() => {
-    try {
-      const savedCart = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (savedCart) {
-        setItems(JSON.parse(savedCart));
-      }
-    } catch (error) {
-      console.error('Failed to load cart from localStorage:', error);
-    }
-  }, []);
+  // useEffect(() => {
+  //   try {
+  //     const savedCart = localStorage.getItem(LOCAL_STORAGE_KEY);
+  //     if (savedCart) {
+  //       setItems(JSON.parse(savedCart));
+  //     }
+  //   } catch (error) {
+  //     console.error('Failed to load cart from localStorage:', error);
+  //   }
+  // }, []);
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
     let isMounted = true;
     const getItems = async () => {
       const cartItems = await cartService.getCart(deviceId, "pending");
-      console.log(cartItems)
+      // console.log(cartItems)
       if (cartItems?.length) setItems(cartItems);
     };
     if (isMounted) getItems();
