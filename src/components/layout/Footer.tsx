@@ -51,7 +51,7 @@ const Footer: React.FC = () => {
                 <Link to="/bestsellers" className="text-blue-200 hover:text-white transition-colors">Bestsellers</Link>
               </li>
               <li>
-                <Link to="/deals" className="text-blue-200 hover:text-white transition-colors">Special Deals</Link>
+                <Link to="/deals" className="hidden text-blue-200 hover:text-white transition-colors">Special Deals</Link>
               </li>
               <li>
                 <Link to="/about" className="text-blue-200 hover:text-white transition-colors">About Us</Link>
@@ -70,10 +70,10 @@ const Footer: React.FC = () => {
                 <Link to="/faq" className="text-blue-200 hover:text-white transition-colors">FAQ</Link>
               </li>
               <li>
-                <Link to="/shipping" className="text-blue-200 hover:text-white transition-colors">Shipping & Returns</Link>
+                <Link to="/shipping" className="hidden text-blue-200 hover:text-white transition-colors">Shipping & Returns</Link>
               </li>
               <li>
-                <Link to="/privacy" className="text-blue-200 hover:text-white transition-colors">Privacy Policy</Link>
+                <Link to="/privacy" className="hidden text-blue-200 hover:text-white transition-colors">Privacy Policy</Link>
               </li>
               <li>
                 <Link to="/terms" className="text-blue-200 hover:text-white transition-colors">Terms & Conditions</Link>
@@ -90,19 +90,19 @@ const Footer: React.FC = () => {
             <ul className="space-y-4 text-sm">
               <li className="flex items-start">
                 <MapPin className="flex-none h-5 w-5 mr-2 text-blue-200" />
-                <span className="text-blue-200">123 Book Street, Reading City, RC 12345</span>
+                <span className="text-blue-200">Ibadan, Oyo state</span>
               </li>
               <li className="flex items-center">
                 <Phone className="flex-none h-5 w-5 mr-2 text-blue-200" />
                 <span className="text-blue-200">{appName.name}</span>
               </li>
-              <li className="flex items-center">
+              <li className="hidden flexitems-center">
                 <Mail className="flex-none h-5 w-5 mr-2 text-blue-200" />
                 <a href={`mailto:${appName.email}`} className="text-blue-200 whitespace-pre-wrap hover:text-white transition-colors">
                   {appName.email}
                 </a>
               </li>
-              <li className="pt-2">
+              <li className="pt-2 hidden">
                 <h4 className="text-sm font-semibold mb-2">Subscribe to our newsletter</h4>
                 <form className="flex">
                   <input

@@ -100,7 +100,7 @@ const OrderDetailPage: React.FC = () => {
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-lg font-semibold mb-6">Order Tracking</h2>
               <div className="relative">
-                {getTrackingSteps("delivered").map((step, index) => (
+                {getTrackingSteps(order.status).map((step, index) => (
                 // {getTrackingSteps(order.status).map((step, index) => (
                   <div key={step.key} className='flex flex-col'>
                     <div className="flex items-center last:mb-0 first">
@@ -126,7 +126,7 @@ const OrderDetailPage: React.FC = () => {
                     </div>
                   
                     {/* {index < getTrackingSteps(order.status).length - 1 && ( */}
-                    {index < getTrackingSteps("delivered").length - 1 && ( 
+                    {index < getTrackingSteps(order.status).length - 1 && ( 
                       <div className={`lasthidden ml-4 bsolute left-4 w-0.5 h-5 mt1 ${
                         step.completed ? 'bg-blue-600' : 'bg-gray-200'
                       }`} style={{ top: `${index * 6 + 2}rem` }}></div>
