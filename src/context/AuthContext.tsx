@@ -29,27 +29,33 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       setIsAuthenticated(true)
     } else {
       (async () => {
-        const userId = browserAPI.get(StorageKey.userKey) as string;
-        if (userId) {
-          const userInfo = await userService.getUserById(userId);
-          if (userInfo) {
-            setUser(userInfo);
-            setIsAuthenticated(true);
+        try {
+          setLoading(true);
+          const userId = browserAPI.get(StorageKey.userKey) as string;
+          if (userId) {
+            const userInfo = await userService.getUserById(userId);
+            if (userInfo) {
+              setUser(userInfo);
+              setIsAuthenticated(true);
+            } else {
+              throw Error("Account not found")
+            }
           }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+          console.log(`Error::500 - Message: ${err.message}`);
+        } finally {
+          setLoading(false);
         }
       })();
     }
   }, [user])
-  // }, [user, pathname])
-
-  const logout = () => {};
 
   const value = {
     appName,
     isAuthenticated,
     loading,
     user,
-    logout,
     setAppName,
     setUser,
     setLoading,

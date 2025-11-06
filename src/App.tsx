@@ -18,12 +18,14 @@ import {
   SearchPage,
   SignUpPage,
   OrderDetailPage,
+  ProfilePage,
 } from './pages';
 import RoutePrivilege from './components/layout/RoutePrivilege';
 import { PageRoutes } from './utils/pageRoutes';
 import { Toaster } from 'react-hot-toast';
 import LoadingUI from './components/ui/Loader';
 import AuthLayout from './components/layout/AuthLayout';
+import { ProtectedRoutes } from './components/layout/ProtectedRoutes';
 
 
 function App() {
@@ -39,6 +41,18 @@ function App() {
               <Route path={`${PageRoutes.books}/:id`} element={<BookDetailPage />} />
               <Route path={PageRoutes.cart} element={<CartPage />} />
               <Route path={PageRoutes.checkout} element={<CheckoutPage />} />
+              
+              <Route path="/" element={<ProtectedRoutes />}>
+              
+                <Route path={`${PageRoutes.profile}/:userId`} element={<ProfilePage />} />
+                <Route path={PageRoutes.orders} element={<OrdersPage />} />
+                <Route path={`${PageRoutes.orders}/:id`} element={<OrderDetailPage />} />
+                
+                <Route path="/" element={<RoutePrivilege />}>
+                  <Route path={PageRoutes.dashboard} element={<AdminDashboardPage />} />
+                </Route>
+              
+              </Route>
 
               <Route path="/" element={<AuthLayout />}>
                 <Route path={PageRoutes.auth.login} element={<LoginPage />} />
@@ -46,15 +60,10 @@ function App() {
                 <Route path={PageRoutes.auth.forgotPassword} element={<ForgotPasswordPage />} />
               </Route>
 
-              <Route path={PageRoutes.orders} element={<OrdersPage />} />
-              <Route path={`${PageRoutes.orders}/:id`} element={<OrderDetailPage />} />
               <Route path={PageRoutes.search} element={<SearchPage />} />
               <Route path={PageRoutes.newRelease} element={<NewReleases />} />
               <Route path={`${PageRoutes.genres}/:genre"`} element={<GenrePage />} />
 
-              <Route path="/" element={<RoutePrivilege />}>
-                <Route path={PageRoutes.dashboard} element={<AdminDashboardPage />} />
-              </Route>
 
               <Route path={PageRoutes.auth.unauthorised} element={<Unauthorised />} />
 

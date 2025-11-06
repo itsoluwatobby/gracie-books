@@ -46,9 +46,9 @@ class Helper {
     return user.firstName + ' ' + user.lastName
   }
 
-  public formatTime(date: string, includeTime = false) {
+  public formatTime(date: string, includeTime = false, dateStyle: "full" | "long" | "medium" | "short" | undefined = "long") {
     return new Intl.DateTimeFormat('en', {
-      dateStyle: 'long',
+      dateStyle,
       timeStyle: includeTime ? 'long' : undefined,
     }).format(new Date(date));
   }

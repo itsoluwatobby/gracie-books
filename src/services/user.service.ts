@@ -15,8 +15,8 @@ import { browserAPI } from "../composables/local-storage";
 class UsersService {
   private usersRef = collection(ApplicationDB, StorageModels.users);
 
-  public async updateUser(email: string, updatedInfo: Partial<UserInfo>) {
-    const docRef = doc(this.usersRef, email);
+  public async updateUser(userId: string, updatedInfo: Partial<UserInfo>) {
+    const docRef = doc(this.usersRef, userId);
     await updateDoc(
       docRef,
       {
@@ -24,20 +24,22 @@ class UsersService {
         updatedAt: new Date().toISOString(),
       },
     );
+
+    return this.getUser(userId);
   };
 
   // USERS
   public async addUser(user: Partial<UserInfo> | null) {
     if (!user) return null;
 
-    const duplicateRecord = await this.getUser(user.email!);
+    const duplicateRecord = await this.getUser(user.id!);
     if (duplicateRecord) {
-      await this.updateUser(duplicateRecord.email, { isLoggedIn: true });
+      await this.updateUser(duplicateRecord.id, { isLoggedIn: true });
       return { ...duplicateRecord, isLoggedIn: true };
     }
   
     await setDoc(
-      doc(this.usersRef, user.email),
+      doc(this.usersRef, user.id),
       {
         ...user,
         role: UserRole.user,
@@ -47,14 +49,14 @@ class UsersService {
         updatedAt: new Date().toISOString(),
       },
     );
-    return this.getUser(user.email!);
+    return this.getUser(user.id!);
   };
 
-  public async getUser(email: string) {
-    const docRef = doc(ApplicationDB, "users", email);
+  public async getUser(userId: string) {
+    const docRef = doc(ApplicationDB, "users", userId);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      return { ...docSnap.data(), id: docSnap.id } as UserInfo;
+      return docSnap.data() as UserInfo;
     }
     return null;
   };
@@ -65,7 +67,7 @@ class UsersService {
 
     let user: UserInfo | null = null;
     querySnapShot.forEach((doc) => {
-      user = { ...doc.data(), id: doc.id } as UserInfo;
+      user = doc.data() as UserInfo;
     });
     return user;
   };
@@ -73,7 +75,7 @@ class UsersService {
   public async getOrAddUser(user: Partial<UserInfo> | null) {
     if (!user) return null;
 
-    const result = await this.getUser(user.email!);
+    const result = await this.getUser(user.id!);
     if (result) return result;
 
     return this.addUser(user);
@@ -84,7 +86,7 @@ class UsersService {
     const querySnapShot = await getDocs(q);
     const users: UserInfo[] = [];
     querySnapShot.forEach((doc) => {
-      users.push({ ...doc.data(), id: doc.id } as UserInfo);
+      users.push(doc.data() as UserInfo);
     });
     return users;
   };

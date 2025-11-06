@@ -20,7 +20,7 @@ const LoginPage: React.FC = () => {
   
   // Get redirect path from URL params or default to homepage
   const searchParams = new URLSearchParams(location.search);
-  const redirectTo = searchParams.get('redirect') || '/';
+  const redirectTo = searchParams.get('redirect') || location?.state?.from || '/';
 
   const handleSubmit = async (signInMethod: SignInMethodTypes) => {
     setError('');

@@ -5,7 +5,7 @@ interface UserCredentials {
   password: string;
 }
 
-type SignInMethodTypes = 'google.com' | 'apple.com' | 'password';
+type SignInMethodTypes = 'google.com' | 'apple.com' | 'password' | 'unknown';
 type VerType = 'ACCOUNT_VERIFICATION' | 'PASSWORD_RESET';
 
 type OTPRequestResponse ={

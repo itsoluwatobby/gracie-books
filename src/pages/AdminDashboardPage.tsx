@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { ChevronDown, ChevronUp, Menu } from 'lucide-react';
 import Layout from '../components/layout/Layout';
@@ -37,11 +37,14 @@ const AdminDashboardPage: React.FC = () => {
   useEffect(() => {
     let isMounted = true;
     const getItems = async () => {
+      if (isLoading) return;
+
       try {
         setIsLoading(true);
         const orderItems = await orderService.getAllOrders();
         if (orderItems?.length) setOrders(orderItems);
         else throw Error("An error occurred");
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -53,7 +56,7 @@ const AdminDashboardPage: React.FC = () => {
     return () => {
       isMounted = false
     }
-  }, [reload.platform_reload]);
+  }, [reload.platform_reload, isLoading]);
 
   // Calculate summary metrics
   const totalOrders = orders.length;

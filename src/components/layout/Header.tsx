@@ -7,6 +7,7 @@ import useCartContext from '../../context/useCartContext';
 import { userAuthenticationAPI } from '../../composables/auth';
 import { userService } from '../../services';
 import { UserRole } from '../../utils/constants';
+import { PageRoutes } from '../../utils/pageRoutes';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -42,17 +43,17 @@ const Header: React.FC = () => {
       <div className="container mx-auto px-4 py-6">
         <div className="flex items-center justify-between">
           {/* Logo and Brand */}
-          <Link to="/" className="flex items-center space-x-2 mr-4">
+          <Link to={PageRoutes.home} className="flex items-center space-x-2 mr-4">
             <BookOpen className="h-8 w-8" />
             <span className="text-xl font-bold">{appName.name}</span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
-            <Link to="/" className="hover:text-blue-200 transition-colors">Home</Link>
-            <Link to="/books" className="hover:text-blue-200 transition-colors">Browse</Link>
-            <Link to="/genres" className="hover:text-blue-200 transition-colors">Genres</Link>
-            <Link to="/new-releases" className="hover:text-blue-200 transition-colors">New Releases</Link>
+            <Link to={PageRoutes.home} className="hover:text-blue-200 transition-colors">Home</Link>
+            <Link to={PageRoutes.books} className="hover:text-blue-200 transition-colors">Browse</Link>
+            <Link to={PageRoutes.genres} className="hover:text-blue-200 transition-colors">Genres</Link>
+            <Link to={PageRoutes.newRelease} className="hover:text-blue-200 transition-colors">New Releases</Link>
           </nav>
 
           {/* Search Form - Desktop */}
@@ -78,7 +79,7 @@ const Header: React.FC = () => {
           <div className="hidden lg:flex items-center space-x-4">
             {
               user?.role !== UserRole.admin ?
-                <Link to="/cart" className="relative hover:text-blue-200 transition-colors">
+                <Link to={PageRoutes.cart} className="relative hover:text-blue-200 transition-colors">
                   <ShoppingCart className="h-6 w-6" />
                   {totalItems > 0 && (
                     <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -97,20 +98,22 @@ const Header: React.FC = () => {
                 </button>
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block">
                   <Link
-                    to="/account"
+                    to={`${PageRoutes.profile}/${user?.id}`}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     My Account
                   </Link>
-                  <Link
-                    to="/orders"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    My Orders
-                  </Link>
-                  {user?.isAdmin && (
+                  {
+                    !user?.isAdmin ? (
+                      <Link
+                        to={PageRoutes.orders}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        My Orders
+                      </Link>
+                    ):(
                     <Link
-                      to="/admin"
+                      to={PageRoutes.dashboard}
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
                       Admin Dashboard
@@ -126,10 +129,10 @@ const Header: React.FC = () => {
               </div>
             ) : (
               <div className="flex items-center space-x-2">
-                <Link to="/login">
+                <Link to={PageRoutes.auth.login}>
                   <Button variant="secondary" size="sm">Login</Button>
                 </Link>
-                <Link to="/signup">
+                <Link to={PageRoutes.auth.signup}>
                   <Button variant="secondary" size="sm">Sign Up</Button>
                 </Link>
               </div>
@@ -174,28 +177,28 @@ const Header: React.FC = () => {
             {/* Navigation Links - Mobile */}
             <nav className="flex flex-col space-y-2">
               <Link
-                to="/"
+                to={PageRoutes.home}
                 className="px-2 py-1 hover:bg-blue-800 rounded transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
               </Link>
               <Link
-                to="/books"
+                to={PageRoutes.books}
                 className="px-2 py-1 hover:bg-blue-800 rounded transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Browse
               </Link>
               <Link
-                to="/genres"
+                to={PageRoutes.genres}
                 className="px-2 py-1 hover:bg-blue-800 rounded transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Genres
               </Link>
               <Link
-                to="/new-releases"
+                to={PageRoutes.newRelease}
                 className="px-2 py-1 hover:bg-blue-800 rounded transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -204,7 +207,7 @@ const Header: React.FC = () => {
               {
                 user?.role !== UserRole.admin ?
                   <Link
-                    to="/cart"
+                    to={PageRoutes.cart}
                     className="px-2 py-1 hover:bg-blue-800 rounded transition-colors flex items-center"
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -222,7 +225,7 @@ const Header: React.FC = () => {
               {isAuthenticated ? (
                 <>
                   <Link
-                    to="/account"
+                    to={`${PageRoutes.profile}/${user?.id}`}
                     className="px-2 py-1 hover:bg-blue-800 rounded transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -231,7 +234,7 @@ const Header: React.FC = () => {
                   {
                     user?.role === UserRole.user ?
                       <Link
-                        to="/orders"
+                        to={PageRoutes.orders}
                         className="px-2 py-1 hover:bg-blue-800 rounded transition-colors"
                         onClick={() => setIsMenuOpen(false)}
                       >
@@ -241,7 +244,7 @@ const Header: React.FC = () => {
                   }
                   {user?.isAdmin ? (
                     <Link
-                      to="/admin"
+                      to={PageRoutes.dashboard}
                       className="px-2 py-1 hover:bg-blue-800 rounded transition-colors"
                       onClick={() => setIsMenuOpen(false)}
                     >
@@ -258,7 +261,7 @@ const Header: React.FC = () => {
               ) : (
                 <div className="flex flex-col space-y-2 mt-2">
                   <Link
-                    to="/login"
+                    to={PageRoutes.auth.login}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <Button variant="secondary" size="sm" fullWidth>
@@ -266,7 +269,7 @@ const Header: React.FC = () => {
                     </Button>
                   </Link>
                   <Link
-                    to="/signup"
+                    to={PageRoutes.auth.signup}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <Button variant="secondary" size="sm" fullWidth>

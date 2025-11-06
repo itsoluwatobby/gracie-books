@@ -1,16 +1,18 @@
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import useAuthContext from "../../context/useAuthContext";
 import { UserRole } from "../../utils/constants";
+import { PageRoutes } from "../../utils/pageRoutes";
 
 export default function RoutePrivilege() {
   const { user, isAuthenticated } = useAuthContext();
 
-  // Check if user is authenticated and is admin
-  if (!isAuthenticated || user?.role !== UserRole.admin) {
-    // return <Navigate to="/login" replace />;
-  }
-
   return (
-    <Outlet />
+    <>
+      {
+        (!isAuthenticated || user?.role !== UserRole.admin)
+        ? <Navigate to={PageRoutes.auth.unauthorised} replace />
+        : <Outlet />
+      }
+    </>
   )
 }

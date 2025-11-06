@@ -12,7 +12,7 @@ import { CURRENCY } from '../utils/constants';
 import { helper } from '../utils/helper';
 
 const CheckoutPage: React.FC = () => {
-  const { isAuthenticated, user } = useAuthContext();
+  const { user } = useAuthContext();
   const { items, totalPrice, clearCart } = useCartContext();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -41,9 +41,9 @@ const CheckoutPage: React.FC = () => {
     }
   }, [user])
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login?redirect=checkout" replace />;
-  }
+  // if (!isAuthenticated) {
+  //   return <Navigate to="/login?redirect=checkout" replace />;
+  // }
 
   if (items.length === 0) {
     return <Navigate to="/cart" replace />;

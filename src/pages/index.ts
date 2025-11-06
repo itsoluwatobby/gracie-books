@@ -14,6 +14,7 @@ import GenrePage from './GenrePage';
 import ForgotPasswordPage from './ForgotPasswordPage';
 import SignUpPage from './SignUpPage';
 import Unauthorised from './Unauthorised';
+import ProfilePage from './ProfilePage';
 
 export {
   AdminDashboardPage,
@@ -32,4 +33,5 @@ export {
   ForgotPasswordPage,
   SignUpPage,
   Unauthorised,
+  ProfilePage,
 };

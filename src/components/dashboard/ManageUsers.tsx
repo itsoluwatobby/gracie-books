@@ -4,6 +4,7 @@ import Button from '../ui/Button'
 import { userService } from '../../services';
 import { LucideBatteryWarning } from 'lucide-react';
 import LoadingContent from '../ui/ContentLoading';
+import { AddOrEditUser } from './AddOrEditUser';
 
 // type ManageUsersProps = {
 //   users: UserInfo[];
@@ -11,11 +12,14 @@ import LoadingContent from '../ui/ContentLoading';
 
 export default function ManageUsers() {
   const [users, setUsers] = useState<UserInfo[]>([]);
+  const [editUser, setEditUser] = useState<UserInfo | null>(null);
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [reload, setReload] = useState<number>(0);
+
+  const [showAddUserModal, setShowAddUserModal] = useState<boolean>(false);
   
-    // setLoading(true)
   const handleReload = () => setReload((prev) => prev += 1);
 
   useEffect(() => {
@@ -39,11 +43,16 @@ export default function ManageUsers() {
     }
   }, [reload]);
 
+  const handleEdit = (user: UserInfo) => {
+    setShowAddUserModal(true);
+    setEditUser(user);
+  }
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Manage Users</h2>
-        <Button>Add New UserInfo</Button>
+        <Button onClick={() => setShowAddUserModal(true)}>Add New UserInfo</Button>
       </div>
       
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -97,7 +106,11 @@ export default function ManageUsers() {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
-                      <Button variant="ghost" size="sm">Edit</Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => handleEdit(user)} 
+                      >Edit</Button>
                     </td>
                   </tr>
                 ))}
@@ -105,6 +118,15 @@ export default function ManageUsers() {
             </table>
           </div>
           )
+        }
+        {
+          showAddUserModal 
+            ? <AddOrEditUser 
+                user={editUser}
+                setEditUser={setEditUser}
+                setShowAddUserModal={setShowAddUserModal}
+              />
+            : null
         }
       </div>
     </div>

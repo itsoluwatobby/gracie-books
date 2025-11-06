@@ -1,26 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { FC } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import useAuthContext from '../../context/useAuthContext';
 import { PageRoutes } from '../../utils/pageRoutes';
+// import LoadingUI from '../ui/Loader';
 
 
-const AuthLayout: React.FC = () => {
+const AuthLayout: FC = () => {
   const { pathname } = useLocation();
-  const navigator = useNavigate()
+  // const navigator = useNavigate()
   const { isAuthenticated } = useAuthContext();
+  // const { isAuthenticated, loading } = useAuthContext();
 
-  useEffect(() => {
-    const { auth } = PageRoutes;
-    if ([auth.login, auth.signup].includes(pathname as any) && isAuthenticated) {
-      console.log("BLOCKER")
-      navigator(-1);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, isAuthenticated])
+  // const to = state?.from ?? PageRoutes.auth.login;
 
+  console.log([PageRoutes.auth.login, PageRoutes.auth.signup].includes(pathname as any) && isAuthenticated)
   return (
     <>
+      {/* {
+        loading 
+        ? <LoadingUI />
+        :
+        ([PageRoutes.auth.login, PageRoutes.auth.signup].includes(pathname as any) && isAuthenticated)
+        ? <Outlet />
+        : <Navigate to={PageRoutes.auth.login} />
+      } */}
       <Outlet />
     </>
   );

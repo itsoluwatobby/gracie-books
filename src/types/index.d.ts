@@ -22,7 +22,6 @@ interface AuthContextType {
   isAuthenticated: boolean;
   appName: AppConfig;
   loading: boolean;
-  logout: () => void;
   setAppName: React.Dispatch<React.SetStateAction<AppConfig>>;
   setUser: React.Dispatch<React.SetStateAction<Partial<UserInfo> | null>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;

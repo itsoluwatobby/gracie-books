@@ -8,6 +8,7 @@ export const PageRoutes = {
   checkout: '/checkout',
   orders: '/orders',
   search: '/search',
+  profile: '/profile',
   newRelease: '/new-release',
   auth: {
     login: '/login',

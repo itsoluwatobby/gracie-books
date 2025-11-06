@@ -13,7 +13,7 @@ import LoadingContent from '../components/ui/ContentLoading';
 
 const OrderDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { user, isAuthenticated } = useAuthContext();
+  const { user } = useAuthContext();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -27,10 +27,6 @@ const OrderDetailPage: React.FC = () => {
       })();
     }
   }, [id]);
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
 
   if (loading) {
     return (
