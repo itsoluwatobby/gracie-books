@@ -14,3 +14,15 @@ export const UserRole = {
   admin: "1155",
   user: "1140",
 } as const;
+
+export const StorageKey = {
+  deviceKey: "wandyte-sales::unique_id",
+  userKey: "wandyte-sales::user",
+} as const;
+
+export const StorageModels = {
+  users: "users",
+  books: "books",
+  carts: "carts",
+  orders: "orders",
+} as const;

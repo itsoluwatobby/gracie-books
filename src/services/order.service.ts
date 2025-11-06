@@ -10,10 +10,11 @@ import {
   where,
 } from "firebase/firestore";
 import { userService } from "./user.service";
+import { StorageModels } from "../utils/constants";
 
 
 class OrdersService {
-  private ordersRef = collection(ApplicationDB, "orders");
+  private ordersRef = collection(ApplicationDB, StorageModels.orders);
 
   public async updateOrder(id: string, updatedInfo: Partial<Order>) {
     const docRef = doc(this.ordersRef, id);

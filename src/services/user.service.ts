@@ -9,12 +9,11 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { UserRole } from "../utils/constants";
+import { StorageKey, StorageModels, UserRole } from "../utils/constants";
 import { browserAPI } from "../composables/local-storage";
 
 class UsersService {
-  private key = "wandyte-sales::unique_id";
-  private usersRef = collection(ApplicationDB, "users");
+  private usersRef = collection(ApplicationDB, StorageModels.users);
 
   public async updateUser(email: string, updatedInfo: Partial<UserInfo>) {
     const docRef = doc(this.usersRef, email);
@@ -42,6 +41,7 @@ class UsersService {
       {
         ...user,
         role: UserRole.user,
+        isAdmin: false,
         deviceId: userService.getDeviceId(),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -59,17 +59,15 @@ class UsersService {
     return null;
   };
 
-  public async getAdminUser() {
-    const q = query(this.usersRef, where("role", "==", UserRole.admin));
+  public async getUserById(userId: string) {
+    const q = query(this.usersRef, where("id", "==", userId));
     const querySnapShot = await getDocs(q);
 
-    const support: UserInfo[] = [];
+    let user: UserInfo | null = null;
     querySnapShot.forEach((doc) => {
-      support.push({ ...doc.data(), id: doc.id } as UserInfo);
+      user = { ...doc.data(), id: doc.id } as UserInfo;
     });
-
-    if (support.length) return support[0];
-    return null;
+    return user;
   };
 
   public async getOrAddUser(user: Partial<UserInfo> | null) {
@@ -92,7 +90,7 @@ class UsersService {
   };
 
   public getDeviceId() {
-    let deviceId = browserAPI.get(this.key) as string;
+    let deviceId = browserAPI.get(StorageKey.deviceKey) as string;
     if (!deviceId) {
       const navigator = window.navigator;
       const screen = window.screen;
@@ -109,7 +107,7 @@ class UsersService {
         hash = hash & hash;
       }
       deviceId = 'device_' + `wandyte::${Math.abs(hash).toString(36)}`;
-      browserAPI.add(this.key, deviceId);
+      browserAPI.add(StorageKey.deviceKey, deviceId);
     }
     return deviceId;
   }

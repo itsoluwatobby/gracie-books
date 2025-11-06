@@ -15,6 +15,7 @@ import {
 } from "firebase/auth";
 import { browserAPI } from "./local-storage";
 import { helper } from "../utils/helper";
+import { StorageKey } from "../utils/constants";
 
 
 // onAuthStateChanged(auth, (user) => {
@@ -109,6 +110,7 @@ class UserAuthenticationAPI {
     const accessToken = await user.getIdToken();
     this.setTokenValue(accessToken);
 
+    browserAPI.add(StorageKey.userKey, user.uid);
     return {
       id: user.uid,
       fullName: user?.displayName ?? null,

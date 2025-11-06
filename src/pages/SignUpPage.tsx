@@ -73,19 +73,18 @@ const SignUpPage: React.FC = () => {
     try {
       let user: Partial<UserInfo> | null = null;
       if (signInMethod === "password") {
-        user = await userAuthenticationAPI.signup(
+        const res = await userAuthenticationAPI.signup(
           {
             signInMethod,
             credentials: { email, password },
           },
         );
         console.log(user)
-        const res = await userService.addUser({ ...user, fullName });
-        console.log({ res })
+        user = await userService.addUser({ ...res, fullName });
         setUserDetails(initDetails);
       } else {
-        user = await userAuthenticationAPI.signup({ signInMethod });
-        await userService.addUser(user);
+        const res = await userAuthenticationAPI.signup({ signInMethod });
+        user = await userService.addUser(res);
       }
       setUser(user);
       setIsAuthenticated(true);

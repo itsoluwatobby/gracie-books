@@ -1,5 +1,7 @@
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
-import { auth } from "../firebase/config";
+import { userService } from '../services';
+import { browserAPI } from '../composables/local-storage';
+import { StorageKey } from '../utils/constants';
 // import { useLocation } from 'react-router-dom';
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -24,27 +26,16 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      console.log(user) 
       setIsAuthenticated(true)
     } else {
       (async () => {
-        const currentUser = auth.currentUser; 
-        
-        if (currentUser) {
-          const accessToken = await currentUser.getIdToken(true);
-          const userInfo: Partial<UserInfo> = {
-            id: currentUser.uid,
-            fullName: null,
-            email: currentUser.email!,
-            profilePicture: currentUser.photoURL ?? null,
-            phoneNumber: currentUser.phoneNumber ?? null,
-            accessToken: accessToken,
-            refreshToken: currentUser.refreshToken,
-          };
-
-          console.log("called")
-          setUser(userInfo);
-          setIsAuthenticated(true);
+        const userId = browserAPI.get(StorageKey.userKey) as string;
+        if (userId) {
+          const userInfo = await userService.getUserById(userId);
+          if (userInfo) {
+            setUser(userInfo);
+            setIsAuthenticated(true);
+          }
         }
       })();
     }

@@ -27,19 +27,19 @@ const LoginPage: React.FC = () => {
     setIsLoading(true);
     
     try {
-      let user: Partial<UserInfo> | null = null;
+      let res: Partial<UserInfo> | null = null;
       if (signInMethod === "password") {
-        user = await userAuthenticationAPI.login(
+        res = await userAuthenticationAPI.login(
           {
             signInMethod,
             credentials: { email, password },
           },
         );
       } else {
-        user = await userAuthenticationAPI.login({ signInMethod });
+        res = await userAuthenticationAPI.login({ signInMethod });
       }
+      const user = await userService.addUser(res);
       setUser(user);
-      await userService.addUser(user);
       setIsAuthenticated(true);
       navigate(redirectTo);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

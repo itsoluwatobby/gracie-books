@@ -10,11 +10,12 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import { StorageModels } from "../utils/constants";
 // import { nanoid } from "nanoid/non-secure";
 // import { browserAPI } from "../composables/local-storage";
 
 class CartsService {
-  private cartsRef = collection(ApplicationDB, "carts");
+  private cartsRef = collection(ApplicationDB, StorageModels.carts);
 
   public async updateCart(userId: string, bookId: string, quantity: number): Promise<CartItem[] | null> {
     const docRef = doc(ApplicationDB, "carts", userId);

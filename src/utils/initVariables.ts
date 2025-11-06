@@ -16,6 +16,8 @@ export const InitBookForm: Book = {
   subtitle: '',
   id: '',
   status: 'public',
+  createdAt: "",
+  updatedAt: ""
 };
 
 export const InitPriceRange = { min: 0, max: 10000 };

@@ -14,17 +14,13 @@ import {
   where,
 } from "firebase/firestore";
 import { nanoid } from "nanoid/non-secure";
+import { StorageModels } from "../utils/constants";
 
 class BookServices {
   goodReadsBaseURL = "https://audio-book-server.onrender.com/api/v1/books/rating";
   googleAPIBaseURL = "https://www.googleapis.com/books/v1/volumes";
 
-  private booksRef = collection(ApplicationDB, "books");
-  // private appConfigRef = collection(ApplicationDB, "appConfig");
-  // private chatsRef = collection(ApplicationDB, "messages");
-  // private conversationsRef = collection(ApplicationDB, "conversations");
-  // private cartsRef = collection(ApplicationDB, "carts");
-  // private ordersRef = collection(ApplicationDB, "orders");
+  private booksRef = collection(ApplicationDB, StorageModels.books);
 
   public async addBook(book: Partial<Book>) {
     const duplicate = await this.getBookByTitle(book.title!);

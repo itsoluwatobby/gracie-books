@@ -6,6 +6,7 @@ import useAuthContext from '../../context/useAuthContext';
 import useCartContext from '../../context/useCartContext';
 import { userAuthenticationAPI } from '../../composables/auth';
 import { userService } from '../../services';
+import { UserRole } from '../../utils/constants';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -26,6 +27,7 @@ const Header: React.FC = () => {
     }
   };
 
+
   const logout = async () => {
     await userAuthenticationAPI.logout();
     if (user) {
@@ -36,7 +38,7 @@ const Header: React.FC = () => {
   }
 
   return (
-    <header className="bg-blue-900 text-white shadow-md sticky top-0 z-50 lg:px-10">
+    <header className="bg-blue-900 text-white shadow-md sticky top-0 z-50 lg:px-8">
       <div className="container mx-auto px-4 py-6">
         <div className="flex items-center justify-between">
           {/* Logo and Brand */}
@@ -74,14 +76,18 @@ const Header: React.FC = () => {
 
           {/* User Actions - Desktop */}
           <div className="hidden lg:flex items-center space-x-4">
-            <Link to="/cart" className="relative hover:text-blue-200 transition-colors">
-              <ShoppingCart className="h-6 w-6" />
-              {totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {totalItems}
-                </span>
-              )}
-            </Link>
+            {
+              user?.role !== UserRole.admin ?
+                <Link to="/cart" className="relative hover:text-blue-200 transition-colors">
+                  <ShoppingCart className="h-6 w-6" />
+                  {totalItems > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {totalItems}
+                    </span>
+                  )}
+                </Link>
+              : null
+            }
 
             {isAuthenticated ? (
               <div className="relative group">
@@ -195,19 +201,23 @@ const Header: React.FC = () => {
               >
                 New Releases
               </Link>
-              <Link
-                to="/cart"
-                className="px-2 py-1 hover:bg-blue-800 rounded transition-colors flex items-center"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <ShoppingCart className="h-5 w-5 mr-2" />
-                Cart
-                {totalItems > 0 && (
-                  <span className="ml-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {totalItems}
-                  </span>
-                )}
-              </Link>
+              {
+                user?.role !== UserRole.admin ?
+                  <Link
+                    to="/cart"
+                    className="px-2 py-1 hover:bg-blue-800 rounded transition-colors flex items-center"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <ShoppingCart className="h-5 w-5 mr-2" />
+                    Cart
+                    {totalItems > 0 && (
+                      <span className="ml-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        {totalItems}
+                      </span>
+                    )}
+                  </Link>
+                : null
+              }
 
               {isAuthenticated ? (
                 <>
@@ -218,14 +228,18 @@ const Header: React.FC = () => {
                   >
                     My Account
                   </Link>
-                  <Link
-                    to="/orders"
-                    className="px-2 py-1 hover:bg-blue-800 rounded transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    My Orders
-                  </Link>
-                  {user?.isAdmin && (
+                  {
+                    user?.role === UserRole.user ?
+                      <Link
+                        to="/orders"
+                        className="px-2 py-1 hover:bg-blue-800 rounded transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        My Orders
+                      </Link>
+                    : null
+                  }
+                  {user?.isAdmin ? (
                     <Link
                       to="/admin"
                       className="px-2 py-1 hover:bg-blue-800 rounded transition-colors"
@@ -233,7 +247,7 @@ const Header: React.FC = () => {
                     >
                       Admin Dashboard
                     </Link>
-                  )}
+                  ) : null}
                   <button
                     onClick={logout}
                     className="px-2 py-1 text-left hover:bg-blue-800 rounded transition-colors"

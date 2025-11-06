@@ -23,13 +23,13 @@ import RoutePrivilege from './components/layout/RoutePrivilege';
 import { PageRoutes } from './utils/pageRoutes';
 import { Toaster } from 'react-hot-toast';
 import LoadingUI from './components/ui/Loader';
-import AuthLayout from './components/layout/AuthLayour';
+import AuthLayout from './components/layout/AuthLayout';
 
 
 function App() {
 
   return (
-    <main className=''>
+    <main>
       <Router>
         <AuthProvider>
           <CartProvider>
