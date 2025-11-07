@@ -7,15 +7,16 @@ export const ProtectedRoutes = () => {
   const { pathname } = useLocation();
   const { loading, isAuthenticated } = useAuthContext() as AuthContextType;
 
+  console.log({ loading, isAuthenticated })
   return (
     <>
       {
         loading ?
           <LoadingUI />
         :
-        !isAuthenticated ?
-          <Navigate to={PageRoutes.auth.login} state={ { from: pathname }} replace />
-        : <Outlet />
+        isAuthenticated 
+        ? <Outlet />
+        : <Navigate to={PageRoutes.auth.login} state={ { from: pathname }} replace />
       }
     </>
   )

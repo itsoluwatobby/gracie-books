@@ -40,10 +40,10 @@ function App() {
               <Route path={PageRoutes.books} element={<BooksPage />} />
               <Route path={`${PageRoutes.books}/:id`} element={<BookDetailPage />} />
               <Route path={PageRoutes.cart} element={<CartPage />} />
-              <Route path={PageRoutes.checkout} element={<CheckoutPage />} />
               
               <Route path="/" element={<ProtectedRoutes />}>
               
+                <Route path={PageRoutes.checkout} element={<CheckoutPage />} />
                 <Route path={`${PageRoutes.profile}/:userId`} element={<ProfilePage />} />
                 <Route path={PageRoutes.orders} element={<OrdersPage />} />
                 <Route path={`${PageRoutes.orders}/:id`} element={<OrderDetailPage />} />

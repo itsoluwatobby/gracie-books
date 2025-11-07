@@ -32,7 +32,7 @@ const Header: React.FC = () => {
   const logout = async () => {
     await userAuthenticationAPI.logout();
     if (user) {
-      await userService.updateUser(user.email!, { isLoggedIn: false });
+      await userService.updateUser(user.id!, { isLoggedIn: false });
     }
     setIsAuthenticated(false);
     setIsMenuOpen(false);
@@ -96,35 +96,37 @@ const Header: React.FC = () => {
                   <User className="h-6 w-6" />
                   <span>{user?.fullName}</span>
                 </button>
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block">
-                  <Link
-                    to={`${PageRoutes.profile}/${user?.id}`}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    My Account
-                  </Link>
-                  {
-                    !user?.isAdmin ? (
-                      <Link
-                        to={PageRoutes.orders}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        My Orders
-                      </Link>
-                    ):(
+                <div className="absolute right-0 -mt-1 h-36 w-48 rounded-md shadow-lg py-1 z-10 hidden group-hover:block duration-500">
+                  <div className="w-full mt-6 rounded-md bg-white h-fit py-1">
                     <Link
-                      to={PageRoutes.dashboard}
+                      to={`${PageRoutes.profile}/${user?.id}`}
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
-                      Admin Dashboard
+                      My Account
                     </Link>
-                  )}
-                  <button
-                    onClick={logout}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Logout
-                  </button>
+                    {
+                      !user?.isAdmin ? (
+                        <Link
+                          to={PageRoutes.orders}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          My Orders
+                        </Link>
+                      ):(
+                      <Link
+                        to={PageRoutes.dashboard}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Admin Dashboard
+                      </Link>
+                    )}
+                    <button
+                      onClick={logout}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -232,7 +234,7 @@ const Header: React.FC = () => {
                     My Account
                   </Link>
                   {
-                    user?.role === UserRole.user ?
+                    !user?.isAdmin ?
                       <Link
                         to={PageRoutes.orders}
                         className="px-2 py-1 hover:bg-blue-800 rounded transition-colors"

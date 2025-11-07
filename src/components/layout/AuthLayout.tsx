@@ -1,30 +1,31 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FC } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import useAuthContext from '../../context/useAuthContext';
 import { PageRoutes } from '../../utils/pageRoutes';
-// import LoadingUI from '../ui/Loader';
 
 
-const AuthLayout: FC = () => {
-  const { pathname } = useLocation();
-  // const navigator = useNavigate()
-  const { isAuthenticated } = useAuthContext();
-  // const { isAuthenticated, loading } = useAuthContext();
+const AuthLayout: React.FC = () => {
+  const { pathname, state } = useLocation();
+  const navigator = useNavigate()
+  const { isAuthenticated, loading } = useAuthContext();
 
-  // const to = state?.from ?? PageRoutes.auth.login;
+  console.log(state)
+  useEffect(() => {
+    const { auth } = PageRoutes;
+    if (
+      [auth.login, auth.signup].includes(pathname as any)
+      && !loading 
+      && isAuthenticated
+    ) {
+      const to = state?.from ?? -1;
+      navigator(to);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, isAuthenticated])
 
-  console.log([PageRoutes.auth.login, PageRoutes.auth.signup].includes(pathname as any) && isAuthenticated)
   return (
     <>
-      {/* {
-        loading 
-        ? <LoadingUI />
-        :
-        ([PageRoutes.auth.login, PageRoutes.auth.signup].includes(pathname as any) && isAuthenticated)
-        ? <Outlet />
-        : <Navigate to={PageRoutes.auth.login} />
-      } */}
       <Outlet />
     </>
   );

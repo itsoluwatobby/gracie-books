@@ -232,10 +232,10 @@ const ProfilePage: React.FC = () => {
                     <span className="text-gray-600">Total Orders</span>
                     <span className="font-medium">12</span>
                   </div>
-                  <div className="flex justify-between">
+                  {/* <div className="flex justify-between">
                     <span className="text-gray-600">Total Spent</span>
                     <span className="font-medium">{helper.formatPrice(324.50)}</span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
 

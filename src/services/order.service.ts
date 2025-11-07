@@ -29,7 +29,7 @@ class OrdersService {
   };
 
   // ORDERS
-  public async addOrder(order: Partial<Order>, email: string) {
+  public async addOrder(order: Partial<Order>, userId: string) {
     await setDoc(
       doc(this.ordersRef, order.id),
       {
@@ -38,7 +38,7 @@ class OrdersService {
         updatedAt: new Date().toISOString(),
       },
     );
-    await userService.updateUser(email, { shippingAddress: order.shippingAddress })
+    await userService.updateUser(userId, { shippingAddress: order.shippingAddress })
     return this.getOrder(order.id!);
   };
 

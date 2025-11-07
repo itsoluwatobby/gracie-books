@@ -12,6 +12,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
   const [reload, setReload] = useState<Reloads>(InitReloads)
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [deviceId] = useState(userService.getDeviceId());
 
   // Load cart from localStorage on component mount
@@ -30,9 +31,10 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   useEffect(() => {
     let isMounted = true;
     const getItems = async () => {
+      setIsLoading(true);
       const cartItems = await cartService.getCart(deviceId, "pending");
-      // console.log(cartItems)
       if (cartItems?.length) setItems(cartItems);
+      setIsLoading(false)
     };
     if (isMounted) getItems();
 
@@ -91,7 +93,8 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         updateQuantity, 
         clearCart, 
         totalItems,
-        totalPrice
+        totalPrice,
+        isLoading,
       }}
     >
       {children}

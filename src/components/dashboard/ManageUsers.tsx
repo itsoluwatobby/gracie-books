@@ -1,17 +1,37 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import Button from '../ui/Button'
-import { userService } from '../../services';
+import { orderService, userService } from '../../services';
 import { LucideBatteryWarning } from 'lucide-react';
 import LoadingContent from '../ui/ContentLoading';
 import { AddOrEditUser } from './AddOrEditUser';
+import { helper } from '../../utils/helper';
+import { OrderStatusEnum } from '../../utils/constants';
 
 // type ManageUsersProps = {
 //   users: UserInfo[];
 // }
 
+type UserHistory = UserInfo & {
+  orders: number,
+  pendingOrders: number,
+  ordersInProgress: number,
+  completedOrders: number,
+  totalSpent: number,
+}
+
+type OrderAnalytics = {
+  totalUsers: number;
+  totalOders: number;
+  totalPending: number;
+  totalProcessed: number;
+  totalCompleted: number;
+  totalAmount: number;
+}
+
 export default function ManageUsers() {
-  const [users, setUsers] = useState<UserInfo[]>([]);
+  const [users, setUsers] = useState<UserHistory[]>([]);
+  const [analytics, setAnalytics] = useState<OrderAnalytics | null>(null);
   const [editUser, setEditUser] = useState<UserInfo | null>(null);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -21,14 +41,70 @@ export default function ManageUsers() {
   const [showAddUserModal, setShowAddUserModal] = useState<boolean>(false);
   
   const handleReload = () => setReload((prev) => prev += 1);
+  
+  const calculateTotalItems = (items: UserHistory[]) => {
+    return items.reduce((acc, init) => {
+      acc.totalOders += init.orders;
+      acc.totalPending += init.pendingOrders;
+      acc.totalProcessed += init.ordersInProgress;
+      acc.totalCompleted += init.completedOrders;
+    
+      acc.totalAmount += init.totalSpent;
+
+      return acc;
+    },
+    {
+      totalOders: 0,
+      totalPending: 0,
+      totalProcessed: 0,
+      totalCompleted: 0,
+      totalAmount: 0,
+    })
+  }
+
+  useEffect(() => {
+    if (users.length) {
+      const result = calculateTotalItems(users);
+      setAnalytics({ totalUsers: users.length, ...result});
+    }
+  }, [users])
 
   useEffect(() => {
     let isMounted = true;
     const getUsers = async () => {
       try {
         setIsLoading(true);
+        const data = new Map<string, UserHistory>();
         const result = await userService.getUsers();
-        if (result?.length) setUsers(result);
+        result.forEach((user) => data.set(
+          user.id,
+          {
+            ...user,
+            completedOrders: 0,
+            pendingOrders: 0,
+            ordersInProgress: 0,
+            orders: 0,
+            totalSpent: 0,
+          } as UserHistory,
+        ));
+
+        const orderItems = await orderService.getAllOrders();
+        if (orderItems?.length) {
+          const { pending, processing, shipped, delivered } = OrderStatusEnum;
+          orderItems.forEach((order) => {
+            const item = data.get(order.userId);
+            if (item) {
+              item.totalSpent += order.totalAmount;
+              item.orders += 1;
+              item.pendingOrders += order.status === pending ? 1 : 0;
+              item.ordersInProgress += [processing, shipped].includes(order.status) ? 1 : 0;
+              item.completedOrders += order.status === delivered ? 1 : 0;
+            }
+          });
+        }
+
+        const userHistory = Array.from(data.values());
+        if (result?.length) setUsers(userHistory);
         else throw Error("No Records Found");
       } catch (err: any) {
         setError(err.message);
@@ -82,6 +158,21 @@ export default function ManageUsers() {
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Role
                   </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Orders
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Pending
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Processed
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Completed
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Total spent
+                  </th>
                   <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
@@ -105,6 +196,21 @@ export default function ManageUsers() {
                         {user.isAdmin ? 'Admin' : 'Customer'}
                       </span>
                     </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {user.orders}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {user.pendingOrders}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {user.ordersInProgress}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {user.completedOrders}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {helper.formatPrice(user.totalSpent)}
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                       <Button 
                         variant="ghost" 
@@ -114,6 +220,35 @@ export default function ManageUsers() {
                     </td>
                   </tr>
                 ))}
+
+                <tr className="hover:bg-gray-100 bg-gray-200">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm font-medium text-gray-900">
+                      Total
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {analytics?.totalUsers}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap"></td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {analytics?.totalOders}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {analytics?.totalPending}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {analytics?.totalProcessed}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {analytics?.totalCompleted}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {helper.formatPrice(analytics?.totalAmount)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>

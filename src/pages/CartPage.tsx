@@ -6,10 +6,12 @@ import Button from '../components/ui/Button';
 import useCartContext from '../context/useCartContext';
 import useAuthContext from '../context/useAuthContext';
 import { helper } from '../utils/helper';
+import LoadingContent from '../components/ui/ContentLoading';
 
 const CartPage: React.FC = () => {
   const {
     items,
+    isLoading,
     updateQuantity, totalItems,
     totalPrice, clearCart,
   } = useCartContext();
@@ -55,15 +57,15 @@ const CartPage: React.FC = () => {
   const subtotal = totalPrice;
   const discount = couponApplied ? subtotal * 0.1 : 0; // 10% discount
   const shipping = subtotal > 100 ? 0 : 5.99;
-  const tax = (subtotal - discount) * 0.07; // 7% tax
-  const total = subtotal - discount + shipping + tax;
+  // const tax = (subtotal - discount) * 0.07; // 7% tax
+  const total = subtotal - discount + shipping;
 
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6">Your Shopping Cart</h1>
 
-        {items.length === 0 ? (
+        {(items.length === 0 && !isLoading) ? (
           <div className="bg-white rounded-lg shadow-md p-8 mb-8 text-center">
             <div className="flex justify-center mb-4">
               <ShoppingBag size={64} className="text-gray-300" />
@@ -80,79 +82,85 @@ const CartPage: React.FC = () => {
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Cart Items */}
             <div className="flex-grow">
-              <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
-                <div className="p-6">
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-lg font-semibold">
-                      Cart Items ({totalItems})
-                    </h2>
-                    <button 
-                      onClick={clearCart}
-                      className="text-red-500 hover:text-red-700 text-sm font-medium flex items-center"
-                    >
-                      <Trash2 size={16} className="mr-1" />
-                      Clear Cart
-                    </button>
-                  </div>
+              {
+                isLoading ?
+                  <LoadingContent />
+                : (
+                <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+                  <div className="p-6">
+                    <div className="flex justify-between items-center mb-4">
+                      <h2 className="text-lg font-semibold">
+                        Cart Items ({totalItems})
+                      </h2>
+                      <button 
+                        onClick={clearCart}
+                        className="text-red-500 hover:text-red-700 text-sm font-medium flex items-center"
+                      >
+                        <Trash2 size={16} className="mr-1" />
+                        Clear Cart
+                      </button>
+                    </div>
 
-                  <div className="divide-y">
-                    {items.map((item: CartItem) => (
-                      <div key={item.book.id} className="py-4 flex">
-                        <div className="w-20 h-28 bg-gray-100 rounded overflow-hidden mr-4">
-                          <img 
-                            src={isImageDisplayed ? item.book?.coverImage : item.book?.icon}
-                            alt={item.book?.title}
-                            onError={() => setIsImageDisplayed(false)}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        
-                        <div className="flex-grow">
-                          <div className="flex justify-between">
-                            <Link to={`/books/${item.book.id}`} className="font-medium hover:text-blue-700">
-                              {item.book.title}
-                            </Link>
-                            <button 
-                              onClick={() => updateQuantity(item, 0)}
-                              className="text-gray-400 hover:text-red-500"
-                            >
-                              <X size={18} />
-                            </button>
+                    <div className="divide-y">
+                      {items.map((item: CartItem) => (
+                        <div key={item.book.id} className="py-4 flex">
+                          <div className="w-20 h-28 bg-gray-100 rounded overflow-hidden mr-4">
+                            <img 
+                              src={isImageDisplayed ? item.book?.coverImage : item.book?.icon}
+                              alt={item.book?.title}
+                              onError={() => setIsImageDisplayed(false)}
+                              className="w-full h-full object-cover"
+                            />
                           </div>
                           
-                          <p className="text-sm text-gray-500">
-                            By {item.book.authors[0]}
-                          </p>
-                          
-                          <div className="mt-2 flex justify-between items-end">
-                            <div className="flex items-center border border-gray-300 rounded">
-                              <button
-                                onClick={() => updateQuantity(item, item.quantity - 1)}
-                                className="px-2 py-1 text-gray-600 hover:text-blue-700"
-                                disabled={item.quantity <= 1}
+                          <div className="flex-grow">
+                            <div className="flex justify-between">
+                              <Link to={`/books/${item.book.id}`} className="font-medium hover:text-blue-700">
+                                {item.book.title}
+                              </Link>
+                              <button 
+                                onClick={() => updateQuantity(item, 0)}
+                                className="text-gray-400 hover:text-red-500"
                               >
-                                −
-                              </button>
-                              <span className="px-2 py-1 text-center w-8">{item.quantity}</span>
-                              <button
-                                onClick={() => updateQuantity(item, item.quantity + 1)}
-                                className="px-2 py-1 text-gray-600 hover:text-blue-700"
-                                disabled={item.quantity >= item.book.stockQuantity}
-                              >
-                                +
+                                <X size={18} />
                               </button>
                             </div>
                             
-                            <div className="font-semibold">
-                              {helper.formatPrice(item.book.price * item.quantity)}
+                            <p className="text-sm text-gray-500">
+                              By {item.book.authors[0]}
+                            </p>
+                            
+                            <div className="mt-2 flex justify-between items-end">
+                              <div className="flex items-center border border-gray-300 rounded">
+                                <button
+                                  onClick={() => updateQuantity(item, item.quantity - 1)}
+                                  className="px-2 py-1 text-gray-600 hover:text-blue-700"
+                                  disabled={item.quantity <= 1}
+                                >
+                                  −
+                                </button>
+                                <span className="px-2 py-1 text-center w-8">{item.quantity}</span>
+                                <button
+                                  onClick={() => updateQuantity(item, item.quantity + 1)}
+                                  className="px-2 py-1 text-gray-600 hover:text-blue-700"
+                                  disabled={item.quantity >= item.book.stockQuantity}
+                                >
+                                  +
+                                </button>
+                              </div>
+                              
+                              <div className="font-semibold">
+                                {helper.formatPrice(item.book.price * item.quantity)}
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
+                )
+              }
 
               <div className="mb-6">
                 <Link to="/books" className="text-blue-700 hover:text-blue-900 inline-flex items-center">
@@ -246,9 +254,9 @@ const CartPage: React.FC = () => {
                   Proceed to Checkout
                 </Button>
 
-                <div className="mt-4 text-xs text-gray-500 text-center">
+                {/* <div className="mt-4 text-xs text-gray-500 text-center">
                   Secure checkout provided by Stripe
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

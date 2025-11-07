@@ -37,6 +37,7 @@ interface CartContextType {
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
+  isLoading: boolean;
 }
 
 interface Book {

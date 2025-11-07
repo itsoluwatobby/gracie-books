@@ -26,3 +26,11 @@ export const StorageModels = {
   carts: "carts",
   orders: "orders",
 } as const;
+
+export const OrderStatusEnum: Record<OrderStatus, OrderStatus> = {
+  pending: "pending",
+  processing: "processing",
+  shipped: "shipped",
+  delivered: "delivered",
+  cancelled: "cancelled",
+};

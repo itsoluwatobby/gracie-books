@@ -105,6 +105,12 @@ class BookServices {
     );
   };
 
+  public async mutateBookStockQuantity(books: Book[]) {
+    await Promise.all(books.map(async (book) => {
+      await this.updateBook(book.id, { stockQuantity: book.stockQuantity })
+    }));
+  }
+
   public async removeBook(bookId: string) {
     const docRef = doc(ApplicationDB, "books", bookId);
     await deleteDoc(docRef);

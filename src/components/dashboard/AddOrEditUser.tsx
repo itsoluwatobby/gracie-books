@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import Button from "../ui/Button"
 import Input from "../ui/Input"
@@ -66,6 +65,7 @@ export const AddOrEditUser: React.FC<AddOrEditUserProps> = (
       toast.success("Record successfully added");
       setEditUser(null);
       setUserDetails({});
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
       toast.error(err.message);

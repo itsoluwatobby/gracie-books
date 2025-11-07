@@ -22,15 +22,16 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   );
   const [user, setUser] = useState<Partial<UserInfo> | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (user) {
       setIsAuthenticated(true)
+      setLoading(false);
     } else {
       (async () => {
         try {
-          setLoading(true);
+          // setLoading(true);
           const userId = browserAPI.get(StorageKey.userKey) as string;
           if (userId) {
             const userInfo = await userService.getUserById(userId);

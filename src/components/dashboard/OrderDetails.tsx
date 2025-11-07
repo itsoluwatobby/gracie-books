@@ -4,6 +4,7 @@ import { X, Calendar, User, Package, MapPin, CreditCard } from 'lucide-react';
 import Button from "../ui/Button";
 import toast from 'react-hot-toast';
 import { orderService } from '../../services/order.service';
+import { OrderStatusEnum } from '../../utils/constants';
 
 type OrderDetailsProps = {
   order: Order;
@@ -25,13 +26,16 @@ export default function OrderDetails(
 
   const customer = users.find(u => u.id === order.userId);
 
+  const { pending, processing, shipped, delivered, cancelled } = OrderStatusEnum;
+  
   const getStatusColor = (status: string) => {
+  
     switch (status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'processing': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'shipped': return 'bg-purple-100 text-purple-800 border-purple-200';
-      case 'delivered': return 'bg-green-100 text-green-800 border-green-200';
-      case 'cancelled': return 'bg-red-100 text-red-800 border-red-200';
+      case pending: return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case processing: return 'bg-blue-100 text-blue-800 border-blue-200';
+      case shipped: return 'bg-purple-100 text-purple-800 border-purple-200';
+      case delivered: return 'bg-green-100 text-green-800 border-green-200';
+      case cancelled: return 'bg-red-100 text-red-800 border-red-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
@@ -43,7 +47,7 @@ export default function OrderDetails(
       const orderInfo = await orderService.updateOrder(order.id, { status: orderDetail.status });
       
       if (!orderInfo)
-        throw Error("An Error Occurred");
+        throw Error("Error updating order status");
       else {
         setOrderDetail(orderInfo);
         setReload((prev) => ({ ...prev, platform_reload: prev.platform_reload + 1 }))
@@ -123,11 +127,11 @@ export default function OrderDetails(
               className={`w-full border focus:outline-0 rounded-lg px-3 py-2 text-sm font-medium capitalize ${getStatusColor(orderDetail.status)}`}
               defaultValue={orderDetail.status}
             >
-              <option value="pending">Pending</option>
-              <option value="processing">Processing</option>
-              <option value="shipped">Shipped</option>
-              <option value="delivered">Delivered</option>
-              <option value="cancelled">Cancelled</option>
+              <option value={pending}>Pending</option>
+              <option value={processing}>Processing</option>
+              <option value={shipped}>Shipped</option>
+              <option value={delivered}>Delivered</option>
+              <option value={cancelled}>Cancelled</option>
             </select>
           </div>
         </div>

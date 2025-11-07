@@ -84,7 +84,7 @@ const CheckoutPage: React.FC = () => {
       };
 
       // Clear cart and redirect to success page
-      await orderService.addOrder(newOrder, user.email!);
+      await orderService.addOrder(newOrder, user.id!);
       clearCart();
       navigate('/orders');
     } catch (error) {

@@ -1,3 +1,4 @@
+import { OrderStatusEnum } from '../../utils/constants';
 import Button from '../ui/Button'
 
 type ManageOrdersProps = {
@@ -11,6 +12,8 @@ export default function ManageOrders(
     orders, formatCurrency, setSelectedOrder
   }: ManageOrdersProps
 ) {
+
+  const { processing, shipped, delivered, cancelled } = OrderStatusEnum;
 
   return (
     <div>
@@ -58,10 +61,10 @@ export default function ManageOrders(
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 py-1 text-xs rounded-full ${
-                      order.status === 'delivered' ? 'bg-green-100 text-green-800' : 
-                      order.status === 'shipped' ? 'bg-blue-100 text-blue-800' : 
-                      order.status === 'processing' ? 'bg-yellow-100 text-yellow-800' :
-                      order.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                      order.status === delivered ? 'bg-green-100 text-green-800' : 
+                      order.status === shipped ? 'bg-blue-100 text-blue-800' : 
+                      order.status === processing ? 'bg-yellow-100 text-yellow-800' :
+                      order.status === cancelled ? 'bg-red-100 text-red-800' :
                       'bg-gray-100 text-gray-800'
                     }`}>
                       {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
