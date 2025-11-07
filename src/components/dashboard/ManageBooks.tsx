@@ -1,52 +1,54 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from 'react';
 import Button from '../ui/Button';
 import { bookServices } from '../../services';
-import { initAppState } from '../../utils/initVariables';
 import { TableRow } from './TableRow';
 import { LoadingBook } from './LoadingBook';
-import useCartContext from '../../context/useCartContext';
 import toast from 'react-hot-toast';
 
 type ManageBooksProps = {
+  books: Book[];
+  appState: AppState;
   handleEditBook: (book: Book) => void;
   formatCurrency: (val: number) => string;
   setShowBookModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setBooks: React.Dispatch<React.SetStateAction<Book[]>>;
 }
 
 const TableHead = ['Book', 'Author', 'Price', 'Quantity', 'status', 'Actions'];
 export default function ManageBooks(
   {
+    books,
+    appState,
+    setBooks,
     handleEditBook, 
     formatCurrency,
     setShowBookModal,
   }: ManageBooksProps
   ) {
-  const { reload } = useCartContext();
-  const [books, setBooks] = useState<Book[]>([]);
-  const [appState, setAppState] = useState<AppState>(initAppState)
+  // const { reload } = useCartContext();
+  // const [books, setBooks] = useState<Book[]>([]);
+  // const [appState, setAppState] = useState<AppState>(initAppState)
 
   const { isLoading, isError, errMsg } = appState;
 
-  useEffect(() => {
-    let isMounted = true;
-    (async () => {
-      if (!isMounted) return;
-      try {
-        setAppState((prev) => ({ ...prev, isLoading: true }));
-        const inventory = await bookServices.getBooks();
-        setBooks(inventory);
-      } catch (err: any) {
-        setAppState((prev) => ({ ...prev, isError: true, errMsg: err.message }));
-      } finally {
-        setAppState((prev) => ({ ...prev, isLoading: false }));
-      }
-    })();
+  // useEffect(() => {
+  //   let isMounted = true;
+  //   (async () => {
+  //     if (!isMounted) return;
+  //     try {
+  //       setAppState((prev) => ({ ...prev, isLoading: true }));
+  //       const inventory = await bookServices.getBooks();
+  //       setBooks(inventory);
+  //     } catch (err: any) {
+  //       setAppState((prev) => ({ ...prev, isError: true, errMsg: err.message }));
+  //     } finally {
+  //       setAppState((prev) => ({ ...prev, isLoading: false }));
+  //     }
+  //   })();
 
-    return () => {
-      isMounted = false;
-    }
-  }, [reload.bookUpdate_reload])
+  //   return () => {
+  //     isMounted = false;
+  //   }
+  // }, [reload.bookUpdate_reload])
 
   const handleDelete = async (bookId: string) => {
     try {

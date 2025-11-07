@@ -194,5 +194,29 @@ class BookServices {
       return normalizeResult;
     }
   }
+
+  public searchBooks(query: string, books: Book[]): Book[] {
+    const lowercaseQuery = query.toLowerCase();
+    return books.filter(book => 
+      book.title.toLowerCase().includes(lowercaseQuery) || 
+      // book.authors.toLowerCase().includes(lowercaseQuery) ||
+      book.description.toLowerCase().includes(lowercaseQuery) ||
+      book.genre.some(g => g.toLowerCase().includes(lowercaseQuery))
+    );
+  };
+  
+  public filterBooksByGenre = (genre: string, books: Book[]): Book[] => {
+    return books.filter(book => book.genre.includes(genre));
+  };
+  
+  public getAllGenres = (books: Book[]): string[] => {
+    const genreSet = new Set<string>();
+    books.forEach(book => {
+      book.genre.forEach(genre => {
+        genreSet.add(genre);
+      });
+    });
+    return Array.from(genreSet);
+  };
 }
 export const bookServices = new BookServices();

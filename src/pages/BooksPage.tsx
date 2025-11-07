@@ -4,13 +4,15 @@ import { Filter, X } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import BookGrid from '../components/books/BookGrid';
 import Button from '../components/ui/Button';
-import { books, getAllGenres } from '../data/books';
 import { InitPriceRange } from '../utils/initVariables';
 import { helper } from '../utils/helper';
 import BookFilter from '../components/books/BookFilters';
 import SortBy from '../components/books/filters/SortBy';
+import { bookServices } from '../services';
+import useBooksContext from '../context/useBooksContext';
 
 const BooksPage: React.FC = () => {
+  const { books } = useBooksContext() as BookContextType;
   const [searchParams, setSearchParams] = useSearchParams();
   const [filteredBooks, setFilteredBooks] = useState<Book[]>(books);
   const [showFilters, setShowFilters] = useState(false);
@@ -19,7 +21,7 @@ const BooksPage: React.FC = () => {
   const [priceRange, setPriceRange] = useState<{ min: number, max: number }>(InitPriceRange);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState('relevance');
-  const allGenres = getAllGenres();
+  const allGenres = bookServices.getAllGenres(books);
 
   const { min, max } = priceRange;
 
@@ -75,7 +77,7 @@ const BooksPage: React.FC = () => {
     }
 
     setFilteredBooks(result);
-  }, [searchQuery, min, max, selectedGenres, sortBy]);
+  }, [searchQuery, min, max, selectedGenres, books, sortBy]);
 
   // Handle search
   const handleSearch = (e: React.FormEvent) => {

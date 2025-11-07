@@ -3,15 +3,17 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { Search as SearchIcon } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import BookGrid from '../components/books/BookGrid';
-import { searchBooks, getAllGenres } from '../data/books';
+import { bookServices } from '../services';
+import useBooksContext from '../context/useBooksContext';
 // import { Book } from '../types';
 
 const SearchPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
-  const [books, setBooks] = useState<Book[]>([]);
+
+  const { books, setBooks } = useBooksContext() as BookContextType;
   const [loading, setLoading] = useState(true);
-  const allGenres = getAllGenres();
+  const allGenres = bookServices.getAllGenres(books);
   
   // Get count of books in each genre from search results
   const genreCounts = books.reduce((counts: Record<string, number>, book) => {
@@ -26,13 +28,13 @@ const SearchPage: React.FC = () => {
     
     // Add a small timeout to simulate an API request
     const timer = setTimeout(() => {
-      const results = searchBooks(query);
+      const results = bookServices.searchBooks(query, books);
       setBooks(results);
       setLoading(false);
     }, 500);
     
     return () => clearTimeout(timer);
-  }, [query]);
+  }, [query, books, setBooks]);
 
   return (
     <Layout>

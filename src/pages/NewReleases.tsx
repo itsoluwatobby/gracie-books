@@ -1,17 +1,19 @@
 import React from 'react';
 import Layout from '../components/layout/Layout';
 import BookGrid from '../components/books/BookGrid';
-import { books } from '../data/books';
+import useBooksContext from '../context/useBooksContext';
 
 const NewReleasesPage: React.FC = () => {
+  const { books } = useBooksContext() as BookContextType;
+
   // Get books from the last 3 months
   const threeMonthsAgo = new Date();
   threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
   
   const newReleases = books
-    .filter(book => new Date(book.publicationDate) >= threeMonthsAgo)
+    .filter(book => new Date(book.publicationDate!) >= threeMonthsAgo)
     .sort((a, b) => 
-      new Date(b.publicationDate).getTime() - new Date(a.publicationDate).getTime()
+      new Date(b.publicationDate!).getTime() - new Date(a.publicationDate!).getTime()
     );
 
   return (

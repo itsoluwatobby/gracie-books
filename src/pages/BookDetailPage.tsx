@@ -12,25 +12,27 @@ import {
 } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
-import { getBookById } from '../data/books';
 import useCartContext from '../context/useCartContext';
 import BookGrid from '../components/books/BookGrid';
-import { books } from '../data/books';
 import { bookServices } from '../services';
 import { initAppState } from '../utils/initVariables';
 import toast from 'react-hot-toast';
+import useBooksContext from '../context/useBooksContext';
 
 const BookDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [book, setBook] = useState<Book | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
-  const { addToCart, reload } = useCartContext();
+
+  const { reload, books } = useBooksContext() as BookContextType;
+  const { addToCart } = useCartContext();
 
   const [isImageDisplayed, setIsImageDisplayed] = useState(true);
   const [appState, setAppState] = useState<AppState>(initAppState);
   
   const { isLoading, isError, errMsg } = appState;
+  
 
   // Get related books (for demo purposes, just random books)
   useEffect(() => {
@@ -40,7 +42,6 @@ const BookDetailPage: React.FC = () => {
       try {
         setAppState((prev) => ({ ...prev, isLoading: true }));
         const inventory = await bookServices.getBookById(id);
-        console.log(inventory)
         setBook(inventory);
       } catch (err: any) {
         setAppState((prev) => ({ ...prev, isError: true, errMsg: err.message }));
@@ -57,15 +58,6 @@ const BookDetailPage: React.FC = () => {
   const relatedBooks = books
     .filter(b => b.id !== id && b.genre.some((g: string) => book?.genre.includes(g)))
     .slice(0, 4);
-
-  useEffect(() => {
-    if (id) {
-      const fetchedBook = getBookById(id);
-      if (fetchedBook) {
-        setBook(fetchedBook);
-      }
-    }
-  }, [id]);
 
   const decreaseQuantity = () => {
     if (quantity > 1) {

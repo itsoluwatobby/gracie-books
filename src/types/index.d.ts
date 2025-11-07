@@ -4,7 +4,6 @@ type AppConfig = {
   _id?: string,
   name: string;
   email: string;
-  isLoggedIn: boolean;
   contact: string;
   socials: {
     instagram: string,
@@ -28,12 +27,21 @@ interface AuthContextType {
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+interface BookContextType {
+  // isLoading: boolean;
+  // isError: boolean;
+  // errMsg: string;
+  books: Book[];
+  appState: AppState;
+  reload: Reloads;
+  setReload: React.Dispatch<React.SetStateAction<Reloads>>;
+  setBooks: React.Dispatch<React.SetStateAction<Book[]>>;
+}
+
 interface CartContextType {
   items: CartItem[];
-  reload: Reloads;
   addToCart: (book: Book, quantity?: number) => void;
   updateQuantity: (cart: CartItem, quantity: number) => void;
-  setReload: React.Dispatch<React.SetStateAction<Reloads>>;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;

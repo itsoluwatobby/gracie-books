@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import { InitReloads } from '../utils/initVariables';
 import { userService } from '../services';
 import { cartService } from '../services/cart.service';
 import toast from 'react-hot-toast';
@@ -11,21 +10,8 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
-  const [reload, setReload] = useState<Reloads>(InitReloads)
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [deviceId] = useState(userService.getDeviceId());
-
-  // Load cart from localStorage on component mount
-  // useEffect(() => {
-  //   try {
-  //     const savedCart = localStorage.getItem(LOCAL_STORAGE_KEY);
-  //     if (savedCart) {
-  //       setItems(JSON.parse(savedCart));
-  //     }
-  //   } catch (error) {
-  //     console.error('Failed to load cart from localStorage:', error);
-  //   }
-  // }, []);
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
@@ -87,8 +73,6 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     <CartContext.Provider 
       value={{ 
         items,
-        reload,
-        setReload,
         addToCart,  
         updateQuantity, 
         clearCart, 

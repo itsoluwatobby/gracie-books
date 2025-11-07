@@ -6,25 +6,24 @@ import toast from 'react-hot-toast';
 import { orderService } from '../../services/order.service';
 import { OrderStatusEnum } from '../../utils/constants';
 
+
 type OrderDetailsProps = {
   order: Order;
-  users: UserInfo[];
   formatCurrency: (val: number) => string;
-  setReload: React.Dispatch<React.SetStateAction<Reloads>>
+  setReload: React.Dispatch<React.SetStateAction<Reloads>>;
   setSelectedOrder: React.Dispatch<React.SetStateAction<Order | null>>;
 }
 
 export default function OrderDetails(
   { 
-    order, users,
-    formatCurrency, setSelectedOrder,
+    order,
+    formatCurrency,
+    setSelectedOrder,
     setReload,
   }: OrderDetailsProps
 ) {
   const [orderDetail, setOrderDetail] = useState<Order>(order);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const customer = users.find(u => u.id === order.userId);
 
   const { pending, processing, shipped, delivered, cancelled } = OrderStatusEnum;
   
@@ -92,8 +91,8 @@ export default function OrderDetails(
             <div className="text-lg font-bold text-blue-900">
               {order.shippingAddress.fullName || 'Unknown Customer'}
             </div>
-            {customer?.email && (
-              <div className="text-sm text-blue-600 mt-1">{customer.email}</div>
+            {order.shippingAddress?.fullName && (
+              <div className="text-sm text-blue-600 mt-1">{order.shippingAddress.fullName}</div>
             )}
           </div>
 

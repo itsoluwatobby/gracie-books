@@ -2,10 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronDown, ChevronUp, Menu } from 'lucide-react';
 import Layout from '../components/layout/Layout';
-// import { orders } from '../data/orders';
-import { books } from '../data/books';
-import { users } from '../data/users';
-import { ModalSelections } from '../utils/constants';
+import { ModalSelections, OrderStatusEnum } from '../utils/constants';
 import { helper } from '../utils/helper';
 import {
   AddorEdit,
@@ -19,7 +16,7 @@ import {
   TopCard,
 } from '../components/dashboard';
 import { orderService } from '../services/order.service';
-import useCartContext from '../context/useCartContext';
+import useBooksContext from '../context/useBooksContext';
 
 
 const AdminDashboardPage: React.FC = () => {
@@ -32,7 +29,13 @@ const AdminDashboardPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { reload, setReload } = useCartContext() as CartContextType;
+  const {
+    appState,
+    books,
+    reload,
+    setReload,
+    setBooks,
+  } = useBooksContext() as BookContextType;
 
   useEffect(() => {
     let isMounted = true;
@@ -61,8 +64,8 @@ const AdminDashboardPage: React.FC = () => {
   // Calculate summary metrics
   const totalOrders = orders.length;
   const totalRevenue = orders.reduce((sum, order) => sum + order.totalAmount, 0);
-  const pendingOrders = orders.filter(order => order.status === 'pending' || order.status === 'processing').length;
-  const lowStockBooks = books.filter(book => book.stockQuantity < 5).length;
+  const pendingOrders = orders.filter(order => [OrderStatusEnum.pending, OrderStatusEnum.processing].includes(order.status)).length;
+  const lowStockBooks = books.filter(book => book.stockQuantity < 2).length;
 
   const handleEditBook = (book: Book) => {
     setEditBook(book);
@@ -103,6 +106,9 @@ const AdminDashboardPage: React.FC = () => {
         handleEditBook={handleEditBook}
         formatCurrency={helper.formatPrice}
         setShowBookModal={setShowBookModal}
+        appState={appState}
+        books={books}
+        setBooks={setBooks}
       />
     ),
     users: <ManageUsers />
@@ -146,7 +152,6 @@ const AdminDashboardPage: React.FC = () => {
               {selectedOrder ? (
                 <OrderDetails 
                   order={selectedOrder}
-                  users={users}
                   setReload={setReload}
                   formatCurrency={helper.formatPrice}
                   setSelectedOrder={setSelectedOrder}

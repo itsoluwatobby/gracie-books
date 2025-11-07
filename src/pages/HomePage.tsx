@@ -1,43 +1,18 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { TrendingUp, BookOpen, ShoppingBag } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import BookGrid from '../components/books/BookGrid';
 import Button from '../components/ui/Button';
 import useAuthContext from '../context/useAuthContext';
-import useCartContext from '../context/useCartContext';
-import { initAppState } from '../utils/initVariables';
-import { bookServices } from '../services';
+import useBooksContext from '../context/useBooksContext';
 
 const HomePage: React.FC = () => {
   const { appName } = useAuthContext();
-  const { reload } = useCartContext();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { appState, books } = useBooksContext() as BookContextType;
 
-  const [books, setBooks] = useState<Book[]>([]);
-  const [appState, setAppState] = useState<AppState>(initAppState);
-
-  const { isLoading, isError, errMsg } = appState;
-
-  useEffect(() => {
-    let isMounted = true;
-    (async () => {
-      if (!isMounted) return;
-      try {
-        setAppState((prev) => ({ ...prev, isLoading: true }));
-        const inventory = await bookServices.getBooks("public");
-        setBooks(inventory);
-      } catch (err: any) {
-        setAppState((prev) => ({ ...prev, isError: true, errMsg: err.message }));
-      } finally {
-        setAppState((prev) => ({ ...prev, isLoading: false }));
-      }
-    })();
-
-    return () => {
-      isMounted = false;
-    }
-  }, [reload.bookUpdate_reload])
+  // const { isLoading, isError, errMsg } = appState;
   
   const featuredBooks = books.slice(0, 5);
   

@@ -9,14 +9,13 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [appName, setAppName] = useState<AppConfig>(
     {
-      name: 'Wandyte Book Sales',
-      email: 'crazywandyte@gmail.com',
-      isLoggedIn: false,
-      contact: '(+234) 813-4657-528',
+      name: import.meta.env.VITE_NAME,
+      email: import.meta.env.VITE_EMAIL,
+      contact: import.meta.env.VITE_CONTACT,
       socials: {
-        instagram: 'https://t.co/tv74l1c4K1',
-        facebook: '',
-        twitter: 'https://x.com/WandyteBookSale'
+        instagram: import.meta.env.VITE_INSTAGRAM,
+        facebook: import.meta.env.VITE_FACEBOOK,
+        twitter: import.meta.env.VITE_TWITTER
       }
     }
   );
