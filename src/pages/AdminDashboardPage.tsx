@@ -109,7 +109,7 @@ const AdminDashboardPage: React.FC = () => {
             setActiveSection={setActiveSection}
             setSelectedOrder={setSelectedOrder}
           />
-          <StockPiled books={books} setActiveSection={setActiveSection} />
+          <StockPiled books={[]} setActiveSection={setActiveSection} />
         </div>
       </>
     ),
