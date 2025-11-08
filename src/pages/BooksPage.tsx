@@ -9,19 +9,23 @@ import { helper } from '../utils/helper';
 import BookFilter from '../components/books/BookFilters';
 import SortBy from '../components/books/filters/SortBy';
 import { bookServices } from '../services';
-import useBooksContext from '../context/useBooksContext';
+import { useGetBooks } from '../hooks/useGetBooks';
+import BookCardLoading from '../components/Loaders/BookCardLoading';
 
 const BooksPage: React.FC = () => {
-  const { books } = useBooksContext() as BookContextType;
+  const { booksData, appState } = useGetBooks(
+    { pagination: { pageSize: 100 } },
+  )
   const [searchParams, setSearchParams] = useSearchParams();
-  const [filteredBooks, setFilteredBooks] = useState<Book[]>(books);
+  const [filteredBooks, setFilteredBooks] = useState<Book[]>(booksData.books);
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [initPriceRange, setInitPriceRange] = useState<{ min: number, max: number }>(InitPriceRange);
   const [priceRange, setPriceRange] = useState<{ min: number, max: number }>(InitPriceRange);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState('relevance');
-  const allGenres = bookServices.getAllGenres(books);
+
+  const allGenres = bookServices.getAllGenres(booksData.books);
 
   const { min, max } = priceRange;
 
@@ -33,7 +37,7 @@ const BooksPage: React.FC = () => {
 
   // Apply filters and sorting
   useEffect(() => {
-    let result = [...books];
+    let result = booksData.books?.length ? [...booksData.books] : [];
 
     // Filter by search query
     if (searchQuery) {
@@ -77,7 +81,7 @@ const BooksPage: React.FC = () => {
     }
 
     setFilteredBooks(result);
-  }, [searchQuery, min, max, selectedGenres, books, sortBy]);
+  }, [searchQuery, min, max, selectedGenres, booksData.books, sortBy]);
 
   // Handle search
   const handleSearch = (e: React.FormEvent) => {
@@ -131,7 +135,7 @@ const BooksPage: React.FC = () => {
 
         <div className="flex flex-col md:flex-row gap-8">
           {/* Filters - Desktop */}
-          <div className="hidden md:block w-64 flex-shrink-0">
+          <div className="hidden md:block w-72 flex-shrink-0">
             <div className="bg-white rounded-lg shadow-md p-6 sticky top-20">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="font-semibold">Filters</h2>
@@ -259,14 +263,19 @@ const BooksPage: React.FC = () => {
 
             {/* Results Summary */}
             <div className="mb-6 text-gray-600">
-              Showing {filteredBooks.length} of {books.length} books
+              Showing {filteredBooks?.length} of {booksData.books?.length} books
             </div>
 
             {/* Book Grid */}
-            <BookGrid 
-              books={filteredBooks}
-              emptyMessage="No books found matching your filters. Try adjusting your search criteria."
-            />
+            {
+              appState?.isLoading 
+              ? <BookCardLoading itemCount={10} />
+              :
+              <BookGrid 
+                books={filteredBooks}
+                emptyMessage="No books found matching your filters. Try adjusting your search criteria."
+              />
+            }
           </div>
         </div>
       </div>

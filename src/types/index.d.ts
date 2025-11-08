@@ -181,7 +181,7 @@ type ErrorResponse = {
 }
 
 type Rating = { bookId: string, rating: number }
-type PriceRangePropTypes = { min: number, max: number }
+type PriceRangePropTypes = { min: number, max: number, step?: number }
 
 type GoogleAPIResponse = {
   items: GoogleResponse[]
@@ -241,3 +241,22 @@ type GracieAudioAPIGoodReadResponse = {
 
 type ReloadKeys = 'cart_reload' | 'platform_reload' | 'bookUpdate_reload' | 'order_reload';
 type Reloads = Record<ReloadKeys, number>;
+
+type Pagination<T> = {
+  pageSize?: number;
+  orderByField?: "createdAt" | "price" | "title"
+  orderDirection?: 'asc' | 'desc';
+  lastDoc?: T;
+}
+
+type FilterQueries<T> = {
+  pagination?: Pagination<T>;
+  rating?: number;
+  title?: string;
+  price?: number;
+  publisher?: string;
+  author?: string;
+  status?: Book["status"];
+  createdAt?: string;
+  genre?: string[];
+}

@@ -1,6 +1,8 @@
 
 export const PageRoutes = {
   home: '/',
+  aboutUs: '/about',
+  termsAndConditions: '/terms',
   books: '/books',
   cart: '/cart',
   dashboard: '/dashboard',
@@ -9,11 +11,12 @@ export const PageRoutes = {
   orders: '/orders',
   search: '/search',
   profile: '/profile',
-  newRelease: '/new-release',
+  newRelease: '/new-releases',
   auth: {
     login: '/login',
     signup: '/signup',
     forgotPassword: '/forgot-password',
+    newPassword: '/new-password',
     unauthorised: '/unauthorised',
   },
 } as const;

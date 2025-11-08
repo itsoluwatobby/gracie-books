@@ -19,6 +19,9 @@ import {
   SignUpPage,
   OrderDetailPage,
   ProfilePage,
+  NewPasswordPage,
+  AboutUsPage,
+  TermsConditionsPage,
 } from './pages';
 import RoutePrivilege from './components/layout/RoutePrivilege';
 import { PageRoutes } from './utils/pageRoutes';
@@ -60,12 +63,15 @@ function App() {
                   <Route path={PageRoutes.auth.login} element={<LoginPage />} />
                   <Route path={PageRoutes.auth.signup} element={<SignUpPage />} />
                   <Route path={PageRoutes.auth.forgotPassword} element={<ForgotPasswordPage />} />
+                  <Route path={PageRoutes.auth.newPassword} element={<NewPasswordPage />} />
                 </Route>
 
                 <Route path={PageRoutes.search} element={<SearchPage />} />
                 <Route path={PageRoutes.newRelease} element={<NewReleases />} />
-                <Route path={`${PageRoutes.genres}/:genre"`} element={<GenrePage />} />
-
+                <Route path={PageRoutes.genres} element={<GenrePage />} />
+      
+                <Route path={PageRoutes.aboutUs} element={<AboutUsPage />} />
+                <Route path={PageRoutes.termsAndConditions} element={<TermsConditionsPage />} />
 
                 <Route path={PageRoutes.auth.unauthorised} element={<Unauthorised />} />
 

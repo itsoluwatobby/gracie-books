@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ShoppingCart, User, Menu, X, BookOpen, Search } from 'lucide-react';
 import Button from '../ui/Button';
 import useAuthContext from '../../context/useAuthContext';
@@ -8,13 +8,24 @@ import { userAuthenticationAPI } from '../../composables/auth';
 import { userService } from '../../services';
 import { UserRole } from '../../utils/constants';
 import { PageRoutes } from '../../utils/pageRoutes';
+import { initAppState } from '../../utils/initVariables';
+import toast from 'react-hot-toast';
 
 const Header: React.FC = () => {
+  const { pathname } = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { isAuthenticated, appName, user, setIsAuthenticated } = useAuthContext();
+  const {
+    user,
+    appName,
+    isAuthenticated,
+    setUser,
+    setIsAuthenticated,
+  } = useAuthContext();
+
   const { totalItems } = useCartContext();
   const navigate = useNavigate();
+  const [appState, setAppState] = useState<AppState>(initAppState);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -28,18 +39,31 @@ const Header: React.FC = () => {
     }
   };
 
-
   const logout = async () => {
-    await userAuthenticationAPI.logout();
-    if (user) {
-      await userService.updateUser(user.id!, { isLoggedIn: false });
+    if (appState.isLoading) return;
+
+    setAppState((prev) => ({ ...prev, isLoading: true }));
+    try {
+      await userAuthenticationAPI.logout();
+      if (user && user.isLoggedIn) {
+        await userService.updateUser(user.id!, { isLoggedIn: false });
+      }
+      setUser(null);
+      setIsAuthenticated(false);
+      setIsMenuOpen(false);
+
+      toast.success("Logout successful");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.log(`MESSAGE: ${err.message}`)
+      setAppState((prev) => ({ ...prev, errMsg: err.message }));
+    } finally {
+      setAppState((prev) => ({ ...prev, isLoading: false }));
     }
-    setIsAuthenticated(false);
-    setIsMenuOpen(false);
   }
 
   return (
-    <header className="bg-blue-900 text-white shadow-md sticky top-0 z-50 lg:px-8">
+    <header className="bg-blue-900 text-white shadow-md sticky top-0 z-50 lg:px-6">
       <div className="container mx-auto px-4 py-6">
         <div className="flex items-center justify-between">
           {/* Logo and Brand */}
@@ -50,10 +74,10 @@ const Header: React.FC = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
-            <Link to={PageRoutes.home} className="hover:text-blue-200 transition-colors">Home</Link>
-            <Link to={PageRoutes.books} className="hover:text-blue-200 transition-colors">Browse</Link>
-            <Link to={PageRoutes.genres} className="hover:text-blue-200 transition-colors">Genres</Link>
-            <Link to={PageRoutes.newRelease} className="hover:text-blue-200 transition-colors">New Releases</Link>
+            <Link to={PageRoutes.home} className={`hover:text-blue-200 transition-colors ${pathname !== PageRoutes.home ? 'text-blue-100' : ''}`}>Home</Link>
+            <Link to={PageRoutes.books} className={`hover:text-blue-200 transition-colors ${pathname !== PageRoutes.books ? 'text-blue-100' : ''}`}>Browse</Link>
+            <Link to={PageRoutes.genres} className={`hover:text-blue-200 transition-colors ${pathname !== PageRoutes.genres ? 'text-blue-100' : ''}`}>Genres</Link>
+            <Link to={PageRoutes.newRelease} className={`hover:text-blue-200 transition-colors ${pathname !== PageRoutes.newRelease ? 'text-blue-100' : ''}`}>New Releases</Link>
           </nav>
 
           {/* Search Form - Desktop */}

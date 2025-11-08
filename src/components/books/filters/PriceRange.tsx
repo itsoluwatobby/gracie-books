@@ -23,8 +23,9 @@ export default function PriceRange(
           min={initPriceRange.min}
           max={priceRange.max}
           value={priceRange.min}
+          step={initPriceRange.step}
           onChange={(e) => setPriceRange((prev) => ({ ...prev, min: Number(e.target.value) }))}
-          className="w-20 border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-24 border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
         <span className="mx-2">-</span>
         <span className="text-gray-600">{CURRENCY.NAIRA}</span>
@@ -32,8 +33,9 @@ export default function PriceRange(
           type="number"
           min={priceRange.min}
           value={priceRange.max}
+          step={initPriceRange.step}
           onChange={(e) => setPriceRange((prev) => ({ ...prev, max: Number(e.target.value) }))}
-          className="w-20 border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-24 border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
       </div>
       <input

@@ -5,26 +5,26 @@ import Layout from '../components/layout/Layout';
 import BookGrid from '../components/books/BookGrid';
 import Button from '../components/ui/Button';
 import useAuthContext from '../context/useAuthContext';
-import useBooksContext from '../context/useBooksContext';
+// import useBooksContext from '../context/useBooksContext';
+import { useGetBooks } from '../hooks/useGetBooks';
+import BookCardLoading from '../components/Loaders/BookCardLoading';
 
 const HomePage: React.FC = () => {
-  const { appName } = useAuthContext();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { appState, books } = useBooksContext() as BookContextType;
+  const { appName } = useAuthContext() as AuthContextType;
 
-  // const { isLoading, isError, errMsg } = appState;
-  
-  const featuredBooks = books.slice(0, 5);
-  
-  // Get recent books (another subset with high ratings)
-  const newArrivals = [...books]
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-    .slice(0, 10);
+  const pageSize = 10;
+  const fiveDaysAgo = new Date();
+  fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 10);
+  fiveDaysAgo.setHours(0, 0, 0, 0);
+  const { booksData: newArrivals, appState } = useGetBooks(
+    { createdAt: fiveDaysAgo.toISOString(), pagination: { pageSize } });
 
-  // const otherBooks = books.slice(0, 10)
+  const { booksData: bestsellers, appState: bestSellerAppState } = useGetBooks(
+    { pagination: { pageSize }, rating: 3 })
   
-  // Get new arrivals (for demo purposes, just another subset)
-  // const newArrivals = books.slice(3, 8);
+  const { booksData: featuredBooks, appState: featuredBooksAppState } = useGetBooks(
+    { pagination: { pageSize, orderByField: "title", orderDirection: "asc" } })
+
 
   return (
     <Layout>
@@ -121,7 +121,9 @@ const HomePage: React.FC = () => {
             </Link>
           </div>
           
-          <BookGrid books={featuredBooks} />
+          {
+            featuredBooksAppState?.isLoading ? <BookCardLoading /> : <BookGrid books={featuredBooks?.books} />
+          }
         </div>
       </section>
 
@@ -136,8 +138,9 @@ const HomePage: React.FC = () => {
               View All →
             </Link>
           </div>
-          
-          <BookGrid books={books} />
+          {
+            bestSellerAppState?.isLoading ? <BookCardLoading /> : <BookGrid books={bestsellers?.books} />
+          }
         </div>
       </section>
 
@@ -152,8 +155,9 @@ const HomePage: React.FC = () => {
               View All →
             </Link>
           </div>
-          
-          <BookGrid books={newArrivals} />
+          {
+            appState?.isLoading ? <BookCardLoading /> : <BookGrid books={newArrivals?.books} />
+          }
         </div>
       </section>
 

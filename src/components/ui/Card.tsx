@@ -14,7 +14,7 @@ const Card: React.FC<CardProps> = ({
   hoverable = false,
 }) => {
   const baseClasses = 'bg-white rounded-lg shadow-md overflow-hidden';
-  const hoverClasses = hoverable ? 'transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg' : '';
+  const hoverClasses = hoverable ? 'transition-transform duration-300 hover:-translate-y-0.5 hover:shadow-md' : '';
   const clickableClasses = onClick ? 'cursor-pointer' : '';
   
   const cardClasses = `

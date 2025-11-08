@@ -103,7 +103,7 @@ const BookDetailPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8">
+      <div className="container lg:max-w-6xl mx-auto px-4 py-8">
         {/* Breadcrumbs */}
         <nav className="mb-6">
           <ol className="flex text-sm text-gray-500">
@@ -121,7 +121,7 @@ const BookDetailPage: React.FC = () => {
             </li>
             <li>
               <Link
-                to={`/genres/${book?.genre[0]}`}
+                to={`/genres?genre=${book?.genre[0]}`}
                 className="hover:text-blue-700"
               >
                 {book?.genre[0]}
@@ -155,14 +155,28 @@ const BookDetailPage: React.FC = () => {
             <div className="flex flex-col md:flex-row gap-8">
               {/* Book Cover Image */}
               <div className="w-full md:w-1/3 lgw-1/4">
-                <figure className="bg-gray-100 rounded-md h-96 overflow-hidden shadow-sm">
-                  <img
-                    src={isImageDisplayed ? book?.coverImage : book?.icon}
-                    alt={book?.title}
-                    onError={() => setIsImageDisplayed(false)}
-                    className="w-full h-auto object-cover"
-                  />
-                </figure>
+                <div className="h-96 rounded-md transform-gpu transition-transform duration-500 hover:rotate-y-4 hover:-translate-y-0.5 hover:scale-[1.005] hover:shadow-xl">
+                  {/* 3D Book Container with Spine & Cover */}
+                  <div className="rounded-md relative w-full h-full preserve-3d group">
+                    {/* Book Cover */}
+                    <div className="absolute inset-0 backface-hidden rounded-lg overflow-hidden">
+                      <img
+                        src={isImageDisplayed ? book?.coverImage : book?.icon}
+                        alt={book.title}
+                        onError={() => setIsImageDisplayed(false)}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+
+                    <div className="absolute rounded-l-md left-0 top-0 w-20 h-full origin-left backface-hidden rotate-y-90 bg-gradient-to-r from-gray-300 to-gray-400 shadow-inner">
+                      <div className="flex flex-col justify-center items-center h-full text-xs text-gray-700 font-semibold writing-mode-vertical transform -rotate-180">
+                        {book.title}
+                      </div>
+                    </div>
+
+                    <div className="absolute inset-0 backface-hidden rounded-lg shadow-inner pointer-events-none opacity-30"></div>
+                  </div>
+                </div>
 
                 <div className="mt-4 flex justify-around">
                   <button className="p-2 text-gray-500 hover:text-blue-700 flex flex-col items-center text-xs">
@@ -290,7 +304,7 @@ const BookDetailPage: React.FC = () => {
                       {book.genre.map((genre, index) => (
                         <Link
                           key={index}
-                          to={`/genres/${genre}`}
+                          to={`/genres/genre=${genre}`}
                           className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm hover:bg-blue-200 transition-colors"
                         >
                           {genre}

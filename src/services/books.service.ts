@@ -12,9 +12,15 @@ import {
   setDoc,
   updateDoc,
   where,
+  DocumentSnapshot,
+  Query,
+  startAfter,
+  limit,
+  orderBy,
 } from "firebase/firestore";
 import { nanoid } from "nanoid/non-secure";
 import { StorageModels } from "../utils/constants";
+
 
 class BookServices {
   goodReadsBaseURL = "https://audio-book-server.onrender.com/api/v1/books/rating";
@@ -92,6 +98,60 @@ class BookServices {
     });
 
     return books;
+  };
+
+  public async getBooksByQuery(filters?: FilterQueries<DocumentSnapshot>) {
+    try {
+      
+      const whereQueries: QueryFieldFilterConstraint[] = [];
+
+      if (filters?.status) whereQueries.push(where("status", "==", filters.status));
+
+      if (filters?.rating) whereQueries.push(where("rating", ">=", filters.rating));
+
+      if (filters?.price) whereQueries.push(where("price", "<=", filters.price));
+
+      if (filters?.publisher) whereQueries.push(where("publisher", "==", filters.publisher));
+
+      if (filters?.title) whereQueries.push(where("title", "==", filters.title));
+    
+      if (filters?.createdAt) whereQueries.push(where("createdAt", ">=", filters.createdAt));
+
+      if (filters?.author) whereQueries.push(where("authors", "array-contains", filters.author));
+
+      if (filters?.genre) whereQueries.push(where("genre", "array-contains", filters.genre));
+
+      let q: Query = query(this.booksRef, ...whereQueries);
+
+      const paginate = filters?.pagination;
+      if (paginate?.orderByField || paginate?.orderDirection) 
+        q = query(q, orderBy(paginate.orderByField!, paginate.orderDirection));
+
+      if (paginate?.pageSize) 
+        q = query(q, limit(paginate.pageSize));
+
+      if (paginate?.lastDoc)
+        q = query(q, startAfter(paginate.lastDoc));
+
+      const querySnapShot = await getDocs(q);
+      const books: Book[] = [];
+      let lastVisible: DocumentSnapshot | null = null;
+      let hasMore = false;
+    
+      querySnapShot.forEach((doc) => {
+        books.push({ ...doc.data(), id: doc.id } as Book);
+      });
+
+      if (books.length > 0) {
+        lastVisible = querySnapShot.docs[querySnapShot.docs.length - 1];
+        hasMore = books.length === paginate?.pageSize;
+      }
+
+      return { books, lastVisible, hasMore };
+    } catch (error) {
+      console.error('Error fetching books:', error);
+      return { books: [], lastVisible: null, hasMore: false };
+    }
   };
 
   public async updateBook(bookId: string, updatedInfo: Partial<Book>) {
@@ -197,7 +257,7 @@ class BookServices {
 
   public searchBooks(query: string, books: Book[]): Book[] {
     const lowercaseQuery = query.toLowerCase();
-    return books.filter(book => 
+    return books?.filter(book => 
       book.title.toLowerCase().includes(lowercaseQuery) || 
       // book.authors.toLowerCase().includes(lowercaseQuery) ||
       book.description.toLowerCase().includes(lowercaseQuery) ||
@@ -211,7 +271,7 @@ class BookServices {
   
   public getAllGenres = (books: Book[]): string[] => {
     const genreSet = new Set<string>();
-    books.forEach(book => {
+    books?.forEach(book => {
       book.genre.forEach(genre => {
         genreSet.add(genre);
       });

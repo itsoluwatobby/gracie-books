@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { BookOpen, Mail, Phone, MapPin } from 'lucide-react';
 import useAuthContext from '../../context/useAuthContext';
 import SVGIcon from '../svgs/Index';
+import { PageRoutes } from '../../utils/pageRoutes';
 
 const Footer: React.FC = () => {
   const { appName } = useAuthContext();
@@ -39,22 +40,22 @@ const Footer: React.FC = () => {
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/" className="text-blue-200 hover:text-white transition-colors">Home</Link>
+                <Link to={PageRoutes.home} className="text-blue-200 hover:text-white transition-colors">Home</Link>
               </li>
               <li>
-                <Link to="/books" className="text-blue-200 hover:text-white transition-colors">Browse Books</Link>
+                <Link to={PageRoutes.books} className="text-blue-200 hover:text-white transition-colors">Browse Books</Link>
               </li>
               <li>
-                <Link to="/new-releases" className="text-blue-200 hover:text-white transition-colors">New Releases</Link>
+                <Link to={PageRoutes.newRelease} className="text-blue-200 hover:text-white transition-colors">New Releases</Link>
               </li>
               <li>
-                <Link to="/bestsellers" className="text-blue-200 hover:text-white transition-colors">Bestsellers</Link>
+                {/* <Link to="/bestsellers" className="text-blue-200 hover:text-white transition-colors">Bestsellers</Link> */}
               </li>
               <li>
-                <Link to="/deals" className="hidden text-blue-200 hover:text-white transition-colors">Special Deals</Link>
+                {/* <Link to={PageRoutes.} className="hidden text-blue-200 hover:text-white transition-colors">Special Deals</Link> */}
               </li>
               <li>
-                <Link to="/about" className="text-blue-200 hover:text-white transition-colors">About Us</Link>
+                <Link to={PageRoutes.aboutUs} className="text-blue-200 hover:text-white transition-colors">About Us</Link>
               </li>
             </ul>
           </div>
@@ -76,7 +77,7 @@ const Footer: React.FC = () => {
                 <Link to="/privacy" className="hidden text-blue-200 hover:text-white transition-colors">Privacy Policy</Link>
               </li>
               <li>
-                <Link to="/terms" className="text-blue-200 hover:text-white transition-colors">Terms & Conditions</Link>
+                <Link to={PageRoutes.termsAndConditions} className="text-blue-200 hover:text-white transition-colors">Terms & Conditions</Link>
               </li>
               <li>
                 <Link to="/track-order" className="text-blue-200 hover:text-white transition-colors">Track Your Order</Link>
@@ -90,7 +91,7 @@ const Footer: React.FC = () => {
             <ul className="space-y-4 text-sm">
               <li className="flex items-start">
                 <MapPin className="flex-none h-5 w-5 mr-2 text-blue-200" />
-                <span className="text-blue-200">Ibadan, Oyo state</span>
+                <span className="text-blue-200">{appName.address}</span>
               </li>
               <li className="flex items-center">
                 <Phone className="flex-none h-5 w-5 mr-2 text-blue-200" />
@@ -126,7 +127,7 @@ const Footer: React.FC = () => {
           <p className="text-blue-200 text-sm">
             &copy; {new Date().getFullYear()} {appName.name}. All rights reserved.
           </p>
-          <div className="mt-4 md:mt-0">
+          <div className="mt-4 md:mt-0 hidden">
             <ul className="flex space-x-4">
               <li>
                 <a href="#" className="text-blue-200 hover:text-white text-sm transition-colors">Privacy</a>

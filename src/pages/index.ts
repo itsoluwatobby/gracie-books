@@ -15,6 +15,9 @@ import ForgotPasswordPage from './ForgotPasswordPage';
 import SignUpPage from './SignUpPage';
 import Unauthorised from './Unauthorised';
 import ProfilePage from './ProfilePage';
+import TermsConditionsPage from './TermsConditionsPage';
+import AboutUsPage from './AboutUsPage';
+import NewPasswordPage from './NewPasswordPage';
 
 export {
   AdminDashboardPage,
@@ -34,4 +37,7 @@ export {
   SignUpPage,
   Unauthorised,
   ProfilePage,
+  NewPasswordPage,
+  TermsConditionsPage,
+  AboutUsPage,
 };

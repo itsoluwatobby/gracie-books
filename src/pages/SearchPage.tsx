@@ -87,7 +87,7 @@ const SearchPage: React.FC = () => {
                 {allGenres.map((genre, index) => (
                   <div key={index} className="flex items-center justify-between">
                     <Link
-                      to={`/genres/${genre}`}
+                      to={`/genres/genre=${genre}`}
                       className="text-gray-700 hover:text-blue-700"
                     >
                       {genre}

@@ -12,6 +12,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       name: import.meta.env.VITE_NAME,
       email: import.meta.env.VITE_EMAIL,
       contact: import.meta.env.VITE_CONTACT,
+      address: import.meta.env.VITE_ADDRESS,
       socials: {
         instagram: import.meta.env.VITE_INSTAGRAM,
         facebook: import.meta.env.VITE_FACEBOOK,

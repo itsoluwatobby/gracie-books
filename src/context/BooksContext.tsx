@@ -15,7 +15,7 @@ const BooksProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       if (!isMounted) return;
       try {
         setAppState((prev) => ({ ...prev, isLoading: true }));
-        const inventory = await bookServices.getBooks();
+        const inventory = await bookServices.getBooks("public");
         setBooks(inventory);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {

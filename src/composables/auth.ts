@@ -200,8 +200,7 @@ class UserAuthenticationAPI {
   };
 
   async logout() {
-    signOut(auth);
-    this.token = null;
+    await signOut(auth);
     browserAPI.clear();
   };
 }

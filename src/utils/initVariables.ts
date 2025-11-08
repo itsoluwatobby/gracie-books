@@ -20,7 +20,7 @@ export const InitBookForm: Book = {
   updatedAt: ""
 };
 
-export const InitPriceRange = { min: 0, max: 10000 };
+export const InitPriceRange = { min: 0, max: 50000, step: 50 };
 
 export const InitReloads = {
   cart_reload: 0,
