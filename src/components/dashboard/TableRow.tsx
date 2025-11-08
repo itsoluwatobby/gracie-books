@@ -3,6 +3,8 @@ import { useState } from "react";
 import Button from "../ui/Button";
 import { bookServices } from "../../services";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
+import { PageRoutes } from "../../utils/pageRoutes";
 
 interface TableRowProps {
   book: Book;
@@ -39,7 +41,7 @@ export const TableRow: React.FC<TableRowProps> = (
   return (
     <tr className={`hover:bg-gray-50 cursor-default text-center ${isLoading ? 'animate-pulse bg-gray-50' : ''}`}>
       <td className="px-6 py-4 whitespace-nowrap">
-        <div className="flex items-center">
+        <Link to={`${PageRoutes.books}/${book.id}`} className="flex items-center">
           <div className="h-10 w-8 flex-shrink-0 mr-3 border">
             {
               (book?.coverImage || book?.icon) ?
@@ -47,7 +49,7 @@ export const TableRow: React.FC<TableRowProps> = (
                 className="h-10 w-8 object-cover rounded-sm" 
                 src={isImageDisplayed ? book.coverImage : book?.icon} 
                 onError={() => setIsImageDisplayed(false)}
-                alt={book.title} 
+                alt={book.title}
               />
               : <span className="text-center">
                 {book.title.substring(0,2)}
@@ -57,7 +59,7 @@ export const TableRow: React.FC<TableRowProps> = (
           <div className="text-sm font-medium text-gray-900 line-clamp-1 w-fit max-w-[10rem]">
             {book.title}
           </div>
-        </div>
+        </Link>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
         {book.authors.join(',')}

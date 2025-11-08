@@ -18,6 +18,7 @@ import { bookServices } from '../services';
 import { initAppState } from '../utils/initVariables';
 import toast from 'react-hot-toast';
 import useBooksContext from '../context/useBooksContext';
+import { helper } from '../utils/helper';
 
 const BookDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -227,7 +228,7 @@ const BookDetailPage: React.FC = () => {
                   {/* Price and Stock */}
                   <div className="mb-6">
                     <div className="text-2xl font-bold text-blue-900 mb-2">
-                      ${book.price.toFixed(2)}
+                      {helper.formatPrice(book.price)}
                     </div>
                     <div className="text-sm">
                       {book.stockQuantity > 0 ? (

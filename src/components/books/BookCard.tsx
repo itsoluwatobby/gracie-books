@@ -26,25 +26,24 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
       className="h-full flex flex-col transition-all duration-300 border border-transparent hover:border-blue-200"
     >
       <Link to={`/books/${book.id}`} className="flex flex-col h-full">
-        <div className="relative pt[120%] h-56 perspective-1000">
+        <div className="relative h-56 perspective-1000">
           <div className="absolute inset-0 transform-gpu transition-transform duration-500 hover:rotate-y-4 hover:-translate-y-0.5 hover:scale-[1.005] hover:shadow-xl">
             {/* 3D Book Container with Spine & Cover */}
-            <div className="relative w-full h-full preserve-3d group">
+            <div className="relative w-full h-full preserve-3d group flex items-center gap-0.5">
               {/* Book Cover */}
-              <div className="absolute inset-0 backface-hidden rounded-lg overflow-hidden shadow-lg bg-white">
+              <div className="w-[35%] h-full origin-left backface-hidden rotate-y-90 bg-gradient-to-r from-gray-300 to-gray-400 shadow-inner">
+                <div className="flex flex-col justify-center items-center h-full text-xs text-gray-700 font-semibold writing-mode-vertical transform -rotate-180">
+                  {book.title}
+                </div>
+              </div>
+
+              <div className="backface-hidden h-56 rounded-lg overflow-hidden shadow-lg bg-white">
                 <img
                   src={isImageDisplayed ? book?.coverImage : book?.icon}
                   alt={book.title}
                   onError={() => setIsImageDisplayed(false)}
                   className="w-full h-full object-contain"
                 />
-              </div>
-
-              {/* Book Spine (Visible on 3D tilt) */}
-              <div className="absolute left-0 top-0 w-14 h-full origin-left backface-hidden rotate-y-90 bg-gradient-to-r from-gray-300 to-gray-400 shadow-inner">
-                <div className="flex flex-col justify-center items-center h-full text-xs text-gray-700 font-semibold writing-mode-vertical transform -rotate-180">
-                  {book.title}
-                </div>
               </div>
 
               {/* Inner Shadow Overlay for Depth */}
@@ -62,14 +61,10 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
             </button>
           </div>
 
-          {/* Subtle Page Curl Effect (Bottom Right) */}
-          <div className="absolute bottom-0 right-0 w-16 h-16 pointer-events-none">
-            <div className="absolute bottom-1 right-1 w-12 h-12 bg-gradient-to-br from-transparent via-white to-gray-100 opacity-60 rounded-tl-full blur-sm"></div>
-          </div>
         </div>
         
         <div className="p-2 flex-grow flex flex-col">
-          <h3 className="font-medium text-lg line-clamp-1">{book.title}</h3>
+          <h3 className="font-medium text-lg line-clamp-1 w-[80%]">{book.title}</h3>
           <p className="text-gray-600 text-sm mb-1">{book?.authors[0]}</p>
           
           <div className="mt-auto">

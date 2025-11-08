@@ -212,7 +212,7 @@ const CheckoutPage: React.FC = () => {
                   <div className="space-y-3 mb-6">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Subtotal</span>
-                      <span>${subtotal}</span>
+                      <span>{helper.formatPrice(subtotal)}</span>
                     </div>
                     
                     <div className="flex justify-between">
@@ -222,7 +222,7 @@ const CheckoutPage: React.FC = () => {
                     
                     {/* <div className="flex justify-between">
                       <span className="text-gray-600">Tax (7%)</span>
-                      <span>${tax}</span>
+                      <span>{helper.formatPrice(tax)}</span>
                     </div> */}
                     
                     <div className="border-t pt-3 flex justify-between font-semibold">
@@ -268,7 +268,7 @@ const CheckoutPage: React.FC = () => {
                 
                 {/* <div className="flex justify-between">
                   <span className="text-gray-600">Tax (7%)</span>
-                  <span>${tax}</span>
+                  <span>{helper.formatPrice(tax)}</span>
                 </div> */}
                 
                 <div className="border-t pt-3 flex justify-between font-semibold">

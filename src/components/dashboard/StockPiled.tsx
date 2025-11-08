@@ -31,7 +31,7 @@ export default function StockPiled(
                 </div>
                 <div>
                   <div className="font-medium line-clamp-1">{book.title}</div>
-                  <div className="text-sm text-gray-500">{book.author}</div>
+                  <div className="text-sm text-gray-500">{book.authors[0]}</div>
                 </div>
               </div>
               <div className={`text-sm font-medium ${

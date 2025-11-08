@@ -7,7 +7,6 @@ export const ProtectedRoutes = () => {
   const { pathname } = useLocation();
   const { loading, isAuthenticated } = useAuthContext() as AuthContextType;
 
-  console.log({ loading, isAuthenticated })
   return (
     <>
       {
