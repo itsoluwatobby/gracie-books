@@ -58,8 +58,8 @@ const AdminDashboardPage: React.FC = () => {
 
   useEffect(() => {
     let isMounted = true;
-    const getItems = async () => {
-      if (isLoading) return;
+    (async () => {
+      if (!isMounted) return;
 
       try {
         setIsLoading(true);
@@ -72,13 +72,12 @@ const AdminDashboardPage: React.FC = () => {
       } finally {
         setIsLoading(false);
       }
-    };
-    if (isMounted) getItems();
+    })();
 
     return () => {
       isMounted = false
     }
-  }, [reload.platform_reload, isLoading]);
+  }, [reload.platform_reload]);
 
   // Calculate summary metrics
   const totalOrders = orders.length;

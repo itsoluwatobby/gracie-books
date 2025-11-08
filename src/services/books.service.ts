@@ -74,7 +74,7 @@ class BookServices {
 
   public async getBookById(bookId: string) {
     try {
-      const docRef = doc(ApplicationDB, "books", bookId);
+      const docRef = doc(ApplicationDB, StorageModels.books, bookId);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const book = { ...docSnap.data(), id: docSnap.id } as Book;
@@ -85,6 +85,17 @@ class BookServices {
     } catch (err: any) {
       throw new Error(err.message);
     }
+  };
+
+  public async getBook(bookId: string) {
+    const docRef = doc(ApplicationDB, StorageModels.books, bookId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const book = { ...docSnap.data(), id: docSnap.id } as Book;
+      return book;
+    }
+  
+    return null;
   };
 
   public async getBooks(filter: Book["status"] | null = null) {
@@ -170,14 +181,20 @@ class BookServices {
     );
   };
 
-  public async mutateBookStockQuantity(books: Book[]) {
-    await Promise.all(books.map(async (book) => {
-      await this.updateBook(book.id, { stockQuantity: book.stockQuantity })
+  public async mutateBookStockQuantity(carts: CartItem[], opr: "deduct" | "revert") {
+    await Promise.all(carts?.map(async (cart) => {
+      const book = await this.getBook(cart.book.id);
+      if (book) {
+        let stockQuantity = book.stockQuantity;
+        if (opr === "deduct") stockQuantity -= cart.quantity;
+        else stockQuantity += cart.quantity;
+        await this.updateBook(book.id, { stockQuantity });
+      }
     }));
   }
 
   public async removeBook(bookId: string) {
-    const docRef = doc(ApplicationDB, "books", bookId);
+    const docRef = doc(ApplicationDB, StorageModels.books, bookId);
     await deleteDoc(docRef);
   };
 
@@ -223,7 +240,7 @@ class BookServices {
   public async fetchBookDetails(query: string): Promise<Partial<Book>[]> {
     try {
       const volumes = await this.googleAPIFetch(query);
-      const normalizeResult: Partial<Book>[] = volumes?.slice(0,5)?.map((volume) => {
+      const normalizeResult: Partial<Book>[] = volumes?.slice(0,10)?.map((volume) => {
         const bookInfo = volume.volumeInfo;
         return {
           id: nanoid(),
@@ -248,11 +265,11 @@ class BookServices {
       })
       return normalizeResult;
     } catch (error: any) {
-      console.log(error)
+      // console.log(error)
       if (axios.isCancel(error)) throw error;
   
       const bookInfo = await this.goodReadAPIFetch(query);
-      const normalizeResult: Partial<Book>[] = bookInfo?.slice(0,5)?.map((bookInfo) => {
+      const normalizeResult: Partial<Book>[] = bookInfo?.slice(0,10)?.map((bookInfo) => {
         return {
           id: nanoid(),
           title: bookInfo.title.toLowerCase(),

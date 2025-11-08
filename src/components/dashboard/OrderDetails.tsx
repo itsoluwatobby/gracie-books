@@ -5,6 +5,7 @@ import Button from "../ui/Button";
 import toast from 'react-hot-toast';
 import { orderService } from '../../services/order.service';
 import { OrderStatusEnum } from '../../utils/constants';
+import { bookServices } from '../../services';
 
 
 type OrderDetailsProps = {
@@ -49,7 +50,18 @@ export default function OrderDetails(
         throw Error("Error updating order status");
       else {
         setOrderDetail(orderInfo);
-        setReload((prev) => ({ ...prev, platform_reload: prev.platform_reload + 1 }))
+        if ([processing, shipped, delivered].includes(orderDetail.status)) {
+          await bookServices.mutateBookStockQuantity(orderInfo.items, "deduct");
+        } else {
+          await bookServices.mutateBookStockQuantity(orderInfo.items, "revert");
+        }
+        setReload((prev) => (
+          {
+            ...prev,
+            platform_reload: prev.platform_reload + 1,
+            bookUpdate_reload: prev.bookUpdate_reload + 1,
+          }),
+        )
         toast.success("Order status updated");
       }
     } catch (err: any) {

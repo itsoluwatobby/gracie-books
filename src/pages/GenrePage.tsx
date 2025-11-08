@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import BookGrid from '../components/books/BookGrid';
@@ -6,16 +6,18 @@ import { useGetBooks } from '../hooks/useGetBooks';
 import BookCardLoading from '../components/Loaders/BookCardLoading';
 
 const GenrePage: React.FC = () => {
-  // const [searchParams] = useSearchParams();
-  // const genre = searchParams.get("genre")
   const location = useLocation();
-  const genre = decodeURI(location.search?.split("=")[1]);
+  const [genre, setGenre] = useState<string | null>(null);
   const { booksData, appState } = useGetBooks(
-    { pagination: { pageSize: 50 }, genre: genre! },
+    { pagination: { pageSize: 50 }, genre: genre },
   )
 
-  console.log(location.search)
-  console.log(genre)
+  useEffect(() => {
+    if (location.search) {
+      const value = decodeURI(location.search?.split("=")[1]);
+      setGenre(value);
+    }
+  }, [location.search])
 
   return (
     <Layout>

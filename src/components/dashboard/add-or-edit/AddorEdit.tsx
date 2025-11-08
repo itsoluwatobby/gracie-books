@@ -39,8 +39,11 @@ export default function AddorEdit(
   const [showCSVUploader, setShowCSVUploader] = useState(false);
 
   useEffect(() => {
-    if (editBook) setBookForm(editBook);
-  }, [editBook])
+    if (editBook) {
+      setBookForm(editBook);
+      // setEditBook(null);
+    }
+  }, [editBook, setEditBook])
 
   // Debounced search function
   const debounce = (func: (...args: any) => void, wait: number) => {
@@ -65,8 +68,7 @@ export default function AddorEdit(
       setShowSearchResults(true);
       setCurrentSlide(0);
     } catch (error: any) {
-      console.log(error)
-      toast.error('Failed to search books');
+      toast.error(`Failed to search books. ERROR - ${error.message}`);
     } finally {
       setIsSearching(false);
     }
@@ -90,7 +92,7 @@ export default function AddorEdit(
     setBookForm({ ...bookForm, ...book });
     setShowSearchResults(false);
     setSearchQuery('');
-    toast.success('Book details filled automatically!');
+    toast.success('Book details prefilled!');
   };
 
   const handleCSVData = async (csvData: CSVBookData[]) => {
@@ -131,6 +133,11 @@ export default function AddorEdit(
     }
   };
 
+  const closeModal = () => {
+    setEditBook(null);
+    setShowBookModal(false);
+  }
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl w-[90%] max-w-3xl max-h-[95vh] overflow-hidden shadow-2xl">
@@ -159,7 +166,7 @@ export default function AddorEdit(
                 </button>
               )}
               <button 
-                onClick={() => setShowBookModal(false)}
+                onClick={closeModal}
                 className="text-white/80 hover:text-white hover:bg-white/20 p-2 rounded-lg transition-colors duration-200"
               >
                 <X size={24} />

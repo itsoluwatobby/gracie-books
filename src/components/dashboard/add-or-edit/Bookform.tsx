@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Book, Building2, Calendar, DollarSign, FileText, Hash, Image, Package, Star, User } from "lucide-react";
+import { Book, Building2, Calendar, DollarSign, FileText, Hash, Image, ImageIcon, Package, Star, User } from "lucide-react";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import { InitBookForm } from "../../../utils/initVariables";
 import { bookServices } from "../../../services";
 import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
+import { getSignedUploadURL, uploadWithSignedURL } from "../../../supabase/config";
 
 type BookFormProps = {
   editBook: Book | null;
@@ -25,6 +26,7 @@ export const BookForm: React.FC<BookFormProps> = (
   },
 ) => {
   const [isloading, setIsloading] = useState(false);
+  const [file, setFile] = useState<File>({} as File);
 
   const handleBookFormSubmit = async(e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,6 +34,15 @@ export const BookForm: React.FC<BookFormProps> = (
     try {
       setIsloading(true);
 
+      if (file.name) {
+        const uploadResponse = await getSignedUploadURL(file);
+        const imageData = await uploadWithSignedURL(file, uploadResponse);
+
+        const imageURL = `${import.meta.env.VITE_SPABASE_URL}/storage/v1/object/public/${imageData.fullPath}`
+        bookForm.coverImage = imageURL;
+        bookForm.previewImages?.unshift(imageURL);
+      }
+    
       if (!editBook) {
         await bookServices.addBook(bookForm);
         toast.success(`${bookForm.title} uploaded`);
@@ -42,6 +53,7 @@ export const BookForm: React.FC<BookFormProps> = (
       }
       setEditBook(null);
       setBookForm(InitBookForm);
+      setFile({} as File);
 
       setReload((prev) => (
         {
@@ -58,6 +70,11 @@ export const BookForm: React.FC<BookFormProps> = (
     }
   }
 
+  const closeModal = () => {
+    setEditBook(null);
+    setShowBookModal(false);
+  }
+
   return (
     <form onSubmit={handleBookFormSubmit} className="space-y-6">
       <div className="grid grid-cols-1 gap-6">
@@ -67,6 +84,29 @@ export const BookForm: React.FC<BookFormProps> = (
             <Book className="w-5 h-5 text-blue-600" />
             Basic Information
           </h3>
+
+          <label htmlFor="book_thumbnail" className="flex items-end my-3 gap-2"
+          >
+            <figure className="size-40 rounded-md bg-gray-100 border flex">
+              {
+                (file || bookForm?.coverImage)
+                 ? <img 
+                    src={file.size ? URL.createObjectURL(file) : bookForm?.coverImage}
+                    // alt={bookForm.title}
+                    className="w-full h-full object-cover rounded-md" 
+                  />
+                : <ImageIcon size={34} className="self-center text-gray-300 mx-auto" />
+              }
+            </figure>
+            <input 
+              type="file" 
+              id="book_thumbnail"
+              hidden
+              accept="image/*"
+              onChange={(e) => setFile((e.target.files as FileList)[0])}
+            />
+            <span>Book Thumbail</span>
+          </label>
           
           <div className="flex items-center justify-between gap-10 max-xxs:flex-col">
             <Input
@@ -174,6 +214,7 @@ export const BookForm: React.FC<BookFormProps> = (
           <Input
             label="Stock Quantity"
             type="number"
+            min={0}
             value={bookForm.stockQuantity}
             onChange={(e) => setBookForm({ ...bookForm, stockQuantity: parseInt(e.target.value) })}
             required
@@ -225,7 +266,7 @@ export const BookForm: React.FC<BookFormProps> = (
       <div className="flex justify-end space-x-4 pt-6 border-t">
         <Button 
           variant="outline" 
-          onClick={() => setShowBookModal(false)}
+          onClick={closeModal}
           type="button"
           className="px-6 py-3"
         >

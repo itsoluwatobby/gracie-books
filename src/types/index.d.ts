@@ -259,6 +259,6 @@ type FilterQueries<T> = {
   author?: string;
   status?: Book["status"];
   createdAt?: string;
-  genre?: string;
+  genre?: string | null;
   genres?: string[];
 }
