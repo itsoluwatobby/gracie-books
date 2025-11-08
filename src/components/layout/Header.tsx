@@ -51,6 +51,7 @@ const Header: React.FC = () => {
       setUser(null);
       setIsAuthenticated(false);
       setIsMenuOpen(false);
+      navigate(PageRoutes.home)
 
       toast.success("Logout successful");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

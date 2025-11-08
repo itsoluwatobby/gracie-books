@@ -163,19 +163,19 @@ class UserAuthenticationAPI {
   };
 
   async resetPassword(email: string) {
-    const resetLink = JSON.parse(
-      localStorage.getItem("reset_password_data") as string,
+    const resetLink = helper.jsonParseValue(
+      browserAPI.get(StorageKey.passwordResetKey) as string,
     ) as { expiresIn: number };
     if (resetLink && resetLink.expiresIn >= new Date().getTime())
       return "duplicate";
 
     await sendPasswordResetEmail(auth, email);
     browserAPI.add(
-      "reset_password_data",
+      StorageKey.passwordResetKey,
       helper.stringifyData(
         {
           email,
-          expiresin: new Date().getTime() + 24 * 60 * 60 * 1000,
+          expiresin: new Date().getTime() + 60 * 60 * 1000,
         }
       )
     );
@@ -196,7 +196,7 @@ class UserAuthenticationAPI {
       credential.oobCode,
       credential.newPassword,
     );
-    localStorage.removeItem("reset_password_data");
+    browserAPI.remove(StorageKey.passwordResetKey);
   };
 
   async logout() {

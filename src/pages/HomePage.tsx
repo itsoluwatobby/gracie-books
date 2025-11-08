@@ -8,6 +8,8 @@ import useAuthContext from '../context/useAuthContext';
 // import useBooksContext from '../context/useBooksContext';
 import { useGetBooks } from '../hooks/useGetBooks';
 import BookCardLoading from '../components/Loaders/BookCardLoading';
+import WhatWeStandFor from '../components/WhatWeStandFor';
+import HowWeWork from '../components/HowWeWork';
 
 const HomePage: React.FC = () => {
   const { appName } = useAuthContext() as AuthContextType;
@@ -174,11 +176,13 @@ const HomePage: React.FC = () => {
           <form className="max-w-lg mx-auto flex flex-col sm:flex-row gap-2">
             <input 
               type="email" 
-              placeholder="Your email address" 
+              placeholder="Coming Soon..."
+              disabled 
+              // placeholder="Your email address" 
               className="flex-grow px-4 py-3 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
-            <Button type="submit">
+            <Button type="submit" disabled>
               Subscribe
             </Button>
           </form>
@@ -188,6 +192,14 @@ const HomePage: React.FC = () => {
           </p>
         </div>
       </section>
+
+      <div className='my-12 p-8'>
+        <WhatWeStandFor />
+      </div>
+      
+      <div className='my-12 p-8'>
+        <HowWeWork />
+      </div>
     </Layout>
   );
 };

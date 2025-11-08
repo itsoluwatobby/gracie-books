@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { Mail, ArrowLeft } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
+import { userAuthenticationAPI } from '../composables/auth';
+import toast from 'react-hot-toast';
 
 const ForgotPasswordPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -14,74 +16,46 @@ const ForgotPasswordPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setIsLoading(true);
+    if (isLoading || !email) return;
 
+    setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setIsSubmitted(true);
+      const response = await userAuthenticationAPI.resetPassword(email);
+      if (response === 'duplicate') {
+        toast.success('Password reset link already sent to your email');
+      } else {
+        setIsSubmitted(true);
+      }
     } catch (err: any) {
-      console.log(err.message);
-      setError('An error occurred. Please try again.');
+      const errCode = err.code ?? err.message;
+
+      let message = "";
+      if (!err?.response?.data) {
+        switch(errCode) {
+          case "auth/invalid-email":
+            message = "Please enter a valid email address";
+            break;
+          case "auth/user-not-found":
+            message = "No account found with this email";
+            break;
+          case "auth/missing-email":
+            message = "Please provide an email";
+            break;
+          default:
+            message = errCode || "Error! Try again";
+        } 
+      } else {
+        message = err?.response?.data?.message || err.messge;
+      }
+
+      toast.error(message);
+      setError(message);
     } finally {
+      // browserAPI.remove(StorageKey.passwordResetKey);
       setIsLoading(false);
     }
   };
 
-  /**
-   *  const { resetPassword, EMAIL_REGEX } = useAuthStore()
-   *  const loading = ref(false);
-
-  const resetEmail = ref("");
-
-  const canSubmit = computed(() => Boolean(resetEmail.value));
-
-  const isValidEmail = computed(() => {
-    if (resetEmail.value.length === 0) return true;
-    return EMAIL_REGEX.test(resetEmail.value);
-  });
-
-  const isRequirementMet = computed(() => {
-    return canSubmit.value && isValidEmail.value;
-  });
-
-  onMounted(() => {
-    setTimeout(() => {
-      localStorage.removeItem('reset_password_data');
-    }, 100);
-  });
-
-  const submit = async () => {
-    if (loading.value || !isRequirementMet.value) return;
-
-    try {
-      loading.value = true;
-
-      const response = await resetPassword(resetEmail.value);
-
-      if (response === 'duplicate') {
-        toast.success('Password reset link already sent to your email');
-      } else {
-        toast.success('Check your email for a password reset link');
-      }
-      // router.push({ name: 'enter-otp' });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      const errCode = error.code ?? error.message;
-
-      let message = '';
-      if (errCode === 'auth/invalid-email') message = 'Please enter a valid email address';
-      else if (errCode === 'auth/user-not-found') message = 'No account found with this email';
-      else if (errCode === 'auth/missing-email') message = 'Please provide an email';
-      else message = errCode ?? 'Error! Try again';
-
-      toast.error(message);
-    } finally {
-      localStorage.removeItem('reset_password_data');
-      loading.value = false;
-    }
-  }
-   */
 
   if (isSubmitted) {
     return (

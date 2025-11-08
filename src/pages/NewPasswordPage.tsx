@@ -3,11 +3,13 @@ import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { Lock, Eye, EyeOff, CheckCircle, ArrowLeft } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
+import toast from 'react-hot-toast';
+import { userAuthenticationAPI } from '../composables/auth';
 
 const NewPasswordPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const token = searchParams.get('token');
+  const token = searchParams.get('oobCode');
   
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -21,9 +23,10 @@ const NewPasswordPage: React.FC = () => {
   const getPasswordStrength = (password: string) => {
     let strength = 0;
     if (password.length >= 8) strength++;
-    if (/[A-Z]/.test(password)) strength++;
-    if (/[a-z]/.test(password)) strength++;
-    if (/[0-9]/.test(password)) strength++;
+    if (/(?=.*[A-Z])/.test(password)) strength++;
+    if (/(?=.*[a-z])/.test(password)) strength++;
+    if (/(?=.*\d)/.test(password)) strength++;
+    if (/(?=.*[!@#$£%^&*()_+\-=[\]{};:'"~|/\\ ,.<>/?])/.test(password)) strength++;
     if (/[^A-Za-z0-9]/.test(password)) strength++;
     return strength;
   };
@@ -75,17 +78,40 @@ const NewPasswordPage: React.FC = () => {
       return;
     }
 
-    setIsLoading(true);
-
     try {
-      // Simulate API call to reset password
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      setIsLoading(true);
+      await userAuthenticationAPI.changePassword(
+        { oobCode: token, newPassword: password },
+      );
       
-      // In a real app, you would send the token and new password to your backend
+      setPassword("");
+      setConfirmPassword("");
       setIsSuccess(true);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      setError(`An error occurred while resetting your password. Please try again. ERROR - ${err.message}`);
+      const errCode = err.code ?? err.message;
+
+      let message = "";
+      if (!err?.response?.data) {
+        switch(errCode) {
+          case "auth/invalid-email":
+            message = "Please enter a valid email address";
+            break;
+          case "auth/user-not-found":
+            message = "No account found with this email";
+            break;
+          case 'auth/expired-action-code':
+            message = 'Session expired, request for new code';
+            break;
+          default:
+            message = errCode || "Error! Try again";
+        } 
+      } else {
+        message = err?.response?.data?.message || err.messge;
+      }
+
+      toast.error(message);
+      setError(message);
     } finally {
       setIsLoading(false);
     }

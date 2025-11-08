@@ -18,6 +18,7 @@ export const UserRole = {
 export const StorageKey = {
   deviceKey: "wandyte-sales::unique_id",
   userKey: "wandyte-sales::user",
+  passwordResetKey: "wandyte-sales::reset_password_timestamp",
 } as const;
 
 export const StorageModels = {

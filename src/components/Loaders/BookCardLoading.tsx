@@ -8,7 +8,7 @@ interface BookCardProps {
   itemCount?: number;
 }
 
-const BookCardLoading: React.FC<BookCardProps> = ({ itemCount = 4 }) => {
+const BookCardLoading: React.FC<BookCardProps> = ({ itemCount = 6 }) => {
 
   return (
     <div className="grid grid-cols-3 max-xs:grid-cols-2 max-xxxs:grid-cols-1 lg:grid-cols-4 xl:grid-cols-6 gap-6">
