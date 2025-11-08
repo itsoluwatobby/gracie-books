@@ -59,6 +59,7 @@ interface Book {
   icon: string;
   coverImage: string;
   previewImages?: string[];
+  keywords?: string[];
   isbn?: string;
   publisher?: string;
   publicationDate?: string;
@@ -258,5 +259,6 @@ type FilterQueries<T> = {
   author?: string;
   status?: Book["status"];
   createdAt?: string;
-  genre?: string[];
+  genre?: string;
+  genres?: string[];
 }

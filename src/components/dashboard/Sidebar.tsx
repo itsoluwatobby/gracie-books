@@ -22,7 +22,7 @@ export default function Sidebar(
   ];
 
   return (
-    <div className={`${isOpen ? 'block' : 'hidden'} lg:block w-64 flex-shrink-0 max-md:w-full`}>
+    <div className={`${isOpen ? 'block' : 'hidden'} lg:block w-72 flex-shrink-0 max-md:w-full`}>
       <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden sticky top-24">
         {/* Sidebar Header */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-5 max-md:hidden">

@@ -1,40 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Search as SearchIcon } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import BookGrid from '../components/books/BookGrid';
 import { bookServices } from '../services';
-import useBooksContext from '../context/useBooksContext';
+import { useGetBooks } from '../hooks/useGetBooks';
+import BookCardLoading from '../components/Loaders/BookCardLoading';
 // import { Book } from '../types';
 
 const SearchPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
 
-  const { books, setBooks } = useBooksContext() as BookContextType;
-  const [loading, setLoading] = useState(true);
-  const allGenres = bookServices.getAllGenres(books);
+  const { booksData, appState } = useGetBooks(
+    {
+      pagination: { pageSize: 50 },
+      title: query,
+      // author: query,
+    },
+  );
+
+  const allGenres = bookServices.getAllGenres(booksData.books);
   
   // Get count of books in each genre from search results
-  const genreCounts = books.reduce((counts: Record<string, number>, book) => {
+  const genreCounts = booksData.books?.reduce((counts: Record<string, number>, book) => {
     book.genre.forEach(genre => {
       counts[genre] = (counts[genre] || 0) + 1;
     });
     return counts;
   }, {});
-
-  useEffect(() => {
-    setLoading(true);
-    
-    // Add a small timeout to simulate an API request
-    const timer = setTimeout(() => {
-      const results = bookServices.searchBooks(query, books);
-      setBooks(results);
-      setLoading(false);
-    }, 500);
-    
-    return () => clearTimeout(timer);
-  }, [query, books, setBooks]);
 
   return (
     <Layout>
@@ -70,10 +64,10 @@ const SearchPage: React.FC = () => {
           </div>
           
           <p className="text-gray-600">
-            {loading ? (
+            {appState?.isLoading ? (
               "Searching..."
             ) : (
-              `Found ${books.length} result${books.length !== 1 ? 's' : ''} for "${query}"`
+              `Found ${booksData.books?.length} result${booksData.books?.length !== 1 ? 's' : ''} for "${query}"`
             )}
           </p>
         </div>
@@ -87,7 +81,7 @@ const SearchPage: React.FC = () => {
                 {allGenres.map((genre, index) => (
                   <div key={index} className="flex items-center justify-between">
                     <Link
-                      to={`/genres/genre=${genre}`}
+                      to={`/genres?genre=${genre}`}
                       className="text-gray-700 hover:text-blue-700"
                     >
                       {genre}
@@ -105,13 +99,11 @@ const SearchPage: React.FC = () => {
           
           {/* Search results */}
           <div className="flex-grow">
-            {loading ? (
-              <div className="flex justify-center items-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-900"></div>
-              </div>
+            {appState?.isLoading ? (
+              <BookCardLoading />
             ) : (
               <BookGrid 
-                books={books}
+                books={booksData.books}
                 emptyMessage={`No books found matching "${query}". Try a different search term.`}
               />
             )}

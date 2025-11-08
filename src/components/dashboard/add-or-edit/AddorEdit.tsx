@@ -17,17 +17,20 @@ type AddorEditProps = {
   editBook: Book | null;
   setShowBookModal: React.Dispatch<React.SetStateAction<boolean>>;
   setEditBook: React.Dispatch<React.SetStateAction<Book | null>>;
+  setReload: React.Dispatch<React.SetStateAction<Reloads>>;
 }
 
 export default function AddorEdit(
   {
-    editBook, setShowBookModal,
+    editBook,
+    setShowBookModal,
     setEditBook,
+    setReload,
   }: AddorEditProps
 ) {
   const [bookForm, setBookForm] = useState<Partial<Book>>(InitBookForm);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<Book[]>([]);
+  const [searchResults, setSearchResults] = useState<Partial<Book>[]>([]);
   const [showSearchResults, setShowSearchResults] = useState(false);
   
   const [isSearching, setIsSearching] = useState(false);
@@ -201,7 +204,7 @@ export default function AddorEdit(
               (showSearchResults && searchResults.length > 0) ? (
                 <BookResultPreveiw 
                   currentSlide={currentSlide}
-                  searchResults={searchResults}
+                  searchResults={searchResults as Book[]}
                   selectBook={selectBook}
                   setCurrentSlide={setCurrentSlide}
                   setShowSearchResults={setShowSearchResults}
@@ -216,6 +219,7 @@ export default function AddorEdit(
               bookForm={bookForm}
               setBookForm={setBookForm}
               setShowBookModal={setShowBookModal}
+              setReload={setReload}
             />
           </div>
         </div>

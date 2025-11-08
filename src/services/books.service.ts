@@ -37,6 +37,7 @@ class BookServices {
 
     await setDoc(doc(this.booksRef, book.id), {
       ...book,
+      keywords: this.generateKeywords(book.title ?? ""),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
@@ -113,19 +114,22 @@ class BookServices {
 
       if (filters?.publisher) whereQueries.push(where("publisher", "==", filters.publisher));
 
-      if (filters?.title) whereQueries.push(where("title", "==", filters.title));
-    
+      if (filters?.title) whereQueries.push(where("keywords", "array-contains", filters.title));
+
       if (filters?.createdAt) whereQueries.push(where("createdAt", ">=", filters.createdAt));
 
       if (filters?.author) whereQueries.push(where("authors", "array-contains", filters.author));
 
       if (filters?.genre) whereQueries.push(where("genre", "array-contains", filters.genre));
+  
+      if (filters?.genres?.length) whereQueries.push(where("genre", "array-contains-any", filters.genres));
 
       let q: Query = query(this.booksRef, ...whereQueries);
+      console.log(whereQueries, filters)
 
       const paginate = filters?.pagination;
-      if (paginate?.orderByField || paginate?.orderDirection) 
-        q = query(q, orderBy(paginate.orderByField!, paginate.orderDirection));
+      if (paginate?.orderByField) 
+        q = query(q, orderBy(paginate.orderByField, paginate.orderDirection));
 
       if (paginate?.pageSize) 
         q = query(q, limit(paginate.pageSize));
@@ -160,6 +164,7 @@ class BookServices {
       docRef,
       {
         ...updatedInfo,
+        // keywords: this.generateKeywords(updatedInfo.title!),
         updatedAt: new Date().toISOString(),
       },
     );
@@ -198,6 +203,21 @@ class BookServices {
       },
     );
     return result.data.data;
+  }
+
+  public generateKeywords(title: string): string[] {
+    const words = title.toLowerCase().split(/\s+/);
+    const keywords = new Set<string>();
+
+    words.forEach(word => keywords.add(word));
+
+    for (let n = 2; n <= words.length; n++) {
+      for (let i = 0; i <= words.length - n; i++) {
+        keywords.add(words.slice(i, i + n).join(" "));
+      }
+    }
+
+    return Array.from(keywords);
   }
 
   public async fetchBookDetails(query: string): Promise<Partial<Book>[]> {

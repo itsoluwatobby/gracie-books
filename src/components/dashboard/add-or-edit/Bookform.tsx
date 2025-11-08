@@ -6,7 +6,6 @@ import { InitBookForm } from "../../../utils/initVariables";
 import { bookServices } from "../../../services";
 import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
-import useCartContext from "../../../context/useCartContext";
 
 type BookFormProps = {
   editBook: Book | null;
@@ -14,6 +13,7 @@ type BookFormProps = {
   setBookForm: React.Dispatch<React.SetStateAction<Partial<Book>>>
   setShowBookModal: React.Dispatch<React.SetStateAction<boolean>>;
   setEditBook: React.Dispatch<React.SetStateAction<Book | null>>;
+  setReload: React.Dispatch<React.SetStateAction<Reloads>>
 }
 
 export const BookForm: React.FC<BookFormProps> = (
@@ -21,9 +21,9 @@ export const BookForm: React.FC<BookFormProps> = (
     bookForm, setBookForm,
     editBook, setShowBookModal,
     setEditBook,
+    setReload,
   },
 ) => {
-  const { setReload } = useCartContext();
   const [isloading, setIsloading] = useState(false);
 
   const handleBookFormSubmit = async(e: FormEvent<HTMLFormElement>) => {

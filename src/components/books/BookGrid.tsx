@@ -24,7 +24,7 @@ const BookGrid: React.FC<BookGridProps> = ({
           <p className="text-gray-500">{emptyMessage}</p>
         </div>
       ) : (
-        <div className="grid grid-cols-3 max-xs:grid-cols-2 max-xxxs:grid-cols-1 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+        <div className="grid grid-cols-3 max-xs:grid-cols-2 max-xxxs:grid-cols-1 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {books.map(book => (
             <BookCard key={book.id} book={book} />
           ))}

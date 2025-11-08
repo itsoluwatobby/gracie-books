@@ -35,7 +35,7 @@ const BookCardLoading: React.FC<BookCardProps> = ({ itemCount = 6 }) => {
                 <div className="mt-auto">
                   <div className="flex items-center space-x-1">
                     {[...Array(5)].map((_, i) => (
-                      <svg 
+                      <svg
                         key={i} 
                         // className={`w-4 h-4 text-gray-300`} 
                         className={`w-4 h-4 ${i < Math.floor(5) ? 'text-yellow-400' : 'text-gray-300'}`}

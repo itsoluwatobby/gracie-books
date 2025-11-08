@@ -304,7 +304,7 @@ const BookDetailPage: React.FC = () => {
                       {book.genre.map((genre, index) => (
                         <Link
                           key={index}
-                          to={`/genres/genre=${genre}`}
+                          to={`/genres?genre=${genre}`}
                           className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm hover:bg-blue-200 transition-colors"
                         >
                           {genre}

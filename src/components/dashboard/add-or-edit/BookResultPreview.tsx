@@ -108,7 +108,7 @@ export const BookResultPreveiw: React.FC<BookResultPreveiwProps> = (
                 </p>
                 
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {searchResults[currentSlide].genre.map((g, idx) => (
+                  {searchResults[currentSlide]?.genre?.map((g, idx) => (
                     <span key={idx} className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs">
                       {g}
                     </span>

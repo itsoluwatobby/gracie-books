@@ -18,11 +18,13 @@ export const useGetBooks = (filter: FilterQueries<DocumentSnapshot>) => {
   const { pagination } = filter;
 
   useEffect(() => {
-    // let isMounted = true;
+    let isMounted = true;
     (async () => {
-      // if (!isMounted) return;
+      if (!isMounted) return;
       try {
         setAppState((prev) => ({ ...prev, isLoading: true }));
+
+        const orderByField = filter?.title ? "title" : filter?.price ? "price" : 'createdAt'
         const inventory = await bookServices.getBooksByQuery(
           {
             status: filter?.status,
@@ -32,10 +34,12 @@ export const useGetBooks = (filter: FilterQueries<DocumentSnapshot>) => {
             createdAt: filter?.createdAt,
             price: filter?.price,
             rating: filter?.rating,
+            genre: filter?.genre,
+            genres: filter?.genres,
             pagination: {
               pageSize: pagination?.pageSize ?? 50,
-              orderByField: pagination?.orderByField ?? "createdAt",
-              orderDirection: pagination?.orderDirection ?? "desc",
+              orderByField: orderByField ?? "createdAt",
+              orderDirection: pagination?.orderDirection ?? "asc",
               lastDoc: pagination?.lastDoc,
             }
           }
@@ -50,9 +54,9 @@ export const useGetBooks = (filter: FilterQueries<DocumentSnapshot>) => {
       }
     })();
 
-    // return () => {
-    //   isMounted = false;
-    // }
+    return () => {
+      isMounted = false;
+    }
   }, [
     reload.bookUpdate_reload,
     filter?.status,
@@ -62,6 +66,8 @@ export const useGetBooks = (filter: FilterQueries<DocumentSnapshot>) => {
     filter?.rating,
     filter?.publisher,
     filter?.createdAt,
+    filter?.genre,
+    filter?.genres,
     pagination?.pageSize,
     pagination?.orderByField,
     pagination?.orderDirection,

@@ -13,17 +13,23 @@ import { useGetBooks } from '../hooks/useGetBooks';
 import BookCardLoading from '../components/Loaders/BookCardLoading';
 
 const BooksPage: React.FC = () => {
-  const { booksData, appState } = useGetBooks(
-    { pagination: { pageSize: 100 } },
-  )
   const [searchParams, setSearchParams] = useSearchParams();
-  const [filteredBooks, setFilteredBooks] = useState<Book[]>(booksData.books);
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [initPriceRange, setInitPriceRange] = useState<{ min: number, max: number }>(InitPriceRange);
   const [priceRange, setPriceRange] = useState<{ min: number, max: number }>(InitPriceRange);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState('relevance');
+  
+  const { booksData, appState } = useGetBooks(
+    {
+      pagination: { pageSize: 5000 },
+      // price: priceRange.max,
+      // title: searchQuery,
+      // genres: selectedGenres,
+    },
+  )
+  const [filteredBooks, setFilteredBooks] = useState<Book[]>(booksData.books);
 
   const allGenres = bookServices.getAllGenres(booksData.books);
 
