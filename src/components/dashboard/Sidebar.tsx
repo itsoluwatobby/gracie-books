@@ -31,7 +31,7 @@ export default function Sidebar(
         </div>
 
         {/* Navigation */}
-        <nav className="p-2 max-md:flex items-center w-full">
+        <nav className="p-2 max-md:flex items-center w-full max-xxs:overflow-x-scroll">
           {ModalSelections.map((item, index) => (
             <SelectionButton 
               key={item.name}

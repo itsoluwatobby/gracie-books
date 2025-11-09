@@ -100,7 +100,6 @@ class CartsService {
       const items: CartItem[] = cartData.items || [];
 
       const updatedItems = items.filter((item) => item.status !== status);
-      console.log(updatedItems)
       await updateDoc(docRef, { items: updatedItems, updatedAt: new Date().toISOString() });
     } else {
       throw new Error("Cart empty")
@@ -175,13 +174,13 @@ class CartsService {
     const querySnapshot = await getDoc(docRef);
 
     if (!querySnapshot.exists()) {
-      console.log(`No cart items found for user ${userId} with status ${status}`);
+      // console.log(`No cart items found for user ${userId} with status ${status}`);
       return null;
     }
 
     const items = querySnapshot.data().items as unknown as CartItem[];
     if (!items.length) {
-      console.log(`No cart items found for user ${userId} with status ${status}`);
+      // console.log(`No cart items found for user ${userId} with status ${status}`);
       return null;
     }
 

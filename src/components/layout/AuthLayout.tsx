@@ -10,7 +10,6 @@ const AuthLayout: React.FC = () => {
   const navigator = useNavigate()
   const { isAuthenticated, loading } = useAuthContext();
 
-  console.log(state)
   useEffect(() => {
     const { auth } = PageRoutes;
     if (

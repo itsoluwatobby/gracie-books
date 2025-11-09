@@ -24,7 +24,7 @@ export default function TopCard(
               <ShoppingBag className="h-6 w-6 text-blue-700" />
             </div>
             <div>
-              <div className="text-sm font-medium text-gray-500">Total Orders</div>
+              <div className="text-sm font-medium text-gray-500 whitespace-nowrap">Total Orders</div>
               <div className="text-2xl font-bold">{totalOrders}</div>
             </div>
           </div>
@@ -36,7 +36,7 @@ export default function TopCard(
               <span className="h-6 w-6 text-green-700 font-bold text-lg flex items-center justify-center">{CURRENCY.NAIRA}</span>
             </div>
             <div>
-              <div className="text-sm font-medium text-gray-500">Total Revenue</div>
+              <div className="text-sm font-medium text-gray-500 whitespace-nowrap">Total Revenue</div>
               <div className="text-2xl font-bold">{formatCurrency(totalRevenue)}</div>
             </div>
           </div>
@@ -48,7 +48,7 @@ export default function TopCard(
               <ShoppingBag className="h-6 w-6 text-yellow-700" />
             </div>
             <div>
-              <div className="text-sm font-medium text-gray-500">Pending Orders</div>
+              <div className="text-sm font-medium text-gray-500 whitespace-nowrap">Pending Orders</div>
               <div className="text-2xl font-bold">{pendingOrders}</div>
             </div>
           </div>
@@ -60,7 +60,7 @@ export default function TopCard(
               <AlertCircle className="h-6 w-6 text-red-700" />
             </div>
             <div>
-              <div className="text-sm font-medium text-gray-500">Low Stock</div>
+              <div className="text-sm font-medium text-gray-500 whitespace-nowrap">Low Stock</div>
               <div className="text-2xl font-bold">{lowStockBooks}</div>
             </div>
           </div>
