@@ -17,8 +17,40 @@ import { StorageModels } from "../utils/constants";
 class CartsService {
   private cartsRef = collection(ApplicationDB, StorageModels.carts);
 
+  public async markCartAsCompleted(userId: string, bookId: string, statusUpdate: CartStatus) {
+    const docRef = doc(this.cartsRef, userId);
+    const docSnap = await getDoc(docRef);
+
+    const status = "pending";
+    if (docSnap.exists()) {
+      const cartData = docSnap.data();
+      const items: CartItem[] = cartData.items || [];
+      const existingItem = items.find(
+        (item) => item.book.id === bookId && item.status === status
+      );
+      
+      if (existingItem) {
+        // Update existing item in the array
+        const updatedItems = items.map((item) =>
+            item.book.id === bookId && item.status === status
+              ? {
+                  ...item,
+                  status: statusUpdate,
+                  updatedAt: new Date().toISOString(),
+                }
+              : item
+          );
+        await updateDoc(docRef, { items: updatedItems, updatedAt: new Date().toISOString() });
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
   public async updateCart(userId: string, bookId: string, quantity: number): Promise<CartItem[] | null> {
-    const docRef = doc(ApplicationDB, "carts", userId);
+    const docRef = doc(this.cartsRef, userId);
     const docSnap = await getDoc(docRef);
 
     const status = "pending";
@@ -46,7 +78,7 @@ class CartsService {
         } else {
           updatedItems = items.filter((item) => item.book.id !== bookId && item.status === status);
         }
-        console.log(updatedItems)
+        // console.log(updatedItems)
         await updateDoc(docRef, { items: updatedItems, updatedAt: new Date().toISOString() });
       } else {
         throw new Error("Item not found")
@@ -59,7 +91,7 @@ class CartsService {
   }
 
   async clearCart(userId: string) {
-    const docRef = doc(ApplicationDB, "carts", userId);
+    const docRef = doc(this.cartsRef, userId);
     const docSnap = await getDoc(docRef);
 
     const status = "pending";
@@ -80,7 +112,7 @@ class CartsService {
       throw new Error("Missing required cart fields: userId, book.id, or status");
     }
 
-    const docRef = doc(ApplicationDB, "carts", cart.userId);
+    const docRef = doc(this.cartsRef, cart.userId);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
@@ -107,7 +139,7 @@ class CartsService {
         // Add new item to the array
         const newItem = {
           ...cart,
-          id: doc(collection(ApplicationDB, "carts")).id, // Unique ID for the item
+          id: doc(this.cartsRef).id, // Unique ID for the item
           quantity: cart.quantity || 1,
           price: cart.book.price || 0,
           createdAt: new Date().toISOString(),
@@ -121,7 +153,7 @@ class CartsService {
     } else {
       const newItem = {
         ...cart,
-        id: doc(collection(ApplicationDB, "carts")).id,
+        id: doc(this.cartsRef).id,
         quantity: cart.quantity || 1,
         price: cart.book.price || 0,
         createdAt: new Date().toISOString(),
@@ -139,7 +171,7 @@ class CartsService {
   }
 
   async getCart(userId: string, status: CartStatus): Promise<CartItem[] | null> {
-    const docRef = doc(ApplicationDB, "carts", userId);
+    const docRef = doc(this.cartsRef, userId);
     const querySnapshot = await getDoc(docRef);
 
     if (!querySnapshot.exists()) {

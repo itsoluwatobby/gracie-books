@@ -50,10 +50,12 @@ export default function OrderDetails(
         throw Error("Error updating order status");
       else {
         setOrderDetail(orderInfo);
-        if ([processing, shipped, delivered].includes(orderDetail.status)) {
-          await bookServices.mutateBookStockQuantity(orderInfo.items, "deduct");
-        } else {
-          await bookServices.mutateBookStockQuantity(orderInfo.items, "revert");
+        if (![processing, shipped, delivered].includes(order.status)) {
+          if ([processing, shipped, delivered].includes(orderDetail.status)) {
+            await bookServices.mutateBookStockQuantity(orderInfo.items, "deduct");
+          } else {
+            await bookServices.mutateBookStockQuantity(orderInfo.items, "revert");
+          }
         }
         setReload((prev) => (
           {

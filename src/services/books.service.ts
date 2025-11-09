@@ -20,6 +20,7 @@ import {
 } from "firebase/firestore";
 import { nanoid } from "nanoid/non-secure";
 import { StorageModels } from "../utils/constants";
+import { cartService } from "./cart.service";
 
 
 class BookServices {
@@ -186,8 +187,14 @@ class BookServices {
       const book = await this.getBook(cart.book.id);
       if (book) {
         let stockQuantity = book.stockQuantity;
-        if (opr === "deduct") stockQuantity -= cart.quantity;
-        else stockQuantity += cart.quantity;
+        if (opr === "deduct" && cart.status === "pending") {
+          stockQuantity -= cart.quantity;
+          await cartService.markCartAsCompleted(cart.userId, cart.book.id, "completed");
+        } else {
+          stockQuantity += cart.quantity;
+          await cartService.markCartAsCompleted(cart.userId, cart.book.id, "pending");
+        }
+
         await this.updateBook(book.id, { stockQuantity });
       }
     }));
