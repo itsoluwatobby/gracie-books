@@ -66,7 +66,7 @@ class BookServices {
         books.push({ ...doc.data(), id: doc.id } as Book);
       });
 
-      if (books.length) return books[0];
+      if (books?.length) return books[0];
       return null
     } catch (err: any) {
       throw new Error(err.message);

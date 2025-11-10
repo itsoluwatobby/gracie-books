@@ -32,7 +32,7 @@ const SearchPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8">
+      <div className="xl:px-16 w-full mx-auto sm:px-10 px-4 py-8">
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <h1 className="text-2xl font-bold text-blue-900 mb-4">
             Search Results for "{query}"

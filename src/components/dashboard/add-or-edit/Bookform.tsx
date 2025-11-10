@@ -34,7 +34,7 @@ export const BookForm: React.FC<BookFormProps> = (
     try {
       setIsloading(true);
 
-      if (file.name) {
+      if (file?.name) {
         const uploadResponse = await getSignedUploadURL(file);
         const imageData = await uploadWithSignedURL(file, uploadResponse);
 
@@ -89,7 +89,7 @@ export const BookForm: React.FC<BookFormProps> = (
           >
             <figure className="size-40 rounded-md bg-gray-100 border flex">
               {
-                (file || bookForm?.coverImage)
+                (file?.size || bookForm?.coverImage)
                  ? <img 
                     src={file.size ? URL.createObjectURL(file) : bookForm?.coverImage}
                     // alt={bookForm.title}

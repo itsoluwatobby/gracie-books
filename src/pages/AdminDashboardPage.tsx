@@ -135,7 +135,7 @@ const AdminDashboardPage: React.FC = () => {
   return (
     <Layout>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 transition-all duration-300 no-scrollbar">
-        <div className="container mx-auto px-4 py-8">
+        <div className="xl:px-16 w-full mx-auto sm:px-10 px-4 py-8">
           {/* Header */}
           <div className="flex justify-between items-center mb-8 bg-white rounded-xl shadow-sm border border-gray-100 px-8 py-6 sticky top-16 z-10 backdrop-blur-sm">
             <div>

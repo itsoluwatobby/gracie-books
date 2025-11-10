@@ -65,7 +65,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="bg-blue-900 text-white shadow-md sticky top-0 z-50 lg:px-6">
-      <div className="container mx-auto px-4 py-6">
+      <div className="xl:px-16 w-full sm:px-10 mx-auto px-5 py-6">
         <div className="flex items-center justify-between">
           {/* Logo and Brand */}
           <Link to={PageRoutes.home} className="flex items-center space-x-2 mr-4">
@@ -82,7 +82,7 @@ const Header: React.FC = () => {
           </nav>
 
           {/* Search Form - Desktop */}
-          <form onSubmit={handleSearch} className="hidden lg:flex items-center flex-1 max-w-lg mx-8">
+          <form onSubmit={handleSearch} className="hidden md:flex items-center flex-1 max-w-lg mx-8">
             <div className="relative w-full">
               <input
                 type="text"

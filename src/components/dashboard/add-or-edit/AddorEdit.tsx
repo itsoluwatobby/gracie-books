@@ -208,7 +208,7 @@ export default function AddorEdit(
 
             {/* Search Results Popup */}
             {
-              (showSearchResults && searchResults.length > 0) ? (
+              (showSearchResults && searchResults?.length > 0) ? (
                 <BookResultPreveiw 
                   currentSlide={currentSlide}
                   searchResults={searchResults as Book[]}
