@@ -42,4 +42,23 @@ async function uploadWithSignedURL(file: File, signed: SignedUploadProps) {
 
   return data;
 }
-export { getSignedUploadURL, uploadWithSignedURL };
+
+async function deleteImageFromStorage(url: string) {
+  const urlBreakDown = url.split("/");
+
+  const baseUrl = import.meta.env.VITE_SUPABASE_URL?.split("/");
+  if (urlBreakDown[2] !== baseUrl[2]) return;
+
+  const key = urlBreakDown[urlBreakDown.length - 1];
+  const { data, error } = await supabase
+  .storage
+  .from('book_thumbnail')
+  .remove([key])
+
+  if (error) {
+    throw new Error(`Failed to upload to bucket: ${error.message}`);
+  }
+
+  return data;
+}
+export { getSignedUploadURL, uploadWithSignedURL, deleteImageFromStorage };

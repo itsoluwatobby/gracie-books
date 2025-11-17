@@ -68,6 +68,24 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
           <p className="text-gray-600 text-sm mb-1">{book?.authors[0]}</p>
           
           <div className="mt-auto">
+             {/* Genre Tags */}
+            <div className="flex flex-wrap gap-1 mb-3">
+              {book.genre.slice(0, 2).map((genre, index) => (
+                <span 
+                  key={index}
+                  className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-full font-medium"
+                >
+                  {genre}
+                </span>
+              ))}
+              <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                book.hardBack 
+                  ? 'bg-amber-50 text-amber-700 border border-amber-200' 
+                  : 'bg-gray-50 text-gray-700 border border-gray-200'
+              }`}>
+                {book.hardBack ? 'Hardcover' : 'Paperback'}
+              </span>
+            </div>
             <div className="flex items-center space-x-1">
               {[...Array(5)].map((_, i) => (
                 <svg 

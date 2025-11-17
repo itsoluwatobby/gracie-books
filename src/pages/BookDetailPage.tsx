@@ -311,6 +311,14 @@ const BookDetailPage: React.FC = () => {
                           {genre}
                         </Link>
                       ))}
+
+                      <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                        book.hardBack 
+                          ? 'bg-amber-50 text-amber-700 border border-amber-200' 
+                          : 'bg-gray-50 text-gray-700 border border-gray-200'
+                      }`}>
+                        {book.hardBack ? 'Hardcover' : 'Paperback'}
+                      </span>
                     </div>
                   </div>
                 </div>

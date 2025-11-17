@@ -64,6 +64,7 @@ interface Book {
   publisher?: string;
   publicationDate?: string;
   discount?: string;
+  hardBack: boolean;
   pageCount: number;
   genre: string[];
   stockQuantity: number;

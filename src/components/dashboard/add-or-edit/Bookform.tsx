@@ -26,6 +26,7 @@ export const BookForm: React.FC<BookFormProps> = (
   },
 ) => {
   const [isloading, setIsloading] = useState(false);
+  const [displayError, setDisplayError] = useState<string | undefined>(undefined);
   const [file, setFile] = useState<File>({} as File);
 
   const handleBookFormSubmit = async(e: FormEvent<HTMLFormElement>) => {
@@ -38,11 +39,12 @@ export const BookForm: React.FC<BookFormProps> = (
         const uploadResponse = await getSignedUploadURL(file);
         const imageData = await uploadWithSignedURL(file, uploadResponse);
 
-        const imageURL = `${import.meta.env.VITE_SPABASE_URL}/storage/v1/object/public/${imageData.fullPath}`
+        const imageURL = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/${imageData.fullPath}`
+        console.log(imageURL)
         bookForm.coverImage = imageURL;
         bookForm.previewImages?.unshift(imageURL);
       }
-    
+
       if (!editBook) {
         await bookServices.addBook(bookForm);
         toast.success(`${bookForm.title} uploaded`);
@@ -89,10 +91,11 @@ export const BookForm: React.FC<BookFormProps> = (
           >
             <figure className="size-40 rounded-md bg-gray-100 border flex">
               {
-                (file?.size || bookForm?.coverImage)
+                (file?.size || bookForm?.coverImage || bookForm?.icon)
                  ? <img 
-                    src={file.size ? URL.createObjectURL(file) : bookForm?.coverImage}
+                    src={file.size ? URL.createObjectURL(file) : (displayError ? bookForm?.icon : bookForm?.coverImage)}
                     // alt={bookForm.title}
+                    onError={() => setDisplayError(bookForm?.icon)}
                     className="w-full h-full object-cover rounded-md" 
                   />
                 : <ImageIcon size={34} className="self-center text-gray-300 mx-auto" />
@@ -151,6 +154,22 @@ export const BookForm: React.FC<BookFormProps> = (
             <Building2 className="w-5 h-5 text-purple-600" />
             Publication Details
           </h3>
+
+          <div className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              id="hardBack"
+              checked={bookForm.hardBack}
+              onChange={(e) => setBookForm({ ...bookForm, hardBack: e.target.checked })}
+              className="border cursor-pointer border-gray-400 size-5 rounded-md"
+            />
+            <label 
+              htmlFor="hardBack" 
+              className="block text-sm font-medium"
+            >
+              Hard Back
+            </label>
+          </div>
           
           <div className="flex items-center justify-between gap-10 max-xxs:flex-col">
             <Input

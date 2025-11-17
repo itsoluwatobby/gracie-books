@@ -268,6 +268,8 @@ class BookServices {
           source: "google" as Book["source"],
           stockQuantity: 1,
           status: 'public',
+          hardBack: false,
+          // rating: bookInfo?.maturityRating ?? +bookInfo?.maturityRating,
         }
       })
       return normalizeResult;
@@ -293,6 +295,8 @@ class BookServices {
           source: "goodreads" as Book["source"],
           stockQuantity: 1,
           status: 'public',
+          hardBack: false,
+          // rating: bookInfo?.rating ?? +bookInfo?.rating,
         }
       });
       return normalizeResult;

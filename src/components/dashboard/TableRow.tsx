@@ -8,7 +8,7 @@ import { PageRoutes } from "../../utils/pageRoutes";
 interface TableRowProps {
   book: Book;
   handleEditBook: (book: Book) => void;
-  handleDelete: (bookId: string) => void;
+  handleDelete: (bookId: string, coverImage?: string) => void;
   formatCurrency: (val: number) => string;
 }
 
@@ -91,7 +91,7 @@ export const TableRow: React.FC<TableRowProps> = (
         onClick={() => handleEditBook(book)}
         >Edit</Button>
         <Button variant="danger" size="sm"
-        onClick={() => handleDelete(book.id)}
+        onClick={() => handleDelete(book.id, book?.coverImage)}
         >Delete</Button>
       </td>
     </tr>

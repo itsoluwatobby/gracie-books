@@ -3,6 +3,7 @@ import { bookServices } from '../../services';
 import { TableRow } from './TableRow';
 import { LoadingBook } from './LoadingBook';
 import toast from 'react-hot-toast';
+import { deleteImageFromStorage } from '../../supabase/config';
 
 type ManageBooksProps = {
   books: Book[];
@@ -50,9 +51,12 @@ export default function ManageBooks(
   //   }
   // }, [reload.bookUpdate_reload])
 
-  const handleDelete = async (bookId: string) => {
+  const handleDelete = async (bookId: string, coverImage?: string) => {
     try {
       await bookServices.removeBook(bookId);
+      if (coverImage) {
+        await deleteImageFromStorage(coverImage);
+      }
       setBooks((prev) => prev?.filter((book) => book.id !== bookId));
     } catch {
       toast.error('Error removing book');
