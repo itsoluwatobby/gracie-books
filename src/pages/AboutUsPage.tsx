@@ -86,7 +86,9 @@ const AboutUsPage: React.FC = () => {
         </section>
 
         {/* Contact Section */}
-        <section className="text-center">
+        <section 
+        id="contact-us"
+        className="text-center">
           <div className="bg-white rounded-lg shadow-md p-8">
             <h2 className="text-2xl font-bold text-blue-900 mb-4">Join Our Community</h2>
             <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
@@ -95,7 +97,7 @@ const AboutUsPage: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
-                href="mailto:info@{appName.name}.com" 
+                href={`mailto:${appName.email}`} 
                 className="bg-blue-900 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition-colors"
               >
                 Contact Us

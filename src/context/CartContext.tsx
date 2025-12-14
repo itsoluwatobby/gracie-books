@@ -42,8 +42,8 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       if (cartItems?.length) setItems(cartItems)
       toast.success(`${quantity} item(s) added to cart`);
     } catch (e: any) {
-      console.log(e)
-      toast.error("Erorr adding item to cart")
+      // console.log(e)
+      toast.error(e?.message || "Erorr adding item to cart")
     }
   };
 
@@ -52,8 +52,8 @@ const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       const cartItems = await cartService.updateCart(deviceId, cart.book.id, quantity);
       if (cartItems?.length) setItems(cartItems);
     } catch (e: any) {
-      console.log(e)
-      toast.error("Erorr updating cart item")
+      // console.log(e)
+      toast.error(e?.message || "Erorr updating cart item")
     }
   };
 

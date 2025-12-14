@@ -122,6 +122,9 @@ class CartsService {
       );
 
       if (existingItem) {
+        if ((existingItem.quantity + cart.quantity) > cart.book.stockQuantity) {
+          throw new Error("Can't add anymore copy");
+        }
         // Update existing item in the array
         const updatedItems = items.map((item) =>
           item.book.id === cart.book.id && item.status === cart.status

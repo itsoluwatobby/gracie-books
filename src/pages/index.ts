@@ -18,6 +18,7 @@ import ProfilePage from './ProfilePage';
 import TermsConditionsPage from './TermsConditionsPage';
 import AboutUsPage from './AboutUsPage';
 import NewPasswordPage from './NewPasswordPage';
+import ComingSoonPage from './ComingSoonPages';
 
 export {
   AdminDashboardPage,
@@ -40,4 +41,5 @@ export {
   NewPasswordPage,
   TermsConditionsPage,
   AboutUsPage,
+  ComingSoonPage,
 };

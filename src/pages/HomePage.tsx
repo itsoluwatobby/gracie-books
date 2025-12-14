@@ -103,7 +103,8 @@ const HomePage: React.FC = () => {
               <p className="text-gray-600 mb-4">
                 Great books at amazing prices. Limited-time offers you don't want to miss.
               </p>
-              <Link to="/deals" className="text-blue-700 font-medium hover:text-blue-900 transition-colors">
+              {/* <Link to="/deals" className="text-blue-700 font-medium hover:text-blue-900 transition-colors"> */}
+              <Link to="/pending" className="text-blue-700 font-medium hover:text-blue-900 transition-colors">
                 View Deals →
               </Link>
             </div>

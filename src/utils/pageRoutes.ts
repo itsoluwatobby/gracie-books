@@ -3,6 +3,7 @@ export const PageRoutes = {
   home: '/',
   aboutUs: '/about',
   termsAndConditions: '/terms',
+  comingSoon: '/pending',
   books: '/books',
   cart: '/cart',
   dashboard: '/dashboard',

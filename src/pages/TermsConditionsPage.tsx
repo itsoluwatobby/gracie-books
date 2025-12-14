@@ -202,7 +202,7 @@ const TermsConditionsPage: React.FC = () => {
                   If you have any questions about these Terms & Conditions, please contact us:
                 </p>
                 <ul className="list-none space-y-2">
-                  <li><strong>Email:</strong> legal@{appName.email}</li>
+                  <li><strong>Email:</strong> {appName.email}</li>
                   {/* <li><strong>Phone:</strong> (123) 456-7890</li> */}
                   <li><strong>Address:</strong> {appName.address}</li>
                 </ul>

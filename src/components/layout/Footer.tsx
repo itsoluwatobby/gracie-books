@@ -65,7 +65,8 @@ const Footer: React.FC = () => {
             <h3 className="text-lg font-semibold mb-4">Customer Service</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/contact" className="text-blue-200 hover:text-white transition-colors">Contact Us</Link>
+                {/* <Link to="/contact" className="text-blue-200 hover:text-white transition-colors">Contact Us</Link> */}
+                <Link to="/about/#contact-us" className="text-blue-200 hover:text-white transition-colors">Contact Us</Link>
               </li>
               <li>
                 <Link to="/faq" className="text-blue-200 hover:text-white transition-colors">FAQ</Link>
@@ -80,7 +81,8 @@ const Footer: React.FC = () => {
                 <Link to={PageRoutes.termsAndConditions} className="text-blue-200 hover:text-white transition-colors">Terms & Conditions</Link>
               </li>
               <li>
-                <Link to="/track-order" className="text-blue-200 hover:text-white transition-colors">Track Your Order</Link>
+                <Link to="/pending" className="text-blue-200 hover:text-white transition-colors">Track Your Order</Link>
+                {/* <Link to="/track-order" className="text-blue-200 hover:text-white transition-colors">Track Your Order</Link> */}
               </li>
             </ul>
           </div>

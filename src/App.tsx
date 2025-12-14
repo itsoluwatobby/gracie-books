@@ -22,6 +22,7 @@ import {
   NewPasswordPage,
   AboutUsPage,
   TermsConditionsPage,
+  ComingSoonPage,
 } from './pages';
 import RoutePrivilege from './components/layout/RoutePrivilege';
 import { PageRoutes } from './utils/pageRoutes';
@@ -72,6 +73,8 @@ function App() {
       
                 <Route path={PageRoutes.aboutUs} element={<AboutUsPage />} />
                 <Route path={PageRoutes.termsAndConditions} element={<TermsConditionsPage />} />
+
+                <Route path={PageRoutes.comingSoon} element={<ComingSoonPage />} />
 
                 <Route path={PageRoutes.auth.unauthorised} element={<Unauthorised />} />
 
