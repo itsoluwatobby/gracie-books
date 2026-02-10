@@ -46,7 +46,7 @@ const Footer: React.FC = () => {
                 <Link to={PageRoutes.books} className="text-blue-200 hover:text-white transition-colors">Browse Books</Link>
               </li>
               <li>
-                <Link to={PageRoutes.newRelease} className="text-blue-200 hover:text-white transition-colors">New Releases</Link>
+                <Link to={PageRoutes.newRelease} className="text-blue-200 hover:text-white transition-colors">New Books</Link>
               </li>
               <li>
                 {/* <Link to="/bestsellers" className="text-blue-200 hover:text-white transition-colors">Bestsellers</Link> */}

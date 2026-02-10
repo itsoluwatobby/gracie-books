@@ -78,7 +78,7 @@ const Header: React.FC = () => {
             <Link to={PageRoutes.home} className={`hover:text-blue-200 transition-colors ${pathname !== PageRoutes.home ? 'text-blue-100' : ''}`}>Home</Link>
             <Link to={PageRoutes.books} className={`hover:text-blue-200 transition-colors ${pathname !== PageRoutes.books ? 'text-blue-100' : ''}`}>Browse</Link>
             <Link to={PageRoutes.genres} className={`hover:text-blue-200 transition-colors ${pathname !== PageRoutes.genres ? 'text-blue-100' : ''}`}>Genres</Link>
-            <Link to={PageRoutes.newRelease} className={`hover:text-blue-200 transition-colors ${pathname !== PageRoutes.newRelease ? 'text-blue-100' : ''}`}>New Releases</Link>
+            <Link to={PageRoutes.newRelease} className={`hover:text-blue-200 transition-colors ${pathname !== PageRoutes.newRelease ? 'text-blue-100' : ''}`}>New Books</Link>
           </nav>
 
           {/* Search Form - Desktop */}
@@ -229,7 +229,7 @@ const Header: React.FC = () => {
                 className="px-2 py-1 hover:bg-blue-800 rounded transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                New Releases
+                New Books
               </Link>
               {
                 user?.role !== UserRole.admin ?

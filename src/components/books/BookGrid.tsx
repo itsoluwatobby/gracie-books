@@ -1,17 +1,19 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import BookCard from './BookCard';
+import { BookOpen } from 'lucide-react';
 
 interface BookGridProps {
   books: Book[];
   title?: string;
-  emptyMessage?: string;
+  emptyMessage?: string | null;
   // from?: 'Home';
 }
 
 const BookGrid: React.FC<BookGridProps> = ({ 
   books, 
   title,
-  emptyMessage = 'No books found.',
+  emptyMessage = null,
 }) => {
   return (
     <div className="w-full">
@@ -20,11 +22,15 @@ const BookGrid: React.FC<BookGridProps> = ({
       ) : null}
       
       {!books?.length ? (
-        <div className="text-center py-12">
-          <p className="text-gray-500">{emptyMessage}</p>
+        <div className="text-center py-12 flex items-center">
+          {
+            emptyMessage ?
+            <p className="text-gray-500">{emptyMessage}</p>
+            : <BookOpen size={24} className="text-red-700 mx-auto" />
+        }
         </div>
       ) : (
-        <div className="grid grid-cols-3 max-xs:grid-cols-2 max-xxxs:grid-cols-1 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-3 max-xs:grid-cols-2 max-xxs:grid-cols-1 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {/* // <div className="flex items-center flex-wrap gap-6"> */}
           {books.map(book => (
             <BookCard key={book.id} book={book} />

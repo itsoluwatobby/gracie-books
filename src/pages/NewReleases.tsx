@@ -25,12 +25,12 @@ const NewReleasesPage: React.FC = () => {
     <Layout>
       <div className="container lg:max-w-7xl mx-auto px-2 py-8">
         <h1 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6">
-          New Releases
+          New Books
         </h1>
         
         <BookGrid 
           books={newReleases}
-          emptyMessage="No new releases found."
+          emptyMessage="No New Books found."
         />
 
         <section className="py-12 bg-white lg:px-3">

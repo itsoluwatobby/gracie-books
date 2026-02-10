@@ -6,7 +6,6 @@ import {
   Heart,
   Share2,
   Bookmark,
-  Star,
   ChevronRight,
   LoaderIcon,
 } from 'lucide-react';
@@ -31,9 +30,8 @@ const BookDetailPage: React.FC = () => {
 
   const [isImageDisplayed, setIsImageDisplayed] = useState(true);
   const [appState, setAppState] = useState<AppState>(initAppState);
-  
+
   const { isLoading, isError, errMsg } = appState;
-  
 
   // Get related books (for demo purposes, just random books)
   useEffect(() => {
@@ -156,7 +154,7 @@ const BookDetailPage: React.FC = () => {
             <div className="flex flex-col md:flex-row gap-8">
               {/* Book Cover Image */}
               <div className="w-full md:w-1/3 lgw-1/4">
-                <div className="h-96 rounded-md transform-gpu transition-transform duration-500 hover:rotate-y-4 hover:-translate-y-0.5 hover:scale-[1.005] hover:shadow-xl">
+                <div className="h-96 rounded-md transform-gpu transition-transform duration-500">
                   {/* 3D Book Container with Spine & Cover */}
                   <div className="rounded-md relative w-full h-full preserve-3d group">
                     {/* Book Cover */}
@@ -169,11 +167,11 @@ const BookDetailPage: React.FC = () => {
                       />
                     </div>
 
-                    <div className="absolute rounded-l-md left-0 top-0 w-20 h-full origin-left backface-hidden rotate-y-90 bg-gradient-to-r from-gray-300 to-gray-400 shadow-inner">
+                    {/* <div className="absolute rounded-l-md left-0 top-0 w-20 h-full origin-left backface-hidden rotate-y-90 bg-gradient-to-r from-gray-300 to-gray-400 shadow-inner">
                       <div className="flex flex-col justify-center items-center h-full text-xs text-gray-700 font-semibold writing-mode-vertical transform -rotate-180">
                         {book.title}
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="absolute inset-0 backface-hidden rounded-lg shadow-inner pointer-events-none opacity-30"></div>
                   </div>
@@ -207,7 +205,7 @@ const BookDetailPage: React.FC = () => {
                   </p>
   
                   {/* Ratings */}
-                  <div className="flex items-center mb-4">
+                  {/* <div className="flex items-center mb-4">
                     <div className="flex items-center mr-2">
                       {[...Array(5)].map((_, i) => (
                         <Star
@@ -223,7 +221,7 @@ const BookDetailPage: React.FC = () => {
                       <span className="text-sm text-gray-600 ml-1">
                       {book.rating.toFixed(1)} ({Math.floor(Math.random() * 200) + 50} reviews)
                     </span> : null}
-                  </div>
+                  </div> */}
   
                   {/* Price and Stock */}
                   <div className="mb-6">

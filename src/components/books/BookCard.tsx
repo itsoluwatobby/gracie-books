@@ -27,25 +27,16 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
     >
       <Link to={`/books/${book.id}`} className="flex flex-col h-full">
         <div className="relative h-56 perspective-1000">
-          <div className="absolute inset-0 transform-gpu transition-transform duration-500 hover:rotate-y-4 hover:-translate-y-0.5 hover:scale-[1.005] hover:shadow-xl">
+          <div className="absolute inset-0 transform-gpu transition-transform duration-500 hover:rotate-y-4 hover:-translate-y-0.5 hover:scale-[1.005] hover:shadow-xl rounded-b-md">
             {/* 3D Book Container with Spine & Cover */}
-            <div className="relative w-full h-full preserve-3d group flex items-center gap-0.5">
-              {/* Book Cover */}
-              <div className="w-[35%] h-full origin-left backface-hidden rotate-y-90 bg-gradient-to-r from-gray-300 to-gray-400 shadow-inner">
-                <div className="flex flex-col justify-center items-center h-full text-xs text-gray-700 font-semibold writing-mode-vertical transform -rotate-180">
-                  {book.title}
-                </div>
-              </div>
-
-              <div className="backface-hidden h-56 rounded-lg overflow-hidden shadow-lg bg-white">
-                <img
-                  src={isImageDisplayed ? book?.coverImage : book?.icon}
-                  alt={book.title}
-                  onError={() => setIsImageDisplayed(false)}
-                  className="w-full h-full object-contain"
-                />
-              </div>
-
+            <div className="relative w-full h-full preserve-3d group flexitems-center gap-0.5">
+              <img
+                src={isImageDisplayed ? book?.coverImage : book?.icon}
+                alt={book.title}
+                onError={() => setIsImageDisplayed(false)}
+                className="w-full h-full shrink0 object-scale-down"
+              />
+            
               {/* Inner Shadow Overlay for Depth */}
               <div className="absolute inset-0 backface-hidden rounded-lg shadow-inner pointer-events-none opacity-30"></div>
             </div>
@@ -64,21 +55,21 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
         </div>
         
         <div className="p-2 flex-grow flex flex-col">
-          <h3 className="font-medium text-lg line-clamp-1 w-[80%]">{book.title}</h3>
-          <p className="text-gray-600 text-sm mb-1">{book?.authors[0]}</p>
+          <h3 className="font-medium text-base max-xs:text-sm line-clamp-1 w-[80%]">{book.title}</h3>
+          <p className="text-gray-600 text-sm max-xs:text-xs mb-1">by {book?.authors[0]}</p>
           
           <div className="mt-auto">
              {/* Genre Tags */}
-            <div className="flex flex-wrap gap-1 mb-3">
+            <div className="flex flex-wrap items-center gap-1 mb-3">
               {book.genre.slice(0, 2).map((genre, index) => (
                 <span 
                   key={index}
-                  className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-full font-medium"
+                  className="text-xs max-xs:text-[9px] bg-blue-50 text-blue-700 px-2 py-1 rounded-full font-medium"
                 >
                   {genre}
                 </span>
               ))}
-              <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+              <span className={`max-xs:text-[9px] text-xs px-2 py-1 rounded-full font-medium ${
                 book.hardBack 
                   ? 'bg-amber-50 text-amber-700 border border-amber-200' 
                   : 'bg-gray-50 text-gray-700 border border-gray-200'
@@ -86,7 +77,7 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
                 {book.hardBack ? 'Hardcover' : 'Paperback'}
               </span>
             </div>
-            <div className="flex items-center space-x-1">
+            {/* <div className="hidden items-center space-x-1">
               {[...Array(5)].map((_, i) => (
                 <svg 
                   key={i} 
@@ -99,31 +90,31 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
                 </svg>
               ))}
               {book?.rating ? <span className="text-xs text-gray-600 ml-1">({book.rating.toFixed(1)})</span> : null}
-            </div>
+            </div> */}
 
             <div className="my-1">
               {book.stockQuantity === 0 ? (
-                <span className="text-xs text-red-600 font-medium bg-red-50 px-2 py-1 rounded">
+                <span className="text-xs max-xs:text-[11px] text-red-600 font-medium bg-red-50 px-2 py-1 rounded">
                   Sold Out
                 </span>
               ) : book.stockQuantity < 3 ? (
-                <span className="text-xs text-orange-600 font-medium bg-orange-50 px-2 py-1 rounded">
+                <span className="text-xs max-xs:text-[11px] text-orange-600 font-medium bg-orange-50 px-2 py-1 rounded">
                   Only {book.stockQuantity} left
                 </span>
               ) : (
-                <span className="text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded">
+                <span className="text-xs max-xs:text-[11px] text-green-600 font-medium bg-green-50 px-2 py-1 rounded">
                   {book.stockQuantity} in stock
                 </span>
               )}
             </div>
             
-            <div className="flex gap1.5 mt-1.5 justify-between items-center">
-              <span className="text-lg font-semibold text-blue-900">{helper.formatPrice(book.price)}</span>
+            <div className="flex max-xs:flex-col max-xs:gap-1.5 mt-1.5 justify-between w-full">
+              <p className="xs:self-end text-sm font-semibold text-blue-900">{helper.formatPrice(book.price)}</p>
               
               <Button 
                 size="sm" 
                 variant="primary" 
-                className="self-end flex items-center w-fit space-x-1 rounded-full px-3"
+                className="self-end flex items-center w-fit max-xs:w-[50%] max-xs:justify-center space-x-1 rounded-full px-3 max-xs:px-2.5"
                 onClick={handleAddToCart}
                 disabled={book.stockQuantity === 0}
               >

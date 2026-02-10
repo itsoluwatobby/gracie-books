@@ -54,7 +54,7 @@ const HomePage: React.FC = () => {
               <Link to="/new-releases">
                 <Button variant="outline" size="lg"
                 className='bg-white'
-                >New Releases</Button>
+                >New Books</Button>
               </Link>
             </div>
           </div>
@@ -86,12 +86,12 @@ const HomePage: React.FC = () => {
               <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <BookOpen size={28} className="text-blue-800" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">New Releases</h3>
+              <h3 className="text-xl font-semibold mb-2">New Books</h3>
               <p className="text-gray-600 mb-4">
                 Be among the first to read the latest and most anticipated titles.
               </p>
               <Link to="/new-releases" className="text-blue-700 font-medium hover:text-blue-900 transition-colors">
-                View New Releases →
+                View New Books →
               </Link>
             </div>
             

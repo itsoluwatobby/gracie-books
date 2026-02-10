@@ -13,8 +13,8 @@ const HowWeWork: React.FC = () => {
               <Truck size={24} className="text-blue-700" />
             </div>
             <div>
-              <h3 className="text-xl font-semibold mb-2">Delivery & Pickup 🚚📦</h3>
-              <p className="text-gray-600">
+              <h3 className="text-xl max-xs:text-lg font-semibold mb-2">Delivery & Pickup 🚚📦</h3>
+              <p className="text-gray-600 max-xs:text-sm">
                 Choose between convenient home delivery or pickup from our location. 
                 We offer flexible options to suit your schedule and preferences.
               </p>
@@ -26,8 +26,8 @@ const HowWeWork: React.FC = () => {
               <Shield size={24} className="text-green-700" />
             </div>
             <div>
-              <h3 className="text-xl font-semibold mb-2">Payment Validates Order ‼️</h3>
-              <p className="text-gray-600">
+              <h3 className="text-xl max-xs:text-lg font-semibold mb-2">Payment Validates Order ‼️</h3>
+              <p className="text-gray-600 max-xs:text-sm">
                 Your order is confirmed only after payment is received. This ensures 
                 availability and helps us maintain accurate inventory.
               </p>
@@ -39,8 +39,8 @@ const HowWeWork: React.FC = () => {
               <Package size={24} className="text-orange-700" />
             </div>
             <div>
-              <h3 className="text-xl font-semibold mb-2">4-Week Stockpile</h3>
-              <p className="text-gray-600">
+              <h3 className="text-xl max-xs:text-lg font-semibold mb-2">4-Week Stockpile</h3>
+              <p className="text-gray-600 max-xs:text-sm">
                 We maintain a rolling inventory with fresh arrivals every week. 
                 Books are held for up to 4 weeks before being rotated.
               </p>
@@ -52,8 +52,8 @@ const HowWeWork: React.FC = () => {
               <BookOpen size={24} className="text-red-700" />
             </div>
             <div>
-              <h3 className="text-xl font-semibold mb-2">Quality Assurance</h3>
-              <p className="text-gray-600">
+              <h3 className="text-xl max-xs:text-lg font-semibold mb-2">Quality Assurance</h3>
+              <p className="text-gray-600 max-xs:text-sm">
                 Each book undergoes careful inspection for condition, completeness, 
                 and readability before being added to our collection.
               </p>
