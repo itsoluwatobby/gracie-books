@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FileWarning, ShoppingBag } from 'lucide-react';
 import Layout from '../components/layout/Layout';
+import { MetaTags } from '../components/layout/OGgraph';
 import OrderItem from '../components/orders/OrderItem';
 import Button from '../components/ui/Button';
 import useAuthContext from '../context/useAuthContext';
@@ -75,6 +76,7 @@ const OrdersPage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags title="My Orders" description="View your order history and track current orders." noindex />
       {
         isLoading ?
           <LoadingContent />

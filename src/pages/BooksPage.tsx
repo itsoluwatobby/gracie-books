@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Filter, X } from 'lucide-react';
 import Layout from '../components/layout/Layout';
+import { MetaTags } from '../components/layout/OGgraph';
 import BookGrid from '../components/books/BookGrid';
 import Button from '../components/ui/Button';
 import { InitPriceRange } from '../utils/initVariables';
@@ -23,7 +24,7 @@ const BooksPage: React.FC = () => {
   
   const { booksData, appState } = useGetBooks(
     {
-      pagination: { pageSize: 5000 },
+      pagination: { pageSize: 100 },
       // price: priceRange.max,
       // title: searchQuery,
       // genres: selectedGenres,
@@ -122,6 +123,11 @@ const BooksPage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags
+        title="Browse Books"
+        description="Explore our complete catalog. Filter by genre, price, and more to find your next great read."
+        keywords="browse books, book catalog, buy books online, fiction, non-fiction, genres"
+      />
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl md:text-3xl font-bold text-blue-900">Browse Books</h1>

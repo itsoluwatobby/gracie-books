@@ -5,6 +5,7 @@ import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
 import toast from 'react-hot-toast';
 import { userAuthenticationAPI } from '../composables/auth';
+import { MetaTags } from '../components/layout/OGgraph';
 
 const NewPasswordPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -107,7 +108,7 @@ const NewPasswordPage: React.FC = () => {
             message = errCode || "Error! Try again";
         } 
       } else {
-        message = err?.response?.data?.message || err.messge;
+        message = err?.response?.data?.message || err.message;
       }
 
       toast.error(message);
@@ -175,6 +176,11 @@ const NewPasswordPage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags
+        title="Reset Password"
+        description="Set a new secure password for your account."
+        noindex
+      />
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
           <div className="p-6">

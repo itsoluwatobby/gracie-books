@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
+import { MetaTags } from '../components/layout/OGgraph';
 
 const PageNotFound: React.FC = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const PageNotFound: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags title="Page Not Found" description="The page you are looking for does not exist." noindex />
       <main className='w-full h-screen flex flex-col gap-y-2 items-center justify-center'>
         <h3 className='text-2xl'><span className='text-4xl'>Oops!!🥹</span> Page Not Found</h3>
         <p className='animate-pulse text-sm text-gray-800'>Redirecting to previous page...</p>

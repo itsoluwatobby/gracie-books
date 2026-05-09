@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { BookOpen, Mail, Lock } from 'lucide-react';
 import Layout from '../components/layout/Layout';
+import { MetaTags } from '../components/layout/OGgraph';
 import Button from '../components/ui/Button';
 import useAuthContext from '../context/useAuthContext';
 import { userAuthenticationAPI } from '../composables/auth';
@@ -71,7 +72,7 @@ const LoginPage: React.FC = () => {
             message = errCode || "Error! Try again";
         } 
       } else {
-        message = err?.response?.data?.message || err.messge;
+        message = err?.response?.data?.message || err.message;
       }
 
       toast.error(message);
@@ -83,6 +84,11 @@ const LoginPage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags
+        title="Login"
+        description="Sign in to your account to access your orders, wishlist, and more."
+        noindex
+      />
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
           <div className="bg-blue-900 py-4 px-6 flex items-center justify-center">

@@ -2,6 +2,7 @@ import React from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Search as SearchIcon } from 'lucide-react';
 import Layout from '../components/layout/Layout';
+import { MetaTags } from '../components/layout/OGgraph';
 import BookGrid from '../components/books/BookGrid';
 import { bookServices } from '../services';
 import { useGetBooks } from '../hooks/useGetBooks';
@@ -32,6 +33,12 @@ const SearchPage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags
+        title={query ? `Search: "${query}"` : 'Search Books'}
+        description={query ? `Browse search results for "${query}". Find books by title, author, or genre.` : 'Search our catalog of books by title, author, or genre.'}
+        keywords={query ? `${query}, books, search` : 'search books, find books'}
+        noindex
+      />
       <div className="xl:px-16 w-full mx-auto sm:px-10 px-4 py-8">
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <h1 className="text-2xl font-bold text-blue-900 mb-4">

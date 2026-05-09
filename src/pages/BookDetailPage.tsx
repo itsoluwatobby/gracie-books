@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { MetaTags } from '../components/layout/OGgraph';
 import {
   ShoppingCart,
   Heart,
@@ -94,14 +95,24 @@ const BookDetailPage: React.FC = () => {
         toast.error(`Error sharing content: ${error.message}`);
       }
     } else {
-      console.log("Web Share API not supported or invalid share data.");
-      // Fallback: You could copy the URL to clipboard or show a message
-      alert("Sharing is not supported on this device. Copy this link: " + shareData.url);
+      // Fallback: copy the URL to clipboard
+      navigator.clipboard?.writeText(shareData.url).then(() => {
+        toast.success("Link copied to clipboard!");
+      }).catch(() => {
+        toast.error("Sharing is not supported on this device.");
+      });
     }
   };
 
   return (
     <Layout>
+      <MetaTags
+        title={book?.title ?? 'Book Details'}
+        description={book?.description ? book.description.slice(0, 160) : 'View book details, price, and availability.'}
+        image={book?.coverImage || book?.icon}
+        type="book"
+        keywords={book?.genre?.join(', ')}
+      />
       <div className="container lg:max-w-6xl mx-auto px-4 py-8">
         {/* Breadcrumbs */}
         <nav className="mb-6">
@@ -153,7 +164,7 @@ const BookDetailPage: React.FC = () => {
           <div className="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8">
             <div className="flex flex-col md:flex-row gap-8">
               {/* Book Cover Image */}
-              <div className="w-full md:w-1/3 lgw-1/4">
+              <div className="w-full md:w-1/3 lg:w-1/4">
                 <div className="h-96 rounded-md transform-gpu transition-transform duration-500">
                   {/* 3D Book Container with Spine & Cover */}
                   <div className="rounded-md relative w-full h-full preserve-3d group">

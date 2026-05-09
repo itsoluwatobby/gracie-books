@@ -4,6 +4,7 @@ import Layout from '../components/layout/Layout';
 import BookGrid from '../components/books/BookGrid';
 import { useGetBooks } from '../hooks/useGetBooks';
 import BookCardLoading from '../components/Loaders/BookCardLoading';
+import { MetaTags } from '../components/layout/OGgraph';
 
 const GenrePage: React.FC = () => {
   const location = useLocation();
@@ -21,6 +22,11 @@ const GenrePage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags
+        title={genre && genre !== 'undefined' ? `${genre} Books` : 'Browse by Genre'}
+        description={genre && genre !== 'undefined' ? `Discover the best ${genre} books. Browse our full ${genre} collection.` : 'Browse books by genre. Find your favourite category.'}
+        keywords={genre && genre !== 'undefined' ? `${genre} books, ${genre}, buy ${genre}` : 'book genres, browse books'}
+      />
       <div className="container lg:max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6">
           {genre !== 'undefined' ? genre : null} Books

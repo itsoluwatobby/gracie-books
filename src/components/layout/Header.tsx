@@ -56,7 +56,6 @@ const Header: React.FC = () => {
       toast.success("Logout successful");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.log(`MESSAGE: ${err.message}`)
       setAppState((prev) => ({ ...prev, errMsg: err.message }));
     } finally {
       setAppState((prev) => ({ ...prev, isLoading: false }));
@@ -121,8 +120,8 @@ const Header: React.FC = () => {
                   <User className="h-6 w-6" />
                   <span>{user?.fullName}</span>
                 </button>
-                <div className="absolute right-0 -mt-1 h-36 w-48 rounded-md shadow-lg py-1 z-10 hidden group-hover:block duration-500">
-                  <div className="w-full mt-6 rounded-md bg-white h-fit py-1">
+                <div className="absolute right-0 top-full pt-2 w-48 z-10 hidden group-hover:block">
+                  <div className="w-full rounded-md bg-white shadow-lg py-1">
                     <Link
                       to={`${PageRoutes.profile}/${user?.id}`}
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"

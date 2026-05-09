@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Truck } from 'lucide-react';
 import Layout from '../components/layout/Layout';
+import { MetaTags } from '../components/layout/OGgraph';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import useAuthContext from '../context/useAuthContext';
@@ -102,6 +103,7 @@ const CheckoutPage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags title="Checkout" description="Complete your order securely." noindex />
       <div className="container mx-auto xl:px-24 px-4 py-8">
         <h1 className="text-2xl md:text-3xl font-bold text-blue-900 mb-8">Checkout</h1>
 

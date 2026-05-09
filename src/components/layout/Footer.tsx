@@ -99,7 +99,7 @@ const Footer: React.FC = () => {
                 <Phone className="flex-none h-5 w-5 mr-2 text-blue-200" />
                 <span className="text-blue-200">{appName.name}</span>
               </li>
-              <li className="hidden flexitems-center">
+              <li className="hidden">
                 <Mail className="flex-none h-5 w-5 mr-2 text-blue-200" />
                 <a href={`mailto:${appName.email}`} className="text-blue-200 whitespace-pre-wrap hover:text-white transition-colors">
                   {appName.email}

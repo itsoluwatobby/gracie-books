@@ -14,10 +14,10 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
   const { addToCart } = useCartContext();
   const [isImageDisplayed, setIsImageDisplayed] = useState(true);
   
-  const handleAddToCart = async (e: React.MouseEvent) => {
+  const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    await addToCart(book, 1);
+    addToCart(book, 1);
   };
 
   return (
@@ -29,12 +29,12 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
         <div className="relative h-56 perspective-1000">
           <div className="absolute inset-0 transform-gpu transition-transform duration-500 hover:rotate-y-4 hover:-translate-y-0.5 hover:scale-[1.005] hover:shadow-xl rounded-b-md">
             {/* 3D Book Container with Spine & Cover */}
-            <div className="relative w-full h-full preserve-3d group flexitems-center gap-0.5">
+            <div className="relative w-full h-full preserve-3d group flex items-center gap-0.5">
               <img
                 src={isImageDisplayed ? book?.coverImage : book?.icon}
                 alt={book.title}
                 onError={() => setIsImageDisplayed(false)}
-                className="w-full h-full shrink0 object-scale-down"
+                className="w-full h-full shrink-0 object-scale-down"
               />
             
               {/* Inner Shadow Overlay for Depth */}
@@ -55,7 +55,7 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
         </div>
         
         <div className="p-2 flex-grow flex flex-col">
-          <h3 className="font-medium text-base max-xs:text-sm line-clamp-1 w-[80%]">{book.title}</h3>
+          <h3 className="font-medium text-base max-xs:text-sm line-clamp-1 min-w-0 flex-1">{book.title}</h3>
           <p className="text-gray-600 text-sm max-xs:text-xs mb-1">by {book?.authors[0]}</p>
           
           <div className="mt-auto">
@@ -111,10 +111,10 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
             <div className="flex max-xs:flex-col max-xs:gap-1.5 mt-1.5 justify-between w-full">
               <p className="xs:self-end text-sm font-semibold text-blue-900">{helper.formatPrice(book.price)}</p>
               
-              <Button 
-                size="sm" 
-                variant="primary" 
-                className="self-end flex items-center w-fit max-xs:w-[50%] max-xs:justify-center space-x-1 rounded-full px-3 max-xs:px-2.5"
+              <Button
+                size="sm"
+                variant="primary"
+                className="self-end flex items-center w-fit max-xs:w-1/2 max-xs:justify-center space-x-1 rounded-full px-3 max-xs:px-2.5"
                 onClick={handleAddToCart}
                 disabled={book.stockQuantity === 0}
               >

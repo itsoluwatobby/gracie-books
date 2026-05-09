@@ -6,6 +6,7 @@ import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
 import { userAuthenticationAPI } from '../composables/auth';
 import toast from 'react-hot-toast';
+import { MetaTags } from '../components/layout/OGgraph';
 
 const ForgotPasswordPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -84,6 +85,11 @@ const ForgotPasswordPage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags
+        title="Forgot Password"
+        description="Reset your password to regain access to your account."
+        noindex
+      />
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
           <div className="p-6">

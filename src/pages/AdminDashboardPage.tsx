@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronDown, ChevronUp, Menu } from 'lucide-react';
 import Layout from '../components/layout/Layout';
+import { MetaTags } from '../components/layout/OGgraph';
 import { ModalSelections, OrderStatusEnum } from '../utils/constants';
 import { helper } from '../utils/helper';
 import {
@@ -134,6 +135,7 @@ const AdminDashboardPage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags title="Admin Dashboard" description="Manage books, orders, and users." noindex />
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 transition-all duration-300 no-scrollbar">
         <div className="xl:px-16 w-full mx-auto sm:px-10 px-4 py-8">
           {/* Header */}

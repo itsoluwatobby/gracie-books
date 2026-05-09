@@ -11,6 +11,7 @@ import { userAuthenticationAPI } from '../composables/auth';
 import toast from 'react-hot-toast';
 import { userService } from '../services';
 import { GoogleSignupbutton } from '../components/ui/GoogleSignupbutton';
+import { MetaTags } from '../components/layout/OGgraph';
 
 const initDetails = {
   fullName: "",
@@ -129,6 +130,11 @@ const SignUpPage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags
+        title="Create Account"
+        description="Join us and start your reading journey. Create a free account to save favourites, track orders, and more."
+        noindex
+      />
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
           <div className="bg-blue-900 py-4 px-6 flex items-center justify-center">

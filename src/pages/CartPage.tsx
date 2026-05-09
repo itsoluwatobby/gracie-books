@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, ShoppingBag, ChevronLeft, X } from 'lucide-react';
 import Layout from '../components/layout/Layout';
+import { MetaTags } from '../components/layout/OGgraph';
 import Button from '../components/ui/Button';
 import useCartContext from '../context/useCartContext';
 import useAuthContext from '../context/useAuthContext';
@@ -21,7 +22,7 @@ const CartPage: React.FC = () => {
   const [couponApplied, setCouponApplied] = useState(false);
   const [error, setError] = useState('');
 
-  const [isImageDisplayed, setIsImageDisplayed] = useState(true);
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
 
   const handleApplyCoupon = () => {
     if (!couponCode) {
@@ -62,6 +63,8 @@ const CartPage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags title="Shopping Cart" description="Review your selected books and proceed to checkout." noindex />
+      
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6">Your Shopping Cart</h1>
 
@@ -105,10 +108,10 @@ const CartPage: React.FC = () => {
                       {items.map((item: CartItem) => (
                         <div key={item.book.id} className="py-4 flex">
                           <div className="w-20 h-28 bg-gray-100 rounded overflow-hidden mr-4">
-                            <img 
-                              src={isImageDisplayed ? item.book?.coverImage : item.book?.icon}
+                            <img
+                              src={failedImages.has(item.book.id) ? item.book?.icon : item.book?.coverImage}
                               alt={item.book?.title}
-                              onError={() => setIsImageDisplayed(false)}
+                              onError={() => setFailedImages(prev => new Set(prev).add(item.book.id))}
                               className="w-full h-full object-cover"
                             />
                           </div>

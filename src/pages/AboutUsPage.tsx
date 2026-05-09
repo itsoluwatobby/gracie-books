@@ -4,12 +4,18 @@ import Layout from '../components/layout/Layout';
 import useAuthContext from '../context/useAuthContext';
 import WhatWeStandFor from '../components/WhatWeStandFor';
 import HowWeWork from '../components/HowWeWork';
+import { MetaTags } from '../components/layout/OGgraph';
 
 const AboutUsPage: React.FC = () => {
   const { appName } = useAuthContext() as AuthContextType;
 
   return (
     <Layout>
+      <MetaTags
+        title="About Us"
+        description="Learn about our mission, values, and passion for connecting readers with great books."
+        keywords="about us, book store, our mission, book lovers"
+      />
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-lg p-8 md:p-12 mb-12">

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { User, MapPin, CreditCard as Edit2, Save, X } from 'lucide-react';
 import Layout from '../components/layout/Layout';
+import { MetaTags } from '../components/layout/OGgraph';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import useAuthContext from '../context/useAuthContext';
@@ -85,6 +86,7 @@ const ProfilePage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags title="My Profile" description="Manage your account details and preferences." noindex />
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-5xl mx-auto">
           <div className="flex justify-between items-center mb-8">

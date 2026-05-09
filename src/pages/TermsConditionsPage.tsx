@@ -2,12 +2,18 @@ import React from 'react';
 import { AlertTriangle, Shield, Truck, CreditCard, Clock, BookOpen } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import useAuthContext from '../context/useAuthContext';
+import { MetaTags } from '../components/layout/OGgraph';
 
 const TermsConditionsPage: React.FC = () => {
   const { appName } = useAuthContext() as AuthContextType;
 
   return (
     <Layout>
+      <MetaTags
+        title="Terms & Conditions"
+        description="Read our terms and conditions, shipping policy, and customer service guidelines."
+        keywords="terms and conditions, shipping policy, returns, privacy"
+      />
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}

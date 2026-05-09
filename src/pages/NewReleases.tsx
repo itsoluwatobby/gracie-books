@@ -4,6 +4,7 @@ import BookGrid from '../components/books/BookGrid';
 import useBooksContext from '../context/useBooksContext';
 import BookCardLoading from '../components/Loaders/BookCardLoading';
 import { useGetBooks } from '../hooks/useGetBooks';
+import { MetaTags } from '../components/layout/OGgraph';
 
 const NewReleasesPage: React.FC = () => {
   const { books } = useBooksContext() as BookContextType;
@@ -23,6 +24,11 @@ const NewReleasesPage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags
+        title="New Book Releases"
+        description="Be among the first to read the latest and most anticipated titles. Fresh releases updated regularly."
+        keywords="new books, new releases, latest books, recently published, new arrivals"
+      />
       <div className="container lg:max-w-7xl mx-auto px-2 py-8">
         <h1 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6">
           New Books

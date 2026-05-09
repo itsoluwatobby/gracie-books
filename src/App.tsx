@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import { HelmetProvider } from 'react-helmet-async';
 import {
   AdminDashboardPage,
   BookDetailPage,
@@ -36,60 +37,61 @@ import { BooksProvider } from './context/BooksContext';
 function App() {
 
   return (
-    <main>
-      <Router>
-        <AuthProvider>
-          <BooksProvider>
-            <CartProvider>
-              <Routes>
-                <Route path={PageRoutes.home} element={<HomePage />} />
-                <Route path={PageRoutes.books} element={<BooksPage />} />
-                <Route path={`${PageRoutes.books}/:id`} element={<BookDetailPage />} />
-                <Route path={PageRoutes.cart} element={<CartPage />} />
-                
-                <Route path="/" element={<ProtectedRoutes />}>
-                
-                  <Route path={PageRoutes.checkout} element={<CheckoutPage />} />
-                  <Route path={`${PageRoutes.profile}/:userId`} element={<ProfilePage />} />
-                  <Route path={PageRoutes.orders} element={<OrdersPage />} />
-                  <Route path={`${PageRoutes.orders}/:id`} element={<OrderDetailPage />} />
+    <HelmetProvider>
+      <main>
+        <Router>
+          <AuthProvider>
+            <BooksProvider>
+              <CartProvider>
+                <Routes>
+                  <Route path={PageRoutes.home} element={<HomePage />} />
+                  <Route path={PageRoutes.books} element={<BooksPage />} />
+                  <Route path={`${PageRoutes.books}/:id`} element={<BookDetailPage />} />
+                  <Route path={PageRoutes.cart} element={<CartPage />} />
                   
-                  <Route path="/" element={<RoutePrivilege />}>
-                    <Route path={PageRoutes.dashboard} element={<AdminDashboardPage />} />
+                  <Route path="/" element={<ProtectedRoutes />}>
+                  
+                    <Route path={PageRoutes.checkout} element={<CheckoutPage />} />
+                    <Route path={`${PageRoutes.profile}/:userId`} element={<ProfilePage />} />
+                    <Route path={PageRoutes.orders} element={<OrdersPage />} />
+                    <Route path={`${PageRoutes.orders}/:id`} element={<OrderDetailPage />} />
+                    
+                    <Route path="/" element={<RoutePrivilege />}>
+                      <Route path={PageRoutes.dashboard} element={<AdminDashboardPage />} />
+                    </Route>
+                  
                   </Route>
-                
-                </Route>
 
-                <Route path="/" element={<AuthLayout />}>
-                  <Route path={PageRoutes.auth.login} element={<LoginPage />} />
-                  <Route path={PageRoutes.auth.signup} element={<SignUpPage />} />
-                  <Route path={PageRoutes.auth.forgotPassword} element={<ForgotPasswordPage />} />
-                  <Route path={PageRoutes.auth.newPassword} element={<NewPasswordPage />} />
-                </Route>
+                  <Route path="/" element={<AuthLayout />}>
+                    <Route path={PageRoutes.auth.login} element={<LoginPage />} />
+                    <Route path={PageRoutes.auth.signup} element={<SignUpPage />} />
+                    <Route path={PageRoutes.auth.forgotPassword} element={<ForgotPasswordPage />} />
+                    <Route path={PageRoutes.auth.newPassword} element={<NewPasswordPage />} />
+                  </Route>
 
-                <Route path={PageRoutes.search} element={<SearchPage />} />
-                <Route path={PageRoutes.newRelease} element={<NewReleases />} />
-                <Route path={PageRoutes.genres} element={<GenrePage />} />
-      
-                <Route path={PageRoutes.aboutUs} element={<AboutUsPage />} />
-                <Route path={PageRoutes.termsAndConditions} element={<TermsConditionsPage />} />
+                  <Route path={PageRoutes.search} element={<SearchPage />} />
+                  <Route path={PageRoutes.newRelease} element={<NewReleases />} />
+                  <Route path={PageRoutes.genres} element={<GenrePage />} />
+        
+                  <Route path={PageRoutes.aboutUs} element={<AboutUsPage />} />
+                  <Route path={PageRoutes.termsAndConditions} element={<TermsConditionsPage />} />
 
-                <Route path={PageRoutes.comingSoon} element={<ComingSoonPage />} />
+                  <Route path={PageRoutes.comingSoon} element={<ComingSoonPage />} />
 
-                <Route path={PageRoutes.auth.unauthorised} element={<Unauthorised />} />
+                  <Route path={PageRoutes.auth.unauthorised} element={<Unauthorised />} />
 
-                <Route path="*" element={<PageNotFound />} />
-              </Routes>
-            </CartProvider>
-          </BooksProvider>
-        </AuthProvider>
+                  <Route path="*" element={<PageNotFound />} />
+                </Routes>
+              </CartProvider>
+            </BooksProvider>
+          </AuthProvider>
 
-        <Toaster />
-      </Router>
+          <Toaster />
+        </Router>
 
-      <LoadingUI />
-    </main>
+        <LoadingUI />
+      </main>
+    </HelmetProvider>
   );
 }
-
 export default App;

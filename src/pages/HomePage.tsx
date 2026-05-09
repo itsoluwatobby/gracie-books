@@ -10,6 +10,7 @@ import { useGetBooks } from '../hooks/useGetBooks';
 import BookCardLoading from '../components/Loaders/BookCardLoading';
 import WhatWeStandFor from '../components/WhatWeStandFor';
 import HowWeWork from '../components/HowWeWork';
+import { MetaTags } from '../components/layout/OGgraph';
 
 const HomePage: React.FC = () => {
   const { appName } = useAuthContext() as AuthContextType;
@@ -30,6 +31,12 @@ const HomePage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags
+        title="Discover Your Next Favorite Book"
+        description="From bestsellers to hidden gems, find the perfect books for your reading journey. Quality literature at competitive prices."
+        keywords="buy books online, bestsellers, new releases, book store, fiction, non-fiction"
+      />
+
       {/* Hero Section */}
       <section className="bg-blue-900 text-white relative overflow-hidden lg:px-10">
         <div className="absolute inset-0 opacity-20">

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { Package, CheckCircle, ArrowLeft, MapPin } from 'lucide-react';
 import Layout from '../components/layout/Layout';
+import { MetaTags } from '../components/layout/OGgraph';
 import Button from '../components/ui/Button';
 import useAuthContext from '../context/useAuthContext';
 import { GetStatusIcon } from '../components/orders/StatusIcons';
@@ -72,6 +73,7 @@ const OrderDetailPage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags title={`Order #${order.id}`} description="View your order details and tracking status." noindex />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-6">
@@ -126,10 +128,10 @@ const OrderDetailPage: React.FC = () => {
                     </div>
                   
                     {/* {index < getTrackingSteps(order.status).length - 1 && ( */}
-                    {index < getTrackingSteps(order.status).length - 1 && ( 
-                      <div className={`lasthidden ml-4 bsolute left-4 w-0.5 h-5 mt1 ${
+                    {index < getTrackingSteps(order.status).length - 1 && (
+                      <div className={`ml-[15px] w-0.5 h-6 my-1 ${
                         step.completed ? 'bg-blue-600' : 'bg-gray-200'
-                      }`} style={{ top: `${index * 6 + 2}rem` }}></div>
+                      }`}></div>
                     )}
                   </div>
                 ))}
