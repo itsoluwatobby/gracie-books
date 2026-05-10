@@ -5,7 +5,7 @@ import useAuthContext from '../context/useAuthContext';
 import { MetaTags } from '../components/layout/OGgraph';
 
 const TermsConditionsPage: React.FC = () => {
-  const { appName } = useAuthContext() as AuthContextType;
+  const { app } = useAuthContext() as AuthContextType;
 
   return (
     <Layout>
@@ -21,7 +21,7 @@ const TermsConditionsPage: React.FC = () => {
             <div className="text-center">
               <Shield size={48} className="mx-auto mb-4" />
               <h1 className="text-3xl md:text-4xl font-bold mb-2">Terms & Conditions</h1>
-              <p className="text-blue-200">{appName.name} - Thrift & Preloved Books</p>
+              <p className="text-blue-200">{app.name} - Thrift & Preloved Books</p>
               <p className="text-sm text-blue-300 mt-2">Last updated: {new Date().toLocaleDateString()}</p>
             </div>
           </div>
@@ -33,7 +33,7 @@ const TermsConditionsPage: React.FC = () => {
               <div>
                 <h2 className="text-lg font-semibold text-red-800 mb-2">Important Notice</h2>
                 <p className="text-red-700">
-                  By using {appName.name}' services, you agree to these terms and conditions. 
+                  By using {app.name}' services, you agree to these terms and conditions. 
                   Please read them carefully before making any purchases.
                 </p>
               </div>
@@ -50,7 +50,7 @@ const TermsConditionsPage: React.FC = () => {
               </div>
               <div className="prose max-w-none text-gray-700">
                 <p className="mb-4">
-                  {appName.name} specializes in <strong>thrift & preloved books 🤗</strong>. We are committed to 
+                  {app.name} specializes in <strong>thrift & preloved books 🤗</strong>. We are committed to 
                   providing quality second-hand books at affordable prices while promoting sustainability 
                   and environmental responsibility.
                 </p>
@@ -181,7 +181,7 @@ const TermsConditionsPage: React.FC = () => {
               <h2 className="text-xl font-semibold text-blue-900 mb-4">Limitation of Liability</h2>
               <div className="prose max-w-none text-gray-700">
                 <p>
-                  {appName.name}' liability is limited to the purchase price of the item(s) in question. 
+                  {app.name}' liability is limited to the purchase price of the item(s) in question. 
                   We are not responsible for any indirect, incidental, or consequential damages. 
                   Our maximum liability shall not exceed the total amount paid for your order.
                 </p>
@@ -193,7 +193,7 @@ const TermsConditionsPage: React.FC = () => {
               <h2 className="text-xl font-semibold text-blue-900 mb-4">Changes to Terms</h2>
               <div className="prose max-w-none text-gray-700">
                 <p>
-                  {appName.name} reserves the right to modify these terms and conditions at any time. 
+                  {app.name} reserves the right to modify these terms and conditions at any time. 
                   Changes will be posted on this page with an updated revision date. 
                   Continued use of our services after changes constitutes acceptance of the new terms.
                 </p>
@@ -208,9 +208,9 @@ const TermsConditionsPage: React.FC = () => {
                   If you have any questions about these Terms & Conditions, please contact us:
                 </p>
                 <ul className="list-none space-y-2">
-                  <li><strong>Email:</strong> {appName.email}</li>
+                  <li><strong>Email:</strong> {app.email}</li>
                   {/* <li><strong>Phone:</strong> (123) 456-7890</li> */}
-                  <li><strong>Address:</strong> {appName.address}</li>
+                  <li><strong>Address:</strong> {app.address}</li>
                 </ul>
               </div>
             </section>

@@ -7,7 +7,7 @@ import { StorageKey } from '../utils/constants';
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [appName, setAppName] = useState<AppConfig>(
+  const [app, setApp] = useState<AppConfig>(
     {
       name: import.meta.env.VITE_NAME,
       email: import.meta.env.VITE_EMAIL,
@@ -53,11 +53,11 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   }, [user])
 
   const value = {
-    appName,
+    app,
     isAuthenticated,
     loading,
     user,
-    setAppName,
+    setApp,
     setUser,
     setLoading,
     setIsAuthenticated,

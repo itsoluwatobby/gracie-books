@@ -27,10 +27,10 @@ export const MetaTags = ({
   keywords,
   noindex = false,
 }: MetaProps) => {
-  const { appName } = useAuthContext();
+  const { app } = useAuthContext();
   const { pathname } = useLocation();
 
-  const siteName = appName.name;
+  const siteName = app.name;
   const fullTitle = `${title} | ${siteName}`;
   const canonicalUrl = `${SITE_URL}${pathname}`;
 

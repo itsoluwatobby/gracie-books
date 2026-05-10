@@ -25,7 +25,7 @@ const SignUpPage: React.FC = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
-  const { appName, setUser, setIsAuthenticated } = useAuthContext();
+  const { app, setUser, setIsAuthenticated } = useAuthContext();
 
   const navigate = useNavigate();
 
@@ -139,7 +139,7 @@ const SignUpPage: React.FC = () => {
         <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
           <div className="bg-blue-900 py-4 px-6 flex items-center justify-center">
             <BookOpen className="text-white mr-2" size={24} />
-            <h1 className="text-xl font-bold text-white">{appName.name}</h1>
+            <h1 className="text-xl font-bold text-white">{app.name}</h1>
           </div>
           
           <div className="p-6 flex flex-col">

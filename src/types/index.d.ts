@@ -19,9 +19,9 @@ type AppConfig = {
 interface AuthContextType {
   user: Partial<UserInfo> | null;
   isAuthenticated: boolean;
-  appName: AppConfig;
+  app: AppConfig;
   loading: boolean;
-  setAppName: React.Dispatch<React.SetStateAction<AppConfig>>;
+  setApp: React.Dispatch<React.SetStateAction<AppConfig>>;
   setUser: React.Dispatch<React.SetStateAction<Partial<UserInfo> | null>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;

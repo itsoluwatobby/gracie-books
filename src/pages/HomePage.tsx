@@ -13,7 +13,7 @@ import HowWeWork from '../components/HowWeWork';
 import { MetaTags } from '../components/layout/OGgraph';
 
 const HomePage: React.FC = () => {
-  const { appName } = useAuthContext() as AuthContextType;
+  const { app } = useAuthContext() as AuthContextType;
 
   const pageSize = 10;
   const fiveDaysAgo = new Date();
@@ -173,7 +173,7 @@ const HomePage: React.FC = () => {
       <section className="py-16 bg-blue-800 text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            Stay Updated with {appName.name}
+            Stay Updated with {app.name}
           </h2>
           <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
             Subscribe to our newsletter for the latest book releases, author interviews, and exclusive deals.

@@ -6,7 +6,7 @@ import SVGIcon from '../svgs/Index';
 import { PageRoutes } from '../../utils/pageRoutes';
 
 const Footer: React.FC = () => {
-  const { appName } = useAuthContext();
+  const { app } = useAuthContext();
 
   return (
     <footer className="bg-blue-900 text-white pt-12 pb-8 w-full lg:px-10">
@@ -16,20 +16,20 @@ const Footer: React.FC = () => {
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <BookOpen className="h-8 w-8" />
-              <span className="text-xl font-bold">{appName.name}</span>
+              <span className="text-xl font-bold">{app.name}</span>
             </div>
             <p className="text-blue-200 text-sm mt-2">
               Your destination for discovering your next favorite book.
               Quality literature, competitive prices, and a passion for reading.
             </p>
             <div className="flex space-x-4 pt-2">
-              <a href={appName.socials.facebook} target="_blank" className="text-white hover:text-blue-200 transition-colors">
+              <a href={app.socials.facebook} target="_blank" className="text-white hover:text-blue-200 transition-colors">
                 <SVGIcon type='Facebook' />
               </a>
-              <a href={appName.socials.twitter} target="_blank" className="text-white hover:text-blue-200 transition-colors">
+              <a href={app.socials.twitter} target="_blank" className="text-white hover:text-blue-200 transition-colors">
                 <SVGIcon type='Twitter' />
               </a>
-              <a href={appName.socials.instagram} target="_blank" className="text-white hover:text-blue-200 transition-colors">
+              <a href={app.socials.instagram} target="_blank" className="text-white hover:text-blue-200 transition-colors">
                 <SVGIcon type='Instagram' />
               </a>
             </div>
@@ -93,16 +93,16 @@ const Footer: React.FC = () => {
             <ul className="space-y-4 text-sm">
               <li className="flex items-start">
                 <MapPin className="flex-none h-5 w-5 mr-2 text-blue-200" />
-                <span className="text-blue-200">{appName.address}</span>
+                <span className="text-blue-200">{app.address}</span>
               </li>
               <li className="flex items-center">
                 <Phone className="flex-none h-5 w-5 mr-2 text-blue-200" />
-                <span className="text-blue-200">{appName.contact}</span>
+                <span className="text-blue-200">{app.contact}</span>
               </li>
               <li className="hidden">
                 <Mail className="flex-none h-5 w-5 mr-2 text-blue-200" />
-                <a href={`mailto:${appName.email}`} className="text-blue-200 whitespace-pre-wrap hover:text-white transition-colors">
-                  {appName.email}
+                <a href={`mailto:${app.email}`} className="text-blue-200 whitespace-pre-wrap hover:text-white transition-colors">
+                  {app.email}
                 </a>
               </li>
               <li className="pt-2 hidden">
@@ -127,7 +127,7 @@ const Footer: React.FC = () => {
 
         <div className="border-t border-blue-800 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-blue-200 text-sm">
-            &copy; {new Date().getFullYear()} {appName.name}. All rights reserved.
+            &copy; {new Date().getFullYear()} {app.name}. All rights reserved.
           </p>
           <div className="mt-4 md:mt-0 hidden">
             <ul className="flex space-x-4">

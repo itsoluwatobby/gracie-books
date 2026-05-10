@@ -7,7 +7,7 @@ import HowWeWork from '../components/HowWeWork';
 import { MetaTags } from '../components/layout/OGgraph';
 
 const AboutUsPage: React.FC = () => {
-  const { appName } = useAuthContext() as AuthContextType;
+  const { app } = useAuthContext() as AuthContextType;
 
   return (
     <Layout>
@@ -26,7 +26,7 @@ const AboutUsPage: React.FC = () => {
               </div>
             </div>
             <h1 className="text-3xl md:text-5xl font-bold mb-4">
-              About {appName.name} 🤗
+              About {app.name} 🤗
             </h1>
             <p className="text-xl md:text-2xl text-blue-100 mb-6">
               Your destination for thrift & preloved books
@@ -45,7 +45,7 @@ const AboutUsPage: React.FC = () => {
             <div className="bg-white rounded-lg shadow-md p-8">
               <div className="prose max-w-none">
                 <p className="text-lg text-gray-700 mb-4">
-                  {appName.name} was born from a simple belief: great books shouldn't be expensive, and good books shouldn't go to waste. 
+                  {app.name} was born from a simple belief: great books shouldn't be expensive, and good books shouldn't go to waste. 
                   We started as a small community initiative to rescue preloved books and give them new homes where they can continue 
                   to spark imagination and knowledge.
                 </p>
@@ -103,7 +103,7 @@ const AboutUsPage: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
-                href={`mailto:${appName.email}`} 
+                href={`mailto:${app.email}`} 
                 className="bg-blue-900 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition-colors"
               >
                 Contact Us

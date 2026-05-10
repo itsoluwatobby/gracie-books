@@ -17,7 +17,7 @@ const Header: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const {
     user,
-    appName,
+    app,
     isAuthenticated,
     setUser,
     setIsAuthenticated,
@@ -85,7 +85,7 @@ const Header: React.FC = () => {
           {/* Logo and Brand */}
           <Link to={PageRoutes.home} className="flex items-center space-x-2 mr-4 flex-shrink-0">
             <BookOpen className="h-7 w-7" />
-            <span className="text-lg font-bold">{appName.name}</span>
+            <span className="text-lg font-bold">{app.name}</span>
           </Link>
 
           {/* Desktop Navigation */}
