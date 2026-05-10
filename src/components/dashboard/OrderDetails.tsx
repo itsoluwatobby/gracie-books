@@ -105,9 +105,6 @@ export default function OrderDetails(
             <div className="text-lg font-bold text-blue-900">
               {order.shippingAddress.fullName || 'Unknown Customer'}
             </div>
-            {order.shippingAddress?.fullName && (
-              <div className="text-sm text-blue-600 mt-1">{order.shippingAddress.fullName}</div>
-            )}
           </div>
 
           <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border border-green-200">

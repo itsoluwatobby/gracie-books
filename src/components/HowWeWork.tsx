@@ -8,7 +8,7 @@ const HowWeWork: React.FC = () => {
       <h2 className="text-2xl md:text-3xl font-bold text-blue-900 mb-8 text-center">How We Work</h2>
       <div className="bg-white rounded-lg shadow-md p-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="flex items-start">
+          <div className="flex items-start p-4 rounded-lg hover:bg-gray-50 transition-colors duration-200">
             <div className="bg-blue-100 p-3 rounded-lg mr-4 flex-shrink-0">
               <Truck size={24} className="text-blue-700" />
             </div>
@@ -21,7 +21,7 @@ const HowWeWork: React.FC = () => {
             </div>
           </div>
           
-          <div className="flex items-start">
+          <div className="flex items-start p-4 rounded-lg hover:bg-gray-50 transition-colors duration-200">
             <div className="bg-green-100 p-3 rounded-lg mr-4 flex-shrink-0">
               <Shield size={24} className="text-green-700" />
             </div>
@@ -34,7 +34,7 @@ const HowWeWork: React.FC = () => {
             </div>
           </div>
           
-          <div className="flex items-start">
+          <div className="flex items-start p-4 rounded-lg hover:bg-gray-50 transition-colors duration-200">
             <div className="bg-orange-100 p-3 rounded-lg mr-4 flex-shrink-0">
               <Package size={24} className="text-orange-700" />
             </div>
@@ -47,7 +47,7 @@ const HowWeWork: React.FC = () => {
             </div>
           </div>
           
-          <div className="flex items-start">
+          <div className="flex items-start p-4 rounded-lg hover:bg-gray-50 transition-colors duration-200">
             <div className="bg-red-100 p-3 rounded-lg mr-4 flex-shrink-0">
               <BookOpen size={24} className="text-red-700" />
             </div>

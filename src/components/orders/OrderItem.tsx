@@ -10,24 +10,24 @@ interface OrderItemProps {
 }
 
 const OrderItem: React.FC<OrderItemProps> = ({ order }) => {
-  const [isImageDisplayed, setIsImageDisplayed] = useState(true);
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-4">
-      <div className="flex flex-col md:flex-row justify-between gap-4">
+    <div className="bg-white rounded-lg shadow-md p-6 mb-4 hover:shadow-lg transition-shadow duration-200">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <div>
           <div className="text-xs text-gray-500 mb-0.5">Order ID</div>
-          <div className="font-medium">#{order.id}</div>
+          <div className="font-medium text-sm truncate max-w-[140px]">#{order.id}</div>
         </div>
         <div>
           <div className="text-xs text-gray-500 mb-0.5">Order Date</div>
-          <div className="font-medium">{helper.formatTime(order.createdAt)}</div>
+          <div className="font-medium text-sm">{helper.formatTime(order.createdAt)}</div>
         </div>
         <div>
           <div className="text-xs text-gray-500 mb-0.5">Total Amount</div>
-          <div className="font-medium">{helper.formatPrice(order.totalAmount)}</div>
+          <div className="font-medium text-sm">{helper.formatPrice(order.totalAmount)}</div>
         </div>
-        <div className='mb-4'>
+        <div>
           <div className="text-xs text-gray-500 mb-0.5">Status</div>
           <div className="flex items-center space-x-2">
             <GetStatusIcon status={order.status} />
@@ -46,11 +46,11 @@ const OrderItem: React.FC<OrderItemProps> = ({ order }) => {
               <div className="flex items-center">
                 <div className="bg-gray-100 w-14 h-12 flex items-center justify-center rounded-sm mr-4">
                   {
-                    isImageDisplayed && (item.book?.coverImage || item.book?.icon) ?
-                      <img 
-                        src={item.book?.icon ? item.book?.icon : item.book?.coverImage}
+                    !failedImages.has(item.book?.id) && (item.book?.coverImage || item.book?.icon) ?
+                      <img
+                        src={failedImages.has(item.book?.id) ? item.book?.icon : item.book?.coverImage}
                         alt={item.book?.title}
-                        onError={() => setIsImageDisplayed(false)}
+                        onError={() => setFailedImages(prev => new Set(prev).add(item.book?.id))}
                         className="w-full h-full object-cover rounded-sm"
                       />
                     :
@@ -70,12 +70,12 @@ const OrderItem: React.FC<OrderItemProps> = ({ order }) => {
         </div>
       </div>
 
-      <div className="mt-6 text-right">
-        <Link 
-          to={`/orders/${order.id}`} 
-          className="text-blue-800 hover:text-blue-600 font-medium"
+      <div className="mt-4 flex justify-end">
+        <Link
+          to={`/orders/${order.id}`}
+          className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-700 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors duration-200"
         >
-          View Order Details
+          View Details →
         </Link>
       </div>
     </div>

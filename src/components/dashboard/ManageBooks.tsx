@@ -3,7 +3,8 @@ import { bookServices } from '../../services';
 import { TableRow } from './TableRow';
 import { LoadingBook } from './LoadingBook';
 import toast from 'react-hot-toast';
-import { deleteImageFromStorage } from '../../supabase/config';
+// import { deleteImageFromStorage } from '../../supabase/config';
+import { deleteFromFirebaseStorage } from '../../firebase/config';
 
 type ManageBooksProps = {
   books: Book[];
@@ -55,7 +56,7 @@ export default function ManageBooks(
     try {
       await bookServices.removeBook(bookId);
       if (coverImage) {
-        await deleteImageFromStorage(coverImage);
+        await deleteFromFirebaseStorage(coverImage);
       }
       setBooks((prev) => prev?.filter((book) => book.id !== bookId));
     } catch {
@@ -81,7 +82,7 @@ export default function ManageBooks(
                   TableHead.map((head) => (
                     <th scope="col" 
                     key={head}
-                    className="px-6 py-3 textleft text-xs font-medium text-gray-500 uppercase tracking-wider textcenter">
+                    className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                       {head}
                     </th>
                   ))
@@ -96,16 +97,16 @@ export default function ManageBooks(
                 ))
                 :
                 isError ? (
-                  <tr className='py-4 px-6 h-20 text-base text-center'>
-                  <p className='text-red-400 translate-x-[50%]'>
-                    {errMsg}
-                  </p>
-                </tr>
-                ) 
+                  <tr>
+                    <td colSpan={6} className="py-10 text-center text-red-400">
+                      {errMsg}
+                    </td>
+                  </tr>
+                )
                 :
                 books?.length ? (
                   books.map(book => (
-                    <TableRow 
+                    <TableRow
                       key={book.id}
                       book={book}
                       handleDelete={handleDelete}
@@ -113,11 +114,13 @@ export default function ManageBooks(
                       formatCurrency={formatCurrency}
                     />
                   ))
-                ) : <tr className='py-4 px-6 h-20 text-xl text-center'>
-                  <p className='translate-x-[50%]'>
-                    No books at the moment
-                  </p>
-                </tr>
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="py-10 text-center text-gray-500">
+                      No books at the moment
+                    </td>
+                  </tr>
+                )
               }
             </tbody>
           </table>

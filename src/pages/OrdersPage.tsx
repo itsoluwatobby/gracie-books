@@ -28,8 +28,7 @@ const OrdersPage: React.FC = () => {
       try {
         setIsLoading(true);
         const orderItems = await orderService.getOrders(user.id!);
-        if (orderItems?.length) setOrders(orderItems);
-        else throw Error("An error occurred");
+        setOrders(orderItems ?? []);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -46,7 +45,7 @@ const OrdersPage: React.FC = () => {
   if (!isAuthenticated || error) {
     return (
       <Layout>
-        <div className="container mx-auto px-4 py-12 xl:max-w-[65vw]">
+        <div className="container mx-auto px-4 py-12 max-w-5xl">
           <div className="bg-white rounded-lg shadow-md p-8 text-center flex flex-col items-center gap-4">
           {
             !isAuthenticated ?
@@ -81,7 +80,7 @@ const OrdersPage: React.FC = () => {
         isLoading ?
           <LoadingContent />
         : (
-          <div className="container mx-auto px-4 py-8 xl:max-w-[75vw]">
+          <div className="container mx-auto px-4 py-8 max-w-5xl">
             <h1 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6">Your Orders</h1>
 
             {orders.length === 0 ? (

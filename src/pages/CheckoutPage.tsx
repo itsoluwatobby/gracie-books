@@ -104,13 +104,13 @@ const CheckoutPage: React.FC = () => {
   return (
     <Layout>
       <MetaTags title="Checkout" description="Complete your order securely." noindex />
-      <div className="container mx-auto xl:px-24 px-4 py-8">
+      <div className="container mx-auto px-4 xl:px-16 py-8">
         <h1 className="text-2xl md:text-3xl font-bold text-blue-900 mb-8">Checkout</h1>
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Checkout Form */}
           <div className="flex-grow">
-            <form onSubmit={handleSubmit}>
+            <form id="checkout-form" onSubmit={handleSubmit}>
               {/* Shipping Information */}
               <div className="bg-white rounded-lg shadow-md p-6 flex flex-col gap-8">
                 <div className="flex items-center mb-4">
@@ -118,7 +118,7 @@ const CheckoutPage: React.FC = () => {
                   <h2 className="text-lg font-semibold">Shipping Information</h2>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 xl:px-8 xl:gap-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                   <Input
                     label="Full Name"
                     name="fullName"

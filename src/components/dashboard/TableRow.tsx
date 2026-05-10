@@ -63,7 +63,7 @@ export const TableRow: React.FC<TableRowProps> = (
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
         {book.authors.join(',')}
       </td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 textcenter">
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
         {formatCurrency(book.price)}
       </td>
       <td className="px-6 py-4 whitespace-nowrap max-sm:text-center">

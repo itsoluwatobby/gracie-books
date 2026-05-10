@@ -193,11 +193,7 @@ const OrderDetailPage: React.FC = () => {
                 </div> */}
                 <div className="flex justify-between">
                   <span className="text-gray-600">Shipping</span>
-                  <span>${(order.totalAmount > 100 ? 0 : 5.99).toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Tax</span>
-                  <span>${(order.totalAmount * 0.07).toFixed(2)}</span>
+                  <span>{order.totalAmount > 100 ? 'Free' : helper.formatPrice(5.99)}</span>
                 </div>
                 <div className="border-t pt-3 flex justify-between font-semibold">
                   <span>Total</span>

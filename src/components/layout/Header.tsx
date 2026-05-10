@@ -62,22 +62,38 @@ const Header: React.FC = () => {
     }
   }
 
+  const navLink = (to: string, label: string) => {
+    const isActive = pathname === to;
+    return (
+      <Link
+        to={to}
+        className={`transition-colors hover:text-white text-sm font-medium pb-0.5 ${
+          isActive
+            ? 'text-white border-b-2 border-white'
+            : 'text-blue-200 hover:border-b-2 hover:border-white/50'
+        }`}
+      >
+        {label}
+      </Link>
+    );
+  };
+
   return (
     <header className="bg-blue-900 text-white shadow-md sticky top-0 z-50 lg:px-6">
-      <div className="xl:px-16 w-full sm:px-10 mx-auto px-5 py-6">
+      <div className="xl:px-16 w-full sm:px-10 mx-auto px-5 py-4">
         <div className="flex items-center justify-between">
           {/* Logo and Brand */}
-          <Link to={PageRoutes.home} className="flex items-center space-x-2 mr-4">
-            <BookOpen className="h-8 w-8" />
-            <span className="text-xl font-bold">{appName.name}</span>
+          <Link to={PageRoutes.home} className="flex items-center space-x-2 mr-4 flex-shrink-0">
+            <BookOpen className="h-7 w-7" />
+            <span className="text-lg font-bold">{appName.name}</span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
-            <Link to={PageRoutes.home} className={`hover:text-blue-200 transition-colors ${pathname !== PageRoutes.home ? 'text-blue-100' : ''}`}>Home</Link>
-            <Link to={PageRoutes.books} className={`hover:text-blue-200 transition-colors ${pathname !== PageRoutes.books ? 'text-blue-100' : ''}`}>Browse</Link>
-            <Link to={PageRoutes.genres} className={`hover:text-blue-200 transition-colors ${pathname !== PageRoutes.genres ? 'text-blue-100' : ''}`}>Genres</Link>
-            <Link to={PageRoutes.newRelease} className={`hover:text-blue-200 transition-colors ${pathname !== PageRoutes.newRelease ? 'text-blue-100' : ''}`}>New Books</Link>
+            {navLink(PageRoutes.home, 'Home')}
+            {navLink(PageRoutes.books, 'Browse')}
+            {navLink(PageRoutes.genres, 'Genres')}
+            {navLink(PageRoutes.newRelease, 'New Books')}
           </nav>
 
           {/* Search Form - Desktop */}

@@ -18,7 +18,14 @@ export default function ManageOrders(
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Manage Orders</h2>
+        <div className="flex items-center gap-3">
+          <h2 className="text-xl font-semibold">Manage Orders</h2>
+          {orders.length > 0 && (
+            <span className="text-xs bg-blue-100 text-blue-700 font-medium px-2.5 py-1 rounded-full">
+              {orders.length}
+            </span>
+          )}
+        </div>
         <Button>Export Orders</Button>
       </div>
       
@@ -48,6 +55,13 @@ export default function ManageOrders(
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
+              {!orders.length && (
+                <tr>
+                  <td colSpan={6} className="py-10 text-center text-gray-500">
+                    No orders yet
+                  </td>
+                </tr>
+              )}
               {orders.map(order => (
                 <tr key={order.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">

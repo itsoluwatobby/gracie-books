@@ -140,7 +140,7 @@ export default function AddorEdit(
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl w-[90%] max-w-3xl max-h-[95vh] overflow-hidden shadow-2xl">
+      <div className="bg-white rounded-xl w-[90%] max-w-3xl lg:max-w-4xl xl:max-w-5xl max-h-[95vh] overflow-hidden shadow-2xl">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
           <div className="flex justify-between items-center">

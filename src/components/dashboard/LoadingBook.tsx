@@ -6,8 +6,8 @@ export const LoadingBook = () => {
     <tr className="hover:bg-gray-50 text-center">
       <td className="px-6 py-4 whitespace-nowrap">
         <div className="flex items-center">
-          <div className={"h-10 w-8 flex-shrink-0 mr-3 border" + loadingClass} />
-          <div className={"text-sm font-medium text-gray-900 line-clamp-1 w-[10rem]" + loadingClass} />
+          <div className={`h-10 w-8 flex-shrink-0 mr-3 border ${loadingClass}`} />
+          <div className={`text-sm font-medium text-gray-900 line-clamp-1 w-[10rem] ${loadingClass}`} />
         </div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

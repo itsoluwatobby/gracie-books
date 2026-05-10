@@ -1,12 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Book, Building2, Calendar, DollarSign, FileText, Hash, Image, ImageIcon, Package, Star, User } from "lucide-react";
+import {
+  Book,
+  Building2,
+  Calendar,
+  DollarSign,
+  FileText,
+  Hash,
+  Image,
+  ImageIcon,
+  Package,
+  Star,
+  User,
+} from "lucide-react";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import { InitBookForm } from "../../../utils/initVariables";
 import { bookServices } from "../../../services";
 import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
-import { getSignedUploadURL, uploadWithSignedURL } from "../../../supabase/config";
+// import { getSignedUploadURL, uploadWithSignedURL } from "../../../supabase/config";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from "../../../firebase/config";
+import { nanoid } from "nanoid/non-secure";
 
 type BookFormProps = {
   editBook: Book | null;
@@ -26,8 +41,32 @@ export const BookForm: React.FC<BookFormProps> = (
   },
 ) => {
   const [isloading, setIsloading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [displayError, setDisplayError] = useState<string | undefined>(undefined);
   const [file, setFile] = useState<File>({} as File);
+
+  const uploadToFirebase = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const filename = `${nanoid(24)}_${file.name}`;
+      const storageRef = ref(storage, `books_thumbnails/${filename}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          setUploadProgress(progress);
+        },
+        (error) => reject(new Error(`Upload failed: ${error.message}`)),
+        async () => {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          resolve(downloadURL);
+        }
+      );
+    });
+  };
 
   const handleBookFormSubmit = async(e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,11 +75,13 @@ export const BookForm: React.FC<BookFormProps> = (
       setIsloading(true);
 
       if (file?.name) {
+        /* --- Supabase upload (commented out) ---
         const uploadResponse = await getSignedUploadURL(file);
         const imageData = await uploadWithSignedURL(file, uploadResponse);
+        const imageURL = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/${imageData.fullPath}`;
+        --- end Supabase upload --- */
 
-        const imageURL = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/${imageData.fullPath}`
-        console.log(imageURL)
+        const imageURL = await uploadToFirebase(file);
         bookForm.coverImage = imageURL;
         bookForm.previewImages?.unshift(imageURL);
       }
@@ -79,7 +120,7 @@ export const BookForm: React.FC<BookFormProps> = (
 
   return (
     <form onSubmit={handleBookFormSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Basic Information */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2 border-b pb-2">
@@ -87,28 +128,43 @@ export const BookForm: React.FC<BookFormProps> = (
             Basic Information
           </h3>
 
-          <label htmlFor="book_thumbnail" className="flex items-end my-3 gap-2"
-          >
+          <label htmlFor="book_thumbnail" className="flex items-end my-3 gap-2 cursor-pointer">
             <figure className="size-40 rounded-md bg-gray-100 border flex">
               {
                 (file?.size || bookForm?.coverImage || bookForm?.icon)
-                 ? <img 
+                 ? <img
                     src={file.size ? URL.createObjectURL(file) : (displayError ? bookForm?.icon : bookForm?.coverImage)}
                     // alt={bookForm.title}
                     onError={() => setDisplayError(bookForm?.icon)}
-                    className="w-full h-full object-cover rounded-md" 
+                    className="w-full h-full object-cover rounded-md"
                   />
                 : <ImageIcon size={34} className="self-center text-gray-300 mx-auto" />
               }
             </figure>
-            <input 
-              type="file" 
+            <input
+              type="file"
               id="book_thumbnail"
               hidden
               accept="image/*"
-              onChange={(e) => setFile((e.target.files as FileList)[0])}
+              onChange={(e) => { setFile((e.target.files as FileList)[0]); setUploadProgress(0); }}
             />
-            <span>Book Thumbail</span>
+            <div className="flex flex-col gap-1">
+              <span className="text-sm font-medium text-gray-700">Book Thumbnail</span>
+              {isloading && file?.name && uploadProgress > 0 && (
+                <div className="w-40">
+                  <div className="flex justify-between text-xs text-gray-500 mb-1">
+                    <span>Uploading…</span>
+                    <span>{uploadProgress}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-1.5">
+                    <div
+                      className="bg-blue-600 h-1.5 rounded-full transition-all duration-200"
+                      style={{ width: `${uploadProgress}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
           </label>
           
           <div className="flex items-center justify-between gap-10 max-xxs:flex-col">

@@ -147,7 +147,7 @@ const BooksPage: React.FC = () => {
 
         <div className="flex flex-col md:flex-row gap-8">
           {/* Filters - Desktop */}
-          <div className="hidden md:block w-72 flex-shrink-0">
+          <div className="hidden md:block w-72 xl:w-80 flex-shrink-0">
             <div className="bg-white rounded-lg shadow-md p-6 sticky top-20">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="font-semibold">Filters</h2>

@@ -128,7 +128,7 @@ export default function ManageUsers() {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Manage Users</h2>
-        <Button onClick={() => setShowAddUserModal(true)}>Add New UserInfo</Button>
+        <Button onClick={() => setShowAddUserModal(true)}>Add New User</Button>
       </div>
       
       <div className="bg-white rounded-lg shadow-md overflow-hidden">

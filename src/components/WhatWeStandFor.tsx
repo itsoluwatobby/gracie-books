@@ -7,7 +7,7 @@ const WhatWeStandFor: React.FC = () => {
      <section className="mb-12">
       <h2 className="text-2xl md:text-3xl font-bold text-blue-900 mb-8 text-center">What We Stand For</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-md p-6 text-center">
+        <div className="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
           <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <Recycle size={32} className="text-green-600" />
           </div>
@@ -17,7 +17,7 @@ const WhatWeStandFor: React.FC = () => {
           </p>
         </div>
         
-        <div className="bg-white rounded-lg shadow-md p-6 text-center">
+        <div className="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
           <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <Heart size={32} className="text-blue-600" />
           </div>
@@ -27,7 +27,7 @@ const WhatWeStandFor: React.FC = () => {
           </p>
         </div>
         
-        <div className="bg-white rounded-lg shadow-md p-6 text-center">
+        <div className="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
           <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <Star size={32} className="text-purple-600" />
           </div>
@@ -37,7 +37,7 @@ const WhatWeStandFor: React.FC = () => {
           </p>
         </div>
         
-        <div className="bg-white rounded-lg shadow-md p-6 text-center">
+        <div className="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
           <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <Users size={32} className="text-orange-600" />
           </div>

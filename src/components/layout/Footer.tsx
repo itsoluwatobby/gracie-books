@@ -97,7 +97,7 @@ const Footer: React.FC = () => {
               </li>
               <li className="flex items-center">
                 <Phone className="flex-none h-5 w-5 mr-2 text-blue-200" />
-                <span className="text-blue-200">{appName.name}</span>
+                <span className="text-blue-200">{appName.contact}</span>
               </li>
               <li className="hidden">
                 <Mail className="flex-none h-5 w-5 mr-2 text-blue-200" />

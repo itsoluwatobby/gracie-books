@@ -65,8 +65,7 @@ const AdminDashboardPage: React.FC = () => {
       try {
         setIsLoading(true);
         const orderItems = await orderService.getAllOrders();
-        if (orderItems?.length) setOrders(orderItems);
-        else throw Error("An error occurred");
+        setOrders(orderItems ?? []);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         setError(err.message);
@@ -109,7 +108,8 @@ const AdminDashboardPage: React.FC = () => {
             setActiveSection={setActiveSection}
             setSelectedOrder={setSelectedOrder}
           />
-          <StockPiled books={[]} setActiveSection={setActiveSection} />
+          {/* LOOK-OUT: STOCKED PILED */}
+          <StockPiled books={books} setActiveSection={setActiveSection} />
         </div>
       </>
     ),
