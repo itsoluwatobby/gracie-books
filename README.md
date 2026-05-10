@@ -160,4 +160,4 @@ Ensure the host is configured to redirect all routes to `index.html` for client-
 
 ## License
 
-Private — all rights reserved.
+[MIT](LICENSE) © 2026 itsoluwatobby
