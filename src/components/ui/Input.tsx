@@ -13,6 +13,8 @@ const Input: React.FC<InputProps> = ({
   fullWidth = false,
   className = '',
   id,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  icon,
   ...props
 }) => {
   const inputId = id || `input-${Math.random().toString(36).substring(2, 9)}`;
