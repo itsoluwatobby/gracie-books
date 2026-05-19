@@ -128,11 +128,11 @@ const BooksPage: React.FC = () => {
         description="Explore our complete catalog. Filter by genre, price, and more to find your next great read."
         keywords="browse books, book catalog, buy books online, fiction, non-fiction, genres"
       />
-      <div className="container mx-auto px-4 py-8">
+      <div className="px-8 max-sm:p-4 mx-auto py-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-blue-900">Browse Books</h1>
+          <h1 className="text-2xl lg:text-3xl font-bold text-blue-900">Browse Books</h1>
           
-          <div className="flex items-center md:hidden">
+          <div className="flex items-center lg:hidden">
             <Button 
               variant="outline" 
               size="sm" 
@@ -145,9 +145,9 @@ const BooksPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters - Desktop */}
-          <div className="hidden md:block w-72 xl:w-80 flex-shrink-0">
+          <div className="hidden lg:block w-72 xl:w-80 flex-shrink-0">
             <div className="bg-white rounded-lg shadow-md p-6 sticky top-20">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="font-semibold">Filters</h2>
@@ -179,7 +179,7 @@ const BooksPage: React.FC = () => {
 
           {/* Filters - Mobile */}
           {showFilters ? (
-            <div className="fixed inset-0 bg-gray-800 bg-opacity-75 z-50 flex justify-end md:hidden">
+            <div className="fixed inset-0 bg-gray-800 bg-opacity-75 z-50 flex justify-end lg:hidden">
               <div className="bg-white w-80 h-full overflow-y-auto p-6">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="font-semibold">Filters</h2>
@@ -269,7 +269,7 @@ const BooksPage: React.FC = () => {
             )}
 
             {/* Sort By - Mobile */}
-            <div className="md:hidden mb-6">
+            <div className="lg:hidden mb-6">
               <SortBy sortBy={sortBy} setSortBy={setSortBy} />
             </div>
 

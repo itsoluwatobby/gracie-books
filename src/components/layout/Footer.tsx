@@ -9,8 +9,8 @@ const Footer: React.FC = () => {
   const { app } = useAuthContext();
 
   return (
-    <footer className="bg-blue-900 text-white pt-12 pb-8 w-full lg:px-10">
-      <div className="container mx-auto px-4">
+    <footer className="bg-blue-900 text-white pt-12 pb-8 w-full">
+      <div className="px-8 max-sm:p-4 mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
           {/* Company Info */}
           <div className="space-y-4">

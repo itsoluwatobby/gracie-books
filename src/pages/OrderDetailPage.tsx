@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
-import { Package, CheckCircle, ArrowLeft, MapPin } from 'lucide-react';
+import { Package, CheckCircle, ArrowLeft, MapPin, Copy, Check, ExternalLink } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import { MetaTags } from '../components/layout/OGgraph';
 import Button from '../components/ui/Button';
@@ -9,14 +9,35 @@ import { GetStatusIcon } from '../components/orders/StatusIcons';
 import { getStatusColor, getStatusText, getTrackingSteps } from '../components/order/helper';
 import { orderService } from '../services/order.service';
 import { helper } from '../utils/helper';
+import { INSTAGRAM_DM_URL } from '../utils/constants';
 import LoadingContent from '../components/ui/ContentLoading';
 
 
 const OrderDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { user } = useAuthContext();
+  const { user, app } = useAuthContext();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
+
+  const buildOrderMessage = () => {
+    if (!order) return '';
+    const bookList = order.items.map(item => `• ${item.book.title} x${item.quantity} — ${helper.formatPrice(item.book.price * item.quantity)}`).join('\n');
+    const { fullName, address, city, state, country, phoneNumber } = order.shippingAddress;
+    return `Hi! I just placed an order 🛍️\n\nOrder ID: ${order.id}\n\nItems:\n${bookList}\n\nTotal: ${helper.formatPrice(order.totalAmount)}\n\nShipping to: ${fullName}, ${address}, ${city}, ${state}, ${country}\nPhone: ${phoneNumber}`;
+  };
+
+  const handleCopy = () => {
+    if (!order) return;
+    navigator.clipboard.writeText(buildOrderMessage());
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleDMRedirect = () => {
+    navigator.clipboard.writeText(buildOrderMessage());
+    window.open(INSTAGRAM_DM_URL, '_blank');
+  };
 
   useEffect(() => {
     if (id) {
@@ -83,7 +104,12 @@ const OrderDetailPage: React.FC = () => {
           </Link>
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-blue-900">Order #{order.id}</h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl md:text-3xl font-bold text-blue-900">Order #{order.id}</h1>
+                <button onClick={handleCopy} className="text-gray-400 hover:text-blue-600 transition-colors" title="Copy order ID">
+                  {copied ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5" />}
+                </button>
+              </div>
               <p className="text-gray-600">Placed on {formatDate(order.createdAt)}</p>
             </div>
             <div className={`mt-4 md:mt-0 px-4 py-2 rounded-lg border ${getStatusColor(order.status)}`}>
@@ -232,19 +258,51 @@ const OrderDetailPage: React.FC = () => {
 
             {/* Actions */}
             <div className="space-y-3">
-              {order.status === 'delivered' && (
+              {
+                order.status === 'pending' ? (
+                <>
+                  <button
+                    onClick={handleCopy}
+                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+                    {copied ? 'Copied!' : 'Copy Order Message'}
+                  </button>
+                  
+                  <button
+                    onClick={handleDMRedirect}
+                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-pink-600 border border-pink-200 rounded-lg hover:bg-pink-50 transition-colors"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    Send Order via Instagram DM
+                  </button>
+                </>
+                )  : null
+              }
+
+              {
+                order.status === 'delivered' ? (
+                  <Button fullWidth variant="outline">
+                    Leave a Review
+                  </Button>
+                ) 
+                : null
+              }
+      
+              {
+                order.status === 'pending' ? (
+                  <Button fullWidth variant="outline">
+                    Cancel Order
+                  </Button>
+                ) 
+                : null
+              }
+        
+              <a href={`mailto:${app.email}?subject=Support Request - Order %23${order.id}`}>
                 <Button fullWidth variant="outline">
-                  Leave a Review
+                  Contact Support
                 </Button>
-              )}
-              {['pending', 'processing'].includes(order.status) && (
-                <Button fullWidth variant="outline">
-                  Cancel Order
-                </Button>
-              )}
-              <Button fullWidth variant="outline">
-                Contact Support
-              </Button>
+              </a>
             </div>
           </div>
         </div>

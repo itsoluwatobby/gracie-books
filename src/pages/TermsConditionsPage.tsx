@@ -14,8 +14,8 @@ const TermsConditionsPage: React.FC = () => {
         description="Read our terms and conditions, shipping policy, and customer service guidelines."
         keywords="terms and conditions, shipping policy, returns, privacy"
       />
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="max-w4xl mx-auto">
           {/* Header */}
           <div className="bg-blue-900 text-white rounded-lg p-8 mb-8">
             <div className="text-center">

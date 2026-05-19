@@ -87,8 +87,8 @@ const ProfilePage: React.FC = () => {
   return (
     <Layout>
       <MetaTags title="My Profile" description="Manage your account details and preferences." noindex />
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-5xl mx-auto">
+      <div className="px-8 max-sm:p-4 mx-auto py-8">
+        <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-2xl md:text-3xl font-bold text-blue-900">My Account</h1>
             {!isEditing ? (

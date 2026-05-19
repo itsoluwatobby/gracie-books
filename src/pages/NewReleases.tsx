@@ -29,7 +29,7 @@ const NewReleasesPage: React.FC = () => {
         description="Be among the first to read the latest and most anticipated titles. Fresh releases updated regularly."
         keywords="new books, new releases, latest books, recently published, new arrivals"
       />
-      <div className="container lg:max-w-7xl mx-auto px-2 py-8">
+      <div className="px-8 max-sm:p-4 mx-auto py-8">
         <h1 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6">
           New Books
         </h1>
@@ -40,7 +40,7 @@ const NewReleasesPage: React.FC = () => {
         />
 
         <section className="py-12 bg-white lg:px-3">
-          <div className="container mx-auto px-4">
+          <div className="mx-auto px-4">
             <h2 className="text-2xl md:text-3xl mb-8 font-bold text-blue-900">
               Recommendations
             </h2>

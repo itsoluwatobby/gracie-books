@@ -45,7 +45,7 @@ const OrdersPage: React.FC = () => {
   if (!isAuthenticated || error) {
     return (
       <Layout>
-        <div className="container mx-auto px-4 py-12 max-w-5xl">
+        <div className="px-8 max-sm:p-4 mx-auto py-12 max-w-7xl">
           <div className="bg-white rounded-lg shadow-md p-8 text-center flex flex-col items-center gap-4">
           {
             !isAuthenticated ?
@@ -80,10 +80,10 @@ const OrdersPage: React.FC = () => {
         isLoading ?
           <LoadingContent />
         : (
-          <div className="container mx-auto px-4 py-8 max-w-5xl">
+          <div className="px-8 max-sm:p-4 mx-auto py-8 max-w-7xl">
             <h1 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6">Your Orders</h1>
 
-            {orders.length === 0 ? (
+            {orders?.length === 0 ? (
               <div className="bg-white rounded-lg shadow-md p-8 text-center">
                 <div className="flex justify-center mb-4">
                   <ShoppingBag size={64} className="text-gray-300" />
@@ -103,7 +103,7 @@ const OrdersPage: React.FC = () => {
                 </div>
                 
                 <div className="space-y-6">
-                  {orders.map(order => (
+                  {orders?.map(order => (
                     <OrderItem key={order.id} order={order} />
                   ))}
                 </div>

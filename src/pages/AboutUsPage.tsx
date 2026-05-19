@@ -16,10 +16,10 @@ const AboutUsPage: React.FC = () => {
         description="Learn about our mission, values, and passion for connecting readers with great books."
         keywords="about us, book store, our mission, book lovers"
       />
-      <div className="container mx-auto px-4 py-8">
+      <div className="mx-auto px-4 sm:px-20 py-8">
         {/* Hero Section */}
-        <div className="bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-lg p-8 md:p-12 mb-12">
-          <div className="max-w-4xl mx-auto text-center">
+        <div className="bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-lg p-8 mdp-12 mb-12">
+          <div className="max-w4xl mx-auto text-center">
             <div className="flex justify-center mb-6">
               <div className="bg-white/20 p-4 rounded-full">
                 <BookOpen size={48} className="text-white" />
@@ -40,7 +40,7 @@ const AboutUsPage: React.FC = () => {
 
         {/* Our Story */}
         <section className="mb-12">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6 text-center">Our Story</h2>
             <div className="bg-white rounded-lg shadow-md p-8">
               <div className="prose max-w-none">

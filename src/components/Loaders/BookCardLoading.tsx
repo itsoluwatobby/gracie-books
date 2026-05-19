@@ -20,7 +20,7 @@ const BookCardLoading: React.FC<BookCardProps> = ({ itemCount = 6 }) => {
             className="h-full flex flex-col transition-all duration-300 border border-transparent hover:border-blue-200"
           >
             <div className="flex flex-col h-full">
-              <div className="relative pt[120%] bg-gray-200 h-40 animate-pulse duration-300">
+              <div className="relative pt[120%] bg-gray-200 h-64 animate-pulse duration-300">
                 <div className="absolute top-2 right-2">
                   <button className="p-1.5 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors">
                     <Heart size={18} className="text-gray-500 hover:text-red-500 transition-colors" />

@@ -34,7 +34,7 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
                 src={isImageDisplayed ? book?.coverImage : book?.icon}
                 alt={book.title}
                 onError={() => setIsImageDisplayed(false)}
-                className="w-full h-full shrink-0 object-scale-down"
+                className="w-full h-full shrink-0 object-contain object-scale-dow"
               />
             
               {/* Inner Shadow Overlay for Depth */}

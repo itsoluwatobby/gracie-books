@@ -65,7 +65,7 @@ const CartPage: React.FC = () => {
     <Layout>
       <MetaTags title="Shopping Cart" description="Review your selected books and proceed to checkout." noindex />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="px-8 max-sm:p-4 mx-auto py-8">
         <h1 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6">Your Shopping Cart</h1>
 
         {(items.length === 0 && !isLoading) ? (

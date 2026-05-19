@@ -79,8 +79,8 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-blue-900 text-white shadow-md sticky top-0 z-50 lg:px-6">
-      <div className="xl:px-16 w-full sm:px-10 mx-auto px-5 py-4">
+    <header className="bg-blue-900 text-white shadow-md sticky top-0 z-50">
+      <div className="px-8 max-sm:p-4 w-full mx-auto py-4">
         <div className="flex items-center justify-between">
           {/* Logo and Brand */}
           <Link to={PageRoutes.home} className="flex items-center space-x-2 mr-4 flex-shrink-0">

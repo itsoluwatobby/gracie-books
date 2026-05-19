@@ -9,8 +9,9 @@ import useAuthContext from '../context/useAuthContext';
 import useCartContext from '../context/useCartContext';
 import { nanoid } from 'nanoid';
 import { orderService } from '../services/order.service';
-import { CURRENCY } from '../utils/constants';
+import { CURRENCY, INSTAGRAM_DM_URL } from '../utils/constants';
 import { helper } from '../utils/helper';
+import toast from 'react-hot-toast';
 
 const CheckoutPage: React.FC = () => {
   const { user } = useAuthContext();
@@ -84,9 +85,17 @@ const CheckoutPage: React.FC = () => {
         },
       };
 
-      // Clear cart and redirect to success page
+      // Clear cart and redirect to Instagram DM
       await orderService.addOrder(newOrder, user.id!);
+
+      const bookList = items.map(item => `• ${item.book.title} x${item.quantity} — ${helper.formatPrice(item.book.price * item.quantity)}`).join('\n');
+      const orderMessage = `Hi! I just placed an order 🛍️\n\nOrder ID: ${newOrder.id}\n\nItems:\n${bookList}\n\nTotal: ${helper.formatPrice(helper.roundPrice(totalPrice))}\n\nShipping to: ${formData.fullName}, ${formData.address}, ${formData.city}, ${formData.state}, ${formData.country}\nPhone: ${formData.phoneNumber}`;
+
+      await navigator.clipboard.writeText(orderMessage);
+      toast.success('Order message copied! Paste it in the DM.', { duration: 5000 });
+
       clearCart();
+      window.open(INSTAGRAM_DM_URL, '_blank');
       navigate('/orders');
     } catch (error) {
       console.error('Checkout error:', error);
@@ -104,7 +113,7 @@ const CheckoutPage: React.FC = () => {
   return (
     <Layout>
       <MetaTags title="Checkout" description="Complete your order securely." noindex />
-      <div className="container mx-auto px-4 xl:px-16 py-8">
+      <div className="px-8 max-sm:p-4 mx-auto xl:px-16 py-8">
         <h1 className="text-2xl md:text-3xl font-bold text-blue-900 mb-8">Checkout</h1>
 
         <div className="flex flex-col lg:flex-row gap-8">

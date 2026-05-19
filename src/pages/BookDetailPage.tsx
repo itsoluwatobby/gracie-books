@@ -113,7 +113,7 @@ const BookDetailPage: React.FC = () => {
         type="book"
         keywords={book?.genre?.join(', ')}
       />
-      <div className="container lg:max-w-6xl mx-auto px-4 py-8">
+      <div className="px-8 max-sm:p-4 mx-auto py-8">
         {/* Breadcrumbs */}
         <nav className="mb-6">
           <ol className="flex text-sm text-gray-500">

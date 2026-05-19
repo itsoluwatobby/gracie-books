@@ -38,7 +38,7 @@ const HomePage: React.FC = () => {
       />
 
       {/* Hero Section */}
-      <section className="bg-blue-900 text-white relative overflow-hidden">
+      <section className="bg-blue-900 text-white relative transition-all overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <img
             src="https://images.pexels.com/photos/590493/pexels-photo-590493.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750"
@@ -46,8 +46,8 @@ const HomePage: React.FC = () => {
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="container mx-auto px-4 xl:px-16 py-20 lg:py-32 relative z-10">
-          <div className="max-w-2xl">
+        <div className="mx-auto px-8 max-sm:p-4 py-20 lg:py-32 relative z-10">
+          <div className="">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
               Discover Your Next Favorite Book
             </h1>
@@ -68,7 +68,7 @@ const HomePage: React.FC = () => {
 
       {/* Featured Categories */}
       <section className="py-16 bg-gradient-to-b from-blue-50 to-white">
-        <div className="container mx-auto px-4 xl:px-16">
+        <div className="containe mx-auto px-8 max-sm:p-4">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-12 text-blue-900">
             Explore Our Categories
           </h2>
@@ -119,7 +119,7 @@ const HomePage: React.FC = () => {
 
       {/* Featured Books Section */}
       <section className="py-16 bg-white">
-        <div className="container mx-auto px-4 xl:px-16">
+        <div className="mx-auto px-8 max-sm:p-4">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-blue-900">
               Featured Books
@@ -137,7 +137,7 @@ const HomePage: React.FC = () => {
 
       {/* Bestsellers Section */}
       <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4 xl:px-16">
+        <div className="px-8 max-sm:p-4 mx-auto">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-blue-900">
               Bestsellers
@@ -154,7 +154,7 @@ const HomePage: React.FC = () => {
 
       {/* New Arrivals Section */}
       <section className="py-16 bg-white">
-        <div className="container mx-auto px-4 xl:px-16">
+        <div className="px-8 max-sm:p-4 mx-auto">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-blue-900">
               New Arrivals
@@ -171,7 +171,7 @@ const HomePage: React.FC = () => {
 
       {/* Newsletter Section */}
       <section className="py-16 bg-blue-800 text-white">
-        <div className="container mx-auto px-4 text-center">
+        <div className="px-8 max-sm:p-4 mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold mb-4">
             Stay Updated with {app.name}
           </h2>

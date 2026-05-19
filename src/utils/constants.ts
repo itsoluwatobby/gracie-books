@@ -1,4 +1,6 @@
 
+export const INSTAGRAM_DM_URL = 'https://ig.me/m/wandyte_book_sale';
+
 export const CURRENCY = {
   "NAIRA": "₦",
 } as const;
