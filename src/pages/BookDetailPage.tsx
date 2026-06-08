@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { MetaTags } from '../components/layout/OGgraph';
+import { MetaTags, SITE_URL } from '../components/layout/OGgraph';
 import {
   ShoppingCart,
   Heart,
@@ -108,10 +108,53 @@ const BookDetailPage: React.FC = () => {
     <Layout>
       <MetaTags
         title={book?.title ?? 'Book Details'}
-        description={book?.description ? book.description.slice(0, 160) : 'View book details, price, and availability.'}
+        description={book?.description ?? 'View book details, price, and availability.'}
         image={book?.coverImage || book?.icon}
         type="book"
         keywords={book?.genre?.join(', ')}
+        author={book?.authors?.join(', ')}
+        publishedTime={book?.publicationDate}
+        structuredData={book ? [
+          {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+              { '@type': 'ListItem', position: 2, name: 'Books', item: `${SITE_URL}/books` },
+              { '@type': 'ListItem', position: 3, name: book.title, item: `${SITE_URL}/books/${book.id}` },
+            ],
+          },
+          {
+          '@context': 'https://schema.org',
+          '@type': 'Book',
+          name: book.title,
+          description: book.description,
+          image: book.coverImage || book.icon,
+          url: `${SITE_URL}/books/${book.id}`,
+          ...(book.isbn && { isbn: book.isbn }),
+          ...(book.pageCount && { numberOfPages: book.pageCount }),
+          ...(book.publicationDate && { datePublished: book.publicationDate }),
+          ...(book.publisher && { publisher: { '@type': 'Organization', name: book.publisher } }),
+          author: book.authors.map(name => ({ '@type': 'Person', name })),
+          genre: book.genre,
+          offers: {
+            '@type': 'Offer',
+            url: `${SITE_URL}/books/${book.id}`,
+            priceCurrency: 'NGN',
+            price: book.price,
+            availability: book.stockQuantity > 0
+              ? 'https://schema.org/InStock'
+              : 'https://schema.org/OutOfStock',
+          },
+          ...(book.rating && {
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              ratingValue: book.rating,
+              ratingCount: book.ratingsCount ?? 1,
+            },
+          }),
+        },
+        ] : undefined}
       />
       <div className="px-8 max-sm:p-4 mx-auto py-8">
         {/* Breadcrumbs */}

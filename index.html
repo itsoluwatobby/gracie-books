@@ -2,13 +2,41 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- <link rel="icon" type="image/svg+xml" href="/vite.svg" /> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Favicons & PWA -->
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1e3a8a" />
+
+    <!-- Preconnect to image CDN used for OG image -->
+    <link rel="preconnect" href="https://images.pexels.com" crossorigin />
+
+    <!-- Default SEO — overridden per-page by react-helmet -->
     <title>Wandyte Book Sales</title>
+    <meta name="description" content="From bestsellers to hidden gems, find the perfect books for your reading journey. Quality literature at competitive prices." />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Fallback Open Graph — social crawlers don't execute JS, so these fire for every shared URL -->
+    <meta property="og:site_name" content="Wandyte Book Sales" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Wandyte Book Sales" />
+    <meta property="og:description" content="From bestsellers to hidden gems, find the perfect books for your reading journey. Quality literature at competitive prices." />
+    <meta property="og:url" content="https://booksales.wandyte.com" />
+    <meta property="og:image" content="https://images.pexels.com/photos/590493/pexels-photo-590493.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750" />
+    <meta property="og:image:width" content="1260" />
+    <meta property="og:image:height" content="750" />
+    <meta property="og:image:alt" content="Wandyte Book Sales" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Fallback Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Wandyte Book Sales" />
+    <meta name="twitter:description" content="From bestsellers to hidden gems, find the perfect books for your reading journey. Quality literature at competitive prices." />
+    <meta name="twitter:image" content="https://images.pexels.com/photos/590493/pexels-photo-590493.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750" />
+    <meta name="twitter:image:alt" content="Wandyte Book Sales" />
   </head>
   <body>
     <div id="root"></div>
